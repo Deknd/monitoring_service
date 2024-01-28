@@ -17,16 +17,24 @@ import java.time.OffsetDateTime;
 import java.time.YearMonth;
 import java.util.Scanner;
 
+/**
+ * Собирает все контекст приложения
+ */
 public class ManualConfig {
+    /**
+     * Главный класс интерфейса
+     */
     private final Console console;
-
+    /**
+     * Собирает все контекст приложения
+     */
     public ManualConfig() {
-        var testUser = User.builder().email("test@mail.com").password("123").firstName("TestName").userId(1L).lastName("TestLastName").build();
+        var testUser = User.builder().email("test@mail.com").password("123").firstName("TestName").lastName("TestLastName").build();
         var roleForTestUser = Role.builder().roleName("USER").build();
         var testAddress = Address.builder().owner(testUser).postalCode(184040L).region("Мурманская область").city("Кандалакша").house("6").apartment("1").build();
         var testData = MeterReading.builder().address(testAddress).meterValue(2133.123).submissionMonth(YearMonth.now()).timeSendMeter(OffsetDateTime.now()).build();
 
-        var testAdmin = User.builder().email("admin@admin.com").password("123").firstName("Admin").userId(2L).lastName("LastName").build();
+        var testAdmin = User.builder().email("admin@admin.com").password("123").firstName("Admin").lastName("LastName").build();
         var roleAdmin = Role.builder().roleName("ADMIN").build();
 
         var scanner = new Scanner(System.in);
@@ -107,7 +115,10 @@ public class ManualConfig {
 
     }
 
-
+    /**
+     * Для выдачи интерфейса
+     * @return главный класс интерфейса
+     */
     public Console console() {
         return this.console;
     }

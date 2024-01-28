@@ -20,18 +20,52 @@ import java.util.Set;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
+/**
+ * Класс представляющий команду консоли, при помощи которой отправляются показания счетчиков
+ */
 @Setter
 public class MeterSendCommand implements ConsoleCommand<String> {
-
+    /**
+     * Команда, которая отвечает за работу этого класса
+     */
     private final String COMMAND = "send";
+    /**
+     * Роль пользователя
+     */
     private final Role USER_ROLE = Role.builder().roleName("USER").build();
+    /**
+     * Сервис для работы с типами данных
+     */
     private final TypeMeterService typeMeterService;
+    /**
+     * Сервис для работы с адресами
+     */
     private final AddressService addressService;
+    /**
+     * Сервис для работы с показаниями
+     */
     private final MeterReadingService meterReadingService;
+    /**
+     * функция, которая достает из массива с параматерами, нужные типы показаний
+     */
     private Function<String[], Set<String>> typeMeterParametersParserFromRawParameters;
+    /**
+     * Валидатор принятых данных
+     */
     private final Validators validators;
+    /**
+     * Сканер консоли
+     */
     private final Scanner scanner;
 
+    /**
+     * Основной конструктор
+     * @param typeMeterService сервис для работы с типами показаний
+     * @param addressService сервис для работы с адресами
+     * @param meterReadingService сервис для работы с показаниями
+     * @param validators валидатор входящих данных
+     * @param scanner сканер консоли
+     */
     public MeterSendCommand(TypeMeterService typeMeterService, AddressService addressService, MeterReadingService meterReadingService, Validators validators, Scanner scanner) {
         this.typeMeterService = typeMeterService;
         this.addressService = addressService;
@@ -40,17 +74,28 @@ public class MeterSendCommand implements ConsoleCommand<String> {
         this.scanner = scanner;
         this.typeMeterParametersParserFromRawParameters = new TypeMeterParametersParserFromRawParameters(this.typeMeterService);
     }
-
+    /**
+     * Возвращает команду, которая запускает работу метода run
+     * @return команда для работы класса
+     */
     @Override
     public String getCommand() {
         return this.COMMAND;
     }
-
+    /**
+     * Возвращает пояснение работы класса
+     * @return пояснение, что делает класс, для аудита
+     */
     @Override
     public String getMakesAction() {
         return "Отправляет показания";
     }
-
+    /**
+     * Основной метод класса
+     * @param command команда полученная из консоли
+     * @param userActive активный юзер
+     * @return возвращает сообщение об результате работы
+     */
     @Override
     public String run(String command, User userActive) {
         if (userActive == null) {
@@ -121,6 +166,11 @@ public class MeterSendCommand implements ConsoleCommand<String> {
         return null;
     }
 
+    /**
+     * получает ввод из консоли
+     * @param addresses лист адресов пользователя
+     * @return возвращает айди адреса
+     */
 
     private Long getIdAddress(List<Address> addresses) {
         var collectAddresses = addresses.stream().map(address -> address.getAddressId() + " - " + address.toString()).collect(Collectors.joining("\n"));
@@ -138,6 +188,10 @@ public class MeterSendCommand implements ConsoleCommand<String> {
         }
     }
 
+    /**
+     * Получает с консоли показания
+     * @return показания в формате Double
+     */
     private Double getMeterValue() {
         var meterValue = this.validators.isValid(
                 "Введите показания: ",
@@ -151,7 +205,11 @@ public class MeterSendCommand implements ConsoleCommand<String> {
             return null;
         }
     }
-
+    /**
+     * Подсказка для команды help
+     * @param roles роли доступные пользователю
+     * @return возвращает сообщение с подсказкой по работе с данной командой
+     */
     @Override
     public String getHelpCommand(List<Role> roles) {
         if (roles.isEmpty()) {

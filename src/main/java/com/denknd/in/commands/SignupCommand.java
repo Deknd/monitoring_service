@@ -12,29 +12,54 @@ import lombok.RequiredArgsConstructor;
 import java.util.List;
 import java.util.Scanner;
 
+/**
+ * Класс представляющий команду консоли, при помощи которой регистрируется новый пользователь
+ */
 @RequiredArgsConstructor
 public class SignupCommand implements ConsoleCommand<String> {
-
+    /**
+     * Сервис для работы с пользователями
+     */
     private final UserService userService;
+    /**
+     * Сервис для работы с ролями пользователя
+     */
     private final RoleService roleService;
-
+    /**
+     * Валидатор принятых данных
+     */
     private final Validators validators;
+    /**
+     * Сканер консоли
+     */
     private final Scanner scanner;
 
-
-
+    /**
+     * Команда, которая отвечает за работу этого класса
+     */
     private final String COMMAND = "signup";
-
+    /**
+     * Возвращает команду, которая запускает работу метода run
+     * @return команда для работы класса
+     */
     @Override
     public String getCommand() {
         return this.COMMAND;
     }
-
+    /**
+     * Возвращает пояснение работы класса
+     * @return пояснение, что делает класс, для аудита
+     */
     @Override
     public String getMakesAction() {
         return "Регистрация пользователя";
     }
-
+    /**
+     * Основной метод класса
+     * @param command команда полученная из консоли
+     * @param userActive активный юзер
+     * @return возвращает сообщение об результате работы
+     */
     @Override
     public String run(String command, User userActive) {
         if (userActive == null) {
@@ -59,7 +84,6 @@ public class SignupCommand implements ConsoleCommand<String> {
                                 "Фамилия введена не верна. Фамилия должна содержать только буквы",
                                 this.scanner) :
                         null;
-
                 var name = this.validators.notNullValue(email, password, lastName) ?
                         this.validators.isValid(
                                 "Введите Ваше имя: ",
@@ -87,9 +111,12 @@ public class SignupCommand implements ConsoleCommand<String> {
             }
         }
         return "Команда не поддерживается: " + command;
-
     }
-
+    /**
+     * Подсказка для команды help
+     * @param roles роли доступные пользователю
+     * @return возвращает сообщение с подсказкой по работе с данной командой
+     */
     @Override
     public String getHelpCommand(List<Role> roles) {
         if (roles.isEmpty()) {

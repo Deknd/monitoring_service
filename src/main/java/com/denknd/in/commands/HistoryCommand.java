@@ -18,22 +18,67 @@ import java.util.List;
 import java.util.Set;
 import java.util.function.Function;
 
+/**
+ * Класс представляющий команду консоли, при помощи которой выдается история подачи показаний
+ */
 @Setter
 public class HistoryCommand implements ConsoleCommand<String> {
+    /**
+     * Команда, которая отвечает за работу этого класса
+     */
     private final String COMMAND = "history";
+    /**
+     * Дополнительный параметр, для передачи айди адреса
+     */
     private final String ADDRESS_ID_PARAMETER = "addr=";
+    /**
+     * Дополнительный параметр, для передачи айди пользователя
+     */
     private final String USER_ID_PARAMETER = "user=";
+    /**
+     * Дополнительный параметр, для передачи даты начало списка
+     */
     private final String START_DATE_PARAMETER = "start_date=";
+    /**
+     * Дополнительный параметр, для передачи даты конца списка
+     */
     private final String END_DATE_PARAMETER = "end_date=";
+    /**
+     * Сервис для работы с адресами
+     */
     private final AddressService addressService;
+    /**
+     * Сервис для работы с показаниями
+     */
     private final MeterReadingService meterReadingService;
+    /**
+     * Сервис для работы с пользователями
+     */
     private final UserService userService;
-
+    /**
+     * Извлекает доступные типы показаний из консольной команды
+     */
     private Function<String[], Set<String>> typeMeterParametersParserFromRawParameters;
+    /**
+     * Конвертирует историю показаний в строку
+     */
     private Function<List<MeterReading>, String> meterReadingsHistoryToStringConverter;
+    /**
+     * достает из консольной команды Long
+     */
     private MyFunction<String[], Long> longIdParserFromRawParameters;
+    /**
+     * достает из консольной команды дату YearMonth
+     */
     private MyFunction<String[], YearMonth> dateParserFromRawParameters;
 
+    /**
+     * Конструктор для класса
+     * @param addressService сервис для работы с адресами
+     * @param meterReadingService сервис для работы с показаниями
+     * @param typeMeterService сервис для работы с типами показаний
+     * @param userService сервис для работы с пользователями
+     */
     public HistoryCommand(AddressService addressService, MeterReadingService meterReadingService, TypeMeterService typeMeterService, UserService userService) {
         this.addressService = addressService;
         this.meterReadingService = meterReadingService;
@@ -44,17 +89,28 @@ public class HistoryCommand implements ConsoleCommand<String> {
         this.dateParserFromRawParameters = new DateParserFromRawParameters();
     }
 
-
+    /**
+     * Возвращает команду, которая запускает работу метода run
+     * @return команда для работы класса
+     */
     @Override
     public String getCommand() {
         return this.COMMAND;
     }
-
+    /**
+     * Возвращает пояснение работы класса
+     * @return пояснение, что делает класс, для аудита
+     */
     @Override
     public String getMakesAction() {
         return "Выводит историю подачи показаний";
     }
-
+    /**
+     * Основной метод класса
+     * @param command команда полученная из консоли
+     * @param userActive активный юзер
+     * @return возвращает сообщение об результате работы
+     */
     @Override
     public String run(String command, User userActive) {
         if (userActive == null) {
@@ -82,6 +138,15 @@ public class HistoryCommand implements ConsoleCommand<String> {
         return null;
     }
 
+    /**
+     * Метод для выдачи истории по полученным данным
+     * @param addressId идентификатор адреса
+     * @param userId идентификатор пользователя
+     * @param acceptedParameters разрешенные параметры
+     * @param startDate дата начала списка показаний
+     * @param endDate дата конца списка показаний
+     * @return возвращает список с показаниями
+     */
     private List<MeterReading> getHistoryByAddressId(Long addressId, Long userId, Set<String> acceptedParameters, YearMonth startDate, YearMonth endDate) {
         var actualAddressesForActiveUser = this.addressService.getAddresses(userId).stream().map(Address::getAddressId).toList();
 
@@ -100,7 +165,11 @@ public class HistoryCommand implements ConsoleCommand<String> {
             return List.copyOf(meterReadingsAllAddress);
         }
     }
-
+    /**
+     * Подсказка для команды help
+     * @param roles роли доступные пользователю
+     * @return возвращает сообщение с подсказкой по работе с данной командой
+     */
     @Override
     public String getHelpCommand(List<Role> roles) {
         if (roles.isEmpty()) {

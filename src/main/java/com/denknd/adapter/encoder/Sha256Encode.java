@@ -6,7 +6,15 @@ import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 
+/**
+ * Класс для хеширования и сравнение пароля
+ */
 public class Sha256Encode implements PasswordEncoder {
+    /**
+     * Хеширует пароль
+     * @param rawPassword сырой пароль @NotNull
+     * @return хеш пароля
+     */
     @Override
     public String encode(CharSequence rawPassword) {
         try {
@@ -25,6 +33,12 @@ public class Sha256Encode implements PasswordEncoder {
         }
     }
 
+    /**
+     * Сравнивает сырой пароль с хешем
+     * @param rawPassword не хешированый пароль @NotNull
+     * @param encodedPassword хешированый пароль
+     * @return
+     */
     @Override
     public boolean matches(CharSequence rawPassword, String encodedPassword) {
         var hashedRawPassword = encode(rawPassword);

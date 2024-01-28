@@ -9,7 +9,15 @@ import java.util.Map;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
+/**
+ * Конвертирует Лист показаний в строку, группирует по адресам и по типам показаний
+ */
 public class MeterReadingsHistoryToStringConverter implements Function<List<MeterReading>, String> {
+    /**
+     * Конвертирует лист показаний в строку, группируя его по адресам и типам показаний
+     * @param meterReadings лист показаний
+     * @return возвращает строку, со всеми показаниями
+     */
     @Override
     public String apply(List<MeterReading> meterReadings) {
 
@@ -27,6 +35,11 @@ public class MeterReadingsHistoryToStringConverter implements Function<List<Mete
 
     }
 
+    /**
+     * Групирует список показаний по адресам
+     * @param typeMeterMap список показаний
+     * @return строку с показаниями по одному типу
+     */
     private String convertingReadingsSameAddress(Map<String, List<MeterReading>> typeMeterMap) {
         return typeMeterMap.keySet().stream()
                 .map(typeMeter -> {
@@ -43,7 +56,11 @@ public class MeterReadingsHistoryToStringConverter implements Function<List<Mete
                 }).collect(Collectors.joining("\n"));
     }
 
-
+    /**
+     * конвертирует показания в строку
+     * @param readings список показаний
+     * @return возвращает список показаний
+     */
     private String convertingReadingsSameType(List<MeterReading> readings) {
         return readings.stream().map(mr ->
                         "показание: " + mr.getMeterValue() + " " + mr.getTypeMeter().getMetric() + " период: " + mr.getSubmissionMonth() + " дата подачи: " + mr.getTimeSendMeter())

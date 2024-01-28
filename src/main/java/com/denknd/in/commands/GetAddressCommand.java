@@ -7,35 +7,61 @@ import com.denknd.in.commands.functions.LongIdParserFromRawParameters;
 import com.denknd.in.commands.functions.MyFunction;
 import com.denknd.services.AddressService;
 import com.denknd.services.UserService;
+import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 
 import java.util.List;
 import java.util.stream.Collectors;
 
+/**
+ * Класс представляющий команду консоли, при помощи которой получают доступные адреса пользователя
+ */
 @Setter
+@RequiredArgsConstructor
 public class GetAddressCommand implements ConsoleCommand<String> {
+    /**
+     * Команда, которая отвечает за работу этого класса
+     */
     private final String COMMAND = "get_addr";
+    /**
+     * Дополнительный параметр для получения айди Юзера из консоли
+     */
     private final String USER_ID_PARAMETER = "user=";
+    /**
+     * Сервис для работы с адресами
+     */
     private final AddressService addressService;
+    /**
+     * Сервис для работы с пользователями
+     */
     private final UserService userService;
-    private MyFunction<String[], Long> longIdParserFromRawParameters;
+    /**
+     * Парсер параметров в Long
+     */
+    private MyFunction<String[], Long> longIdParserFromRawParameters = new LongIdParserFromRawParameters();;
 
-    public GetAddressCommand(AddressService addressService, UserService userService) {
-        this.addressService = addressService;
-        this.userService = userService;
-        this.longIdParserFromRawParameters = new LongIdParserFromRawParameters();
-    }
-
+    /**
+     * Возвращает команду, которая запускает работу метода run
+     * @return команда для работы класса
+     */
     @Override
     public String getCommand() {
         return this.COMMAND;
     }
-
+    /**
+     * Возвращает пояснение работы класса
+     * @return пояснение, что делает класс, для аудита
+     */
     @Override
     public String getMakesAction() {
         return "Получает доступные адреса";
     }
-
+    /**
+     * Основной метод класса
+     * @param command команда полученная из консоли
+     * @param userActive активный юзер
+     * @return возвращает сообщение об результате работы
+     */
     @Override
     public String run(String command, User userActive) {
         if (userActive == null) {
@@ -69,12 +95,21 @@ public class GetAddressCommand implements ConsoleCommand<String> {
         return null;
     }
 
+    /**
+     * Конвертирует список адресов в строку
+     * @param addresses список адресов
+     * @return строку из адресов
+     */
     private String addressToStringConverter(List<Address> addresses) {
         return addresses.stream().map(address ->
                         "   id: " + address.getAddressId() + ", " + address.toString())
                 .collect(Collectors.joining(",\n    "));
     }
-
+    /**
+     * Подсказка для команды help
+     * @param roles роли доступные пользователю
+     * @return возвращает сообщение с подсказкой по работе с данной командой
+     */
     @Override
     public String getHelpCommand(List<Role> roles) {
         if (roles == null || roles.isEmpty()) {

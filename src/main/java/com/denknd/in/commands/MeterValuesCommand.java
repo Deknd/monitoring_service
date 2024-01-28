@@ -101,7 +101,10 @@ public class MeterValuesCommand implements ConsoleCommand<String> {
     public String getCommand() {
         return this.COMMAND;
     }
-
+    /**
+     * Возвращает пояснение работы класса
+     * @return пояснение, что делает класс, для аудита
+     */
     @Override
     public String getMakesAction() {
         return "Получает актуальные показание";

@@ -8,10 +8,22 @@ import java.util.List;
 import java.util.Map;
 import java.util.Random;
 
+/**
+ * Для хранения типов показаний в памяти
+ */
 public class InMemoryTypeMeterRepository implements TypeMeterRepository {
+    /**
+     * Хранит связь айди -> объект TypeMeter
+     */
     private final Map<Long, TypeMeter> typeMeterMap = new HashMap<>();
-
+    /**
+     * Для генерации айди
+     */
     private final Random random = new Random();
+
+    /**
+     * Сохраняет в память стандартные типы
+     */
     public InMemoryTypeMeterRepository(){
         var cold = TypeMeter.builder()
                 .typeMeterId(0L)
@@ -36,12 +48,20 @@ public class InMemoryTypeMeterRepository implements TypeMeterRepository {
         this.typeMeterMap.put(heat.getTypeMeterId(), heat);
     }
 
-
+    /**
+     * Ищет все доступные типы
+     * @return список доступных типов показаний
+     */
     @Override
     public List<TypeMeter> findTypeMeter() {
-        return this.typeMeterMap.keySet().stream().map(this.typeMeterMap::get).toList();
+        return this.typeMeterMap.keySet().stream().map(this.typeMeterMap::get).map(this::buildTypeMeter).toList();
     }
 
+    /**
+     * Сохраняет новые типы показаний в память
+     * @param typeMeter заполненный объект TypeMeter, без айди
+     * @return возвращает копию заполненного объекта
+     */
     @Override
     public TypeMeter save(TypeMeter typeMeter) {
         long typeMeterId;
@@ -54,8 +74,17 @@ public class InMemoryTypeMeterRepository implements TypeMeterRepository {
         }
         typeMeter.setTypeMeterId(typeMeterId);
         this.typeMeterMap.put(typeMeterId, typeMeter);
+        return buildTypeMeter(typeMeter);
+    }
+
+    /**
+     * Копирует входящий объект
+     * @param typeMeter заполненный объект TypeMeter
+     * @return копия входящего объекта
+     */
+    private TypeMeter buildTypeMeter(TypeMeter typeMeter) {
         return TypeMeter.builder()
-                .typeMeterId(typeMeterId)
+                .typeMeterId(typeMeter.getTypeMeterId())
                 .typeCode(typeMeter.getTypeCode())
                 .typeDescription(typeMeter.getTypeDescription())
                 .metric(typeMeter.getMetric())

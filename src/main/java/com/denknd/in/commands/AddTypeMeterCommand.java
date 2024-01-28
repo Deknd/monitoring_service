@@ -10,25 +10,49 @@ import lombok.RequiredArgsConstructor;
 
 import java.util.List;
 import java.util.Scanner;
-
+/**
+ * Класс представляющий команду консоли, при помощи которой подаются показания счетчиков
+ */
 @RequiredArgsConstructor
 public class AddTypeMeterCommand implements ConsoleCommand<String> {
-
+    /**
+     * Команда, которая отвечает за работу этого класса
+     */
     private final String COMMAND = "add_type";
+    /**
+     * Валидатор принятых данных
+     */
     private final Validators validators;
+    /**
+     * Сканер консоли
+     */
     private final Scanner scanner;
+    /**
+     * Сервис для работы с показаниями
+     */
     private final TypeMeterService typeMeterService;
-
+    /**
+     * Возвращает команду, которая запускает работу метода run
+     * @return команда для работы класса
+     */
     @Override
     public String getCommand() {
         return this.COMMAND;
     }
-
+    /**
+     * Возвращает пояснение работы класса
+     * @return пояснение, что делает класс, для аудита
+     */
     @Override
     public String getMakesAction() {
         return "Добавляет новый тип показаний в БД";
     }
-
+    /**
+     * Основной метод класса
+     * @param command команда полученная из консоли
+     * @param userActive активный юзер
+     * @return возвращает сообщение об результате работы
+     */
     @Override
     public String run(String command, User userActive) {
         if (userActive == null) {
@@ -68,6 +92,11 @@ public class AddTypeMeterCommand implements ConsoleCommand<String> {
         return null;
     }
 
+    /**
+     * Подсказка для команды help
+     * @param roles роли доступные пользователю
+     * @return возвращает сообщение с подсказкой по работе с данной командой
+     */
     @Override
     public String getHelpCommand(List<Role> roles) {
         if (roles == null || roles.isEmpty()){

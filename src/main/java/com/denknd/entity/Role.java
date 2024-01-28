@@ -3,10 +3,19 @@ package com.denknd.entity;
 import lombok.Builder;
 import lombok.Getter;
 
+/**
+ * Класс для обозначения роли
+ */
 @Builder
 @Getter
 public class Role {
+    /**
+     * Идентификатор объекта
+     */
     private Long roleId;
+    /**
+     * Имя роли
+     */
     private String roleName;
 
 

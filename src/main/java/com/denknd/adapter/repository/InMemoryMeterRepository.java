@@ -24,6 +24,7 @@ public class InMemoryMeterRepository implements MeterReadingRepository {
 
     /**
      * Служит для сохранения показаний в память
+     *
      * @param meterReading полностью заполненный объект показаний(без meterId)
      * @return возвращает объект с генерированным meterId
      */
@@ -43,7 +44,7 @@ public class InMemoryMeterRepository implements MeterReadingRepository {
         meterReading.setMeterId(meterReadingId);
         this.meterReadingMap.put(meterReadingId, meterReading);
         var addressId = meterReading.getAddress().getAddressId();
-        if(this.addressIdMeterIdListMap.containsKey(addressId)){
+        if (this.addressIdMeterIdListMap.containsKey(addressId)) {
             var longs = new ArrayList<>(this.addressIdMeterIdListMap.get(addressId));
             longs.add(meterReadingId);
             this.addressIdMeterIdListMap.put(addressId, List.copyOf(longs));
@@ -53,9 +54,14 @@ public class InMemoryMeterRepository implements MeterReadingRepository {
         return meterReading;
     }
 
+    /**
+     * Выдает список показаний по айди адреса
+     * @param addressId идентификатор адреса
+     * @return список показаний по этому адресу
+     */
     @Override
     public List<MeterReading> findMeterReadingByAddressId(Long addressId) {
-        if(this.addressIdMeterIdListMap.containsKey(addressId)){
+        if (this.addressIdMeterIdListMap.containsKey(addressId)) {
             return this.addressIdMeterIdListMap.get(addressId).stream().map(this.meterReadingMap::get).toList();
         }
         return List.of();
