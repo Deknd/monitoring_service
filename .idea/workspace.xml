@@ -4,19 +4,126 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="67e803ab-0ce3-40cd-9d15-569ee2b2619c" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/gradle.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/vcs.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/build.gradle" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/gradle/wrapper/gradle-wrapper.jar" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/gradle/wrapper/gradle-wrapper.properties" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/gradlew" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/gradlew.bat" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/settings.gradle" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/denknd/Main.java" afterDir="false" />
+    <list default="true" id="67e803ab-0ce3-40cd-9d15-569ee2b2619c" name="Changes" comment="инициализация">
+      <change afterPath="$PROJECT_DIR$/.idea/uiDesigner.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/README.md" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/denknd/MonitoringServiceApplication.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/denknd/adapter/encoder/Sha256Encode.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/denknd/adapter/repository/InMemoryAddressRepository.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/denknd/adapter/repository/InMemoryAuditRepository.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/denknd/adapter/repository/InMemoryMeterRepository.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/denknd/adapter/repository/InMemoryRoleRepository.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/denknd/adapter/repository/InMemoryTypeMeterRepository.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/denknd/adapter/repository/InMemoryUserRepository.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/denknd/config/ManualConfig.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/denknd/entity/Address.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/denknd/entity/Audit.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/denknd/entity/Meter.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/denknd/entity/MeterReading.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/denknd/entity/Role.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/denknd/entity/TypeMeter.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/denknd/entity/User.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/denknd/exception/UserAlreadyExistsException.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/denknd/in/Console.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/denknd/in/commands/AddAddressCommand.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/denknd/in/commands/AddTypeMeterCommand.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/denknd/in/commands/ConsoleCommand.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/denknd/in/commands/ExitCommand.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/denknd/in/commands/GetAddressCommand.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/denknd/in/commands/HelpCommand.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/denknd/in/commands/HistoryCommand.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/denknd/in/commands/LoginCommand.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/denknd/in/commands/LogoutCommand.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/denknd/in/commands/MeterSendCommand.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/denknd/in/commands/MeterValuesCommand.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/denknd/in/commands/SignupCommand.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/denknd/in/commands/UserCommand.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/denknd/in/commands/functions/AbstractMyFunctionParser.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/denknd/in/commands/functions/DateParserFromRawParameters.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/denknd/in/commands/functions/DefaultMeterReadingsToStringConverter.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/denknd/in/commands/functions/LongIdParserFromRawParameters.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/denknd/in/commands/functions/MeterReadingsHistoryToStringConverter.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/denknd/in/commands/functions/MyFunction.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/denknd/in/commands/functions/TypeMeterParametersParserFromRawParameters.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/denknd/port/AddressRepository.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/denknd/port/AuditRepository.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/denknd/port/IGivingAudit.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/denknd/port/MeterReadingRepository.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/denknd/port/PasswordEncoder.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/denknd/port/RoleRepository.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/denknd/port/TypeMeterRepository.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/denknd/port/UserRepository.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/denknd/services/AddressService.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/denknd/services/AuditService.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/denknd/services/MeterReadingService.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/denknd/services/RoleService.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/denknd/services/TypeMeterService.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/denknd/services/UserService.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/denknd/services/impl/AddressServiceImpl.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/denknd/services/impl/AuditServiceImpl.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/denknd/services/impl/MeterReadingServiceImpl.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/denknd/services/impl/RoleServiceImpl.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/denknd/services/impl/TypeMeterServiceImpl.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/denknd/services/impl/UserServiceImpl.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/denknd/validator/DigitalValidator.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/denknd/validator/DoubleDigitalValidator.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/denknd/validator/EmailValidator.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/denknd/validator/HouseNumberValidator.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/denknd/validator/IValidator.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/denknd/validator/NameValidator.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/denknd/validator/PasswordValidator.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/denknd/validator/PostalCodeValidator.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/denknd/validator/RegionValidator.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/denknd/validator/TitleValidator.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/denknd/validator/Validators.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/denknd/validator/ValidatorsImpl.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/test/java/com/denknd/adapter/encoder/Sha256EncodeTest.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/test/java/com/denknd/adapter/repository/InMemoryAddressRepositoryTest.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/test/java/com/denknd/adapter/repository/InMemoryAuditRepositoryTest.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/test/java/com/denknd/adapter/repository/InMemoryMeterRepositoryTest.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/test/java/com/denknd/adapter/repository/InMemoryRoleRepositoryTest.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/test/java/com/denknd/adapter/repository/InMemoryTypeMeterRepositoryTest.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/test/java/com/denknd/adapter/repository/InMemoryUserRepositoryTest.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/test/java/com/denknd/config/ManualConfigTest.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/test/java/com/denknd/in/ConsoleTest.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/test/java/com/denknd/in/commands/AddAddressCommandTest.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/test/java/com/denknd/in/commands/AddTypeMeterCommandTest.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/test/java/com/denknd/in/commands/ExitCommandTest.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/test/java/com/denknd/in/commands/GetAddressCommandTest.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/test/java/com/denknd/in/commands/HelpCommandTest.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/test/java/com/denknd/in/commands/HistoryCommandTest.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/test/java/com/denknd/in/commands/LoginCommandTest.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/test/java/com/denknd/in/commands/LogoutCommandTest.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/test/java/com/denknd/in/commands/MeterSendCommandTest.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/test/java/com/denknd/in/commands/MeterValuesCommandTest.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/test/java/com/denknd/in/commands/SignupCommandTest.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/test/java/com/denknd/in/commands/UserCommandTest.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/test/java/com/denknd/in/commands/functions/AbstractMyFunctionParserTest.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/test/java/com/denknd/in/commands/functions/DateParserFromRawParametersTest.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/test/java/com/denknd/in/commands/functions/DefaultMeterReadingsToStringConverterTest.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/test/java/com/denknd/in/commands/functions/LongIdParserFromRawParametersTest.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/test/java/com/denknd/in/commands/functions/MeterReadingsHistoryToStringConverterTest.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/test/java/com/denknd/in/commands/functions/TypeMeterParametersParserFromRawParametersTest.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/test/java/com/denknd/services/impl/AddressServiceImplTest.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/test/java/com/denknd/services/impl/AuditServiceImplTest.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/test/java/com/denknd/services/impl/MeterReadingServiceImplTest.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/test/java/com/denknd/services/impl/RoleServiceImplTest.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/test/java/com/denknd/services/impl/TypeMeterServiceImplTest.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/test/java/com/denknd/services/impl/UserServiceImplTest.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/test/java/com/denknd/validator/DigitalValidatorTest.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/test/java/com/denknd/validator/DoubleDigitalValidatorTest.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/test/java/com/denknd/validator/EmailValidatorTest.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/test/java/com/denknd/validator/HouseNumberValidatorTest.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/test/java/com/denknd/validator/NameValidatorTest.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/test/java/com/denknd/validator/PasswordValidatorTest.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/test/java/com/denknd/validator/PostalCodeValidatorTest.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/test/java/com/denknd/validator/RegionValidatorTest.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/test/java/com/denknd/validator/TitleValidatorTest.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/test/java/com/denknd/validator/ValidatorsImplTest.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/gradle.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/gradle.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/build.gradle" beforeDir="false" afterPath="$PROJECT_DIR$/build.gradle" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/denknd/Main.java" beforeDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -28,8 +135,62 @@
       <ProjectState />
     </projectState>
   </component>
+  <component name="ExternalProjectsManager">
+    <system id="GRADLE">
+      <state>
+        <task path="$PROJECT_DIR$">
+          <activation />
+        </task>
+        <projects_view>
+          <tree_state>
+            <expand>
+              <path>
+                <item name="" type="6a2764b6:ExternalProjectsStructure$RootNode" />
+                <item name="monitoring_service" type="f1a62948:ProjectNode" />
+              </path>
+              <path>
+                <item name="" type="6a2764b6:ExternalProjectsStructure$RootNode" />
+                <item name="monitoring_service" type="f1a62948:ProjectNode" />
+                <item name="Tasks" type="e4a08cd1:TasksNode" />
+              </path>
+              <path>
+                <item name="" type="6a2764b6:ExternalProjectsStructure$RootNode" />
+                <item name="monitoring_service" type="f1a62948:ProjectNode" />
+                <item name="Tasks" type="e4a08cd1:TasksNode" />
+                <item name="build" type="c8890929:TasksNode$1" />
+              </path>
+            </expand>
+            <select />
+          </tree_state>
+        </projects_view>
+      </state>
+    </system>
+  </component>
+  <component name="FileTemplateManagerImpl">
+    <option name="RECENT_TEMPLATES">
+      <list>
+        <option value="Interface" />
+        <option value="Class" />
+        <option value="JUnit5 Test Class" />
+      </list>
+    </option>
+  </component>
   <component name="Git.Settings">
+    <option name="PUSH_TAGS">
+      <GitPushTagMode>
+        <option name="argument" value="--tags" />
+        <option name="title" value="All" />
+      </GitPushTagMode>
+    </option>
+    <option name="RECENT_BRANCH_BY_REPOSITORY">
+      <map>
+        <entry key="$PROJECT_DIR$" value="master" />
+      </map>
+    </option>
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+  </component>
+  <component name="MarkdownSettingsMigration">
+    <option name="stateVersion" value="1" />
   </component>
   <component name="ProjectId" id="2bOiAfCftpjtiuDmheCxhsaI2wp" />
   <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
@@ -37,11 +198,152 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent"><![CDATA[{
-  "keyToString": {
-    "WebServerToolWindowFactoryState": "false"
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;SHARE_PROJECT_CONFIGURATION_FILES&quot;: &quot;true&quot;,
+    &quot;WebServerToolWindowFactoryState&quot;: &quot;false&quot;,
+    &quot;com.intellij.testIntegration.createTest.CreateTestDialog.defaultLibrary&quot;: &quot;JUnit5&quot;,
+    &quot;com.intellij.testIntegration.createTest.CreateTestDialog.defaultLibrarySuperClass.JUnit5&quot;: &quot;&quot;,
+    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
+    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
+    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
+    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
+    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;
   }
-}]]></component>
+}</component>
+  <component name="RecentsManager">
+    <key name="CreateTestDialog.Recents.Supers">
+      <recent name="" />
+    </key>
+    <key name="MoveClassesOrPackagesDialog.RECENTS_KEY">
+      <recent name="com.denknd.port" />
+    </key>
+    <key name="CreateTestDialog.RecentsKey">
+      <recent name="com.denknd.adapter.repository" />
+      <recent name="com.denknd.services.impl" />
+      <recent name="com.denknd.in.commands" />
+      <recent name="com.denknd.validator" />
+      <recent name="com.denknd.presentation.commands" />
+    </key>
+  </component>
+  <component name="RunManager" selected="Gradle.monitoring_service [build]">
+    <configuration name="InMemoryAuditRepositoryTest.save_f" type="GradleRunConfiguration" factoryName="Gradle" temporary="true">
+      <ExternalSystemSettings>
+        <option name="executionName" />
+        <option name="externalProjectPath" value="$PROJECT_DIR$" />
+        <option name="externalSystemIdString" value="GRADLE" />
+        <option name="scriptParameters" value="" />
+        <option name="taskDescriptions">
+          <list />
+        </option>
+        <option name="taskNames">
+          <list>
+            <option value=":test" />
+            <option value="--tests" />
+            <option value="&quot;com.denknd.adapter.repository.InMemoryAuditRepositoryTest.save_f&quot;" />
+          </list>
+        </option>
+        <option name="vmOptions" />
+      </ExternalSystemSettings>
+      <ExternalSystemDebugServerProcess>false</ExternalSystemDebugServerProcess>
+      <ExternalSystemReattachDebugProcess>true</ExternalSystemReattachDebugProcess>
+      <DebugAllEnabled>false</DebugAllEnabled>
+      <method v="2" />
+    </configuration>
+    <configuration name="Tests in 'monitoring_service.test'" type="GradleRunConfiguration" factoryName="Gradle" temporary="true">
+      <ExternalSystemSettings>
+        <option name="executionName" />
+        <option name="externalProjectPath" value="$PROJECT_DIR$" />
+        <option name="externalSystemIdString" value="GRADLE" />
+        <option name="scriptParameters" value="" />
+        <option name="taskDescriptions">
+          <list />
+        </option>
+        <option name="taskNames">
+          <list>
+            <option value=":test" />
+          </list>
+        </option>
+        <option name="vmOptions" />
+      </ExternalSystemSettings>
+      <ExternalSystemDebugServerProcess>false</ExternalSystemDebugServerProcess>
+      <ExternalSystemReattachDebugProcess>true</ExternalSystemReattachDebugProcess>
+      <DebugAllEnabled>false</DebugAllEnabled>
+      <method v="2" />
+    </configuration>
+    <configuration name="monitoring_service [build]" type="GradleRunConfiguration" factoryName="Gradle" temporary="true">
+      <ExternalSystemSettings>
+        <option name="executionName" />
+        <option name="externalProjectPath" value="$PROJECT_DIR$" />
+        <option name="externalSystemIdString" value="GRADLE" />
+        <option name="scriptParameters" />
+        <option name="taskDescriptions">
+          <list />
+        </option>
+        <option name="taskNames">
+          <list>
+            <option value="build" />
+          </list>
+        </option>
+        <option name="vmOptions" />
+      </ExternalSystemSettings>
+      <ExternalSystemDebugServerProcess>true</ExternalSystemDebugServerProcess>
+      <ExternalSystemReattachDebugProcess>true</ExternalSystemReattachDebugProcess>
+      <DebugAllEnabled>false</DebugAllEnabled>
+      <method v="2" />
+    </configuration>
+    <configuration name="monitoring_service [clean]" type="GradleRunConfiguration" factoryName="Gradle" temporary="true">
+      <ExternalSystemSettings>
+        <option name="executionName" />
+        <option name="externalProjectPath" value="$PROJECT_DIR$" />
+        <option name="externalSystemIdString" value="GRADLE" />
+        <option name="scriptParameters" />
+        <option name="taskDescriptions">
+          <list />
+        </option>
+        <option name="taskNames">
+          <list>
+            <option value="clean" />
+          </list>
+        </option>
+        <option name="vmOptions" />
+      </ExternalSystemSettings>
+      <ExternalSystemDebugServerProcess>true</ExternalSystemDebugServerProcess>
+      <ExternalSystemReattachDebugProcess>true</ExternalSystemReattachDebugProcess>
+      <DebugAllEnabled>false</DebugAllEnabled>
+      <method v="2" />
+    </configuration>
+    <configuration name="monitoring_service [jar]" type="GradleRunConfiguration" factoryName="Gradle" temporary="true">
+      <ExternalSystemSettings>
+        <option name="executionName" />
+        <option name="externalProjectPath" value="$PROJECT_DIR$" />
+        <option name="externalSystemIdString" value="GRADLE" />
+        <option name="scriptParameters" />
+        <option name="taskDescriptions">
+          <list />
+        </option>
+        <option name="taskNames">
+          <list>
+            <option value="jar" />
+          </list>
+        </option>
+        <option name="vmOptions" />
+      </ExternalSystemSettings>
+      <ExternalSystemDebugServerProcess>true</ExternalSystemDebugServerProcess>
+      <ExternalSystemReattachDebugProcess>true</ExternalSystemReattachDebugProcess>
+      <DebugAllEnabled>false</DebugAllEnabled>
+      <method v="2" />
+    </configuration>
+    <recent_temporary>
+      <list>
+        <item itemvalue="Gradle.monitoring_service [build]" />
+        <item itemvalue="Gradle.monitoring_service [clean]" />
+        <item itemvalue="Gradle.monitoring_service [jar]" />
+        <item itemvalue="Gradle.Tests in 'monitoring_service.test'" />
+        <item itemvalue="Gradle.InMemoryAuditRepositoryTest.save_f" />
+      </list>
+    </recent_temporary>
+  </component>
   <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
   <component name="TaskManager">
     <task active="true" id="Default" summary="Default task">
@@ -50,8 +352,20 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1706092384437</updated>
-      <workItem from="1706092386506" duration="26000" />
+      <workItem from="1706092386506" duration="28324000" />
+      <workItem from="1706163775888" duration="36012000" />
+      <workItem from="1706250969186" duration="48171000" />
+      <workItem from="1706338698595" duration="58570000" />
+      <workItem from="1706429542435" duration="29256000" />
     </task>
+    <task id="LOCAL-00001" summary="инициализация">
+      <created>1706092461059</created>
+      <option name="number" value="00001" />
+      <option name="presentableId" value="LOCAL-00001" />
+      <option name="project" value="LOCAL" />
+      <updated>1706092461059</updated>
+    </task>
+    <option name="localTasksCounter" value="2" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -62,10 +376,78 @@
       <map>
         <entry key="MAIN">
           <value>
-            <State />
+            <State>
+              <option name="FILTERS">
+                <map>
+                  <entry key="branch">
+                    <value>
+                      <list>
+                        <option value="homework1" />
+                      </list>
+                    </value>
+                  </entry>
+                </map>
+              </option>
+            </State>
           </value>
         </entry>
       </map>
     </option>
+  </component>
+  <component name="VcsManagerConfiguration">
+    <MESSAGE value="инициализация" />
+    <option name="LAST_COMMIT_MESSAGE" value="инициализация" />
+  </component>
+  <component name="com.intellij.coverage.CoverageDataManagerImpl">
+    <SUITE FILE_PATH="coverage/monitoring_service$InMemoryMeterRepositoryTest_save.ic" NAME="InMemoryMeterRepositoryTest.save Coverage Results" MODIFIED="1706370233633" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="idea" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" />
+    <SUITE FILE_PATH="coverage/monitoring_service$HelpCommandTest_run.ic" NAME="HelpCommandTest.run Coverage Results" MODIFIED="1706383921068" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="idea" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" />
+    <SUITE FILE_PATH="coverage/monitoring_service$HouseNumberValidatorTest.ic" NAME="HouseNumberValidatorTest Coverage Results" MODIFIED="1706430542874" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="idea" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" />
+    <SUITE FILE_PATH="coverage/monitoring_service$SignupCommandTest.ic" NAME="SignupCommandTest Coverage Results" MODIFIED="1706369743298" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="idea" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" />
+    <SUITE FILE_PATH="coverage/monitoring_service$GetAddressCommandTest_run_AdminNotAddress.ic" NAME="GetAddressCommandTest.run_AdminNotAddress Coverage Results" MODIFIED="1706447701609" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="idea" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" />
+    <SUITE FILE_PATH="coverage/monitoring_service$AddTypeMeterCommandTest_run.ic" NAME="AddTypeMeterCommandTest.run Coverage Results" MODIFIED="1706435362559" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="idea" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" />
+    <SUITE FILE_PATH="coverage/monitoring_service$MeterSendCommandTest_run_noRole.ic" NAME="MeterSendCommandTest.run_noRole Coverage Results" MODIFIED="1706392773425" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="idea" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" />
+    <SUITE FILE_PATH="coverage/monitoring_service$UserCommandTest_run.ic" NAME="UserCommandTest.run Coverage Results" MODIFIED="1706440794013" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="idea" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" />
+    <SUITE FILE_PATH="coverage/monitoring_service$GetAddressCommandTest_run_Admin.ic" NAME="GetAddressCommandTest.run_Admin Coverage Results" MODIFIED="1706447628390" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="idea" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" />
+    <SUITE FILE_PATH="coverage/monitoring_service$InMemoryTypeMeterRepositoryTest_save.ic" NAME="InMemoryTypeMeterRepositoryTest.save Coverage Results" MODIFIED="1706437497127" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="idea" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" />
+    <SUITE FILE_PATH="coverage/monitoring_service$GetAddressCommandTest_run_notAddress.ic" NAME="GetAddressCommandTest.run_notAddress Coverage Results" MODIFIED="1706447087813" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="idea" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" />
+    <SUITE FILE_PATH="coverage/monitoring_service$DefaultMeterReadingsToStringConverterTest_apply.ic" NAME="DefaultMeterReadingsToStringConverterTest.apply Coverage Results" MODIFIED="1706375040701" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="idea" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" />
+    <SUITE FILE_PATH="coverage/monitoring_service$AddAddressCommandTest.ic" NAME="AddAddressCommandTest Coverage Results" MODIFIED="1706381289737" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="idea" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" />
+    <SUITE FILE_PATH="coverage/monitoring_service$HistoryCommandTest_run.ic" NAME="HistoryCommandTest.run Coverage Results" MODIFIED="1706386140294" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="idea" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" />
+    <SUITE FILE_PATH="coverage/monitoring_service$InMemoryUserRepositoryTest.ic" NAME="InMemoryUserRepositoryTest Coverage Results" MODIFIED="1706371913224" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="idea" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" />
+    <SUITE FILE_PATH="coverage/monitoring_service$MeterValuesCommandTest_run.ic" NAME="MeterValuesCommandTest.run Coverage Results" MODIFIED="1706394662613" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="idea" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" />
+    <SUITE FILE_PATH="coverage/monitoring_service$InMemoryAddressRepositoryTest.ic" NAME="InMemoryAddressRepositoryTest Coverage Results" MODIFIED="1706367488179" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="idea" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" />
+    <SUITE FILE_PATH="coverage/monitoring_service$ValidatorsImplTest_addValidator_differentName.ic" NAME="ValidatorsImplTest.addValidator_differentName Coverage Results" MODIFIED="1706433130574" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="idea" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" />
+    <SUITE FILE_PATH="coverage/monitoring_service$HistoryCommandTest_run_notAddress.ic" NAME="HistoryCommandTest.run_notAddress Coverage Results" MODIFIED="1706386361046" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="idea" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" />
+    <SUITE FILE_PATH="coverage/monitoring_service$Tests_in__monitoring_service_test_.ic" NAME="Tests in 'monitoring_service.test' Coverage Results" MODIFIED="1706457072524" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="idea" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" />
+    <SUITE FILE_PATH="coverage/monitoring_service$LoginCommandTest.ic" NAME="LoginCommandTest Coverage Results" MODIFIED="1706368330217" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="idea" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" />
+    <SUITE FILE_PATH="coverage/monitoring_service$GetAddressCommandTest_run.ic" NAME="GetAddressCommandTest.run Coverage Results" MODIFIED="1706446981632" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="idea" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" />
+    <SUITE FILE_PATH="coverage/monitoring_service$MeterReadingsHistoryToStringConverterTest_apply.ic" NAME="MeterReadingsHistoryToStringConverterTest.apply Coverage Results" MODIFIED="1706378003567" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="idea" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" />
+    <SUITE FILE_PATH="coverage/monitoring_service$UserServiceImplTest_loginUser.ic" NAME="UserServiceImplTest.loginUser Coverage Results" MODIFIED="1706202657220" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="idea" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" />
+    <SUITE FILE_PATH="coverage/monitoring_service$InMemoryAuditRepositoryTest.ic" NAME="InMemoryAuditRepositoryTest Coverage Results" MODIFIED="1706456441371" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="idea" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" />
+    <SUITE FILE_PATH="coverage/monitoring_service$InMemoryMeterRepositoryTest.ic" NAME="InMemoryMeterRepositoryTest Coverage Results" MODIFIED="1706371623106" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="idea" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" />
+    <SUITE FILE_PATH="coverage/monitoring_service$MeterSendCommandTest_run_.ic" NAME="MeterSendCommandTest.run_ Coverage Results" MODIFIED="1706391821620" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="idea" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" />
+    <SUITE FILE_PATH="coverage/monitoring_service$MeterValuesCommandTest_run_allAddress.ic" NAME="MeterValuesCommandTest.run_allAddress Coverage Results" MODIFIED="1706394954461" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="idea" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" />
+    <SUITE FILE_PATH="coverage/monitoring_service$GetAddressCommandTest.ic" NAME="GetAddressCommandTest Coverage Results" MODIFIED="1706448204243" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="idea" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" />
+    <SUITE FILE_PATH="coverage/monitoring_service$AddTypeMeterCommandTest.ic" NAME="AddTypeMeterCommandTest Coverage Results" MODIFIED="1706436061732" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="idea" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" />
+    <SUITE FILE_PATH="coverage/monitoring_service$UserCommandTest_run_Admin.ic" NAME="UserCommandTest.run_Admin Coverage Results" MODIFIED="1706441256713" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="idea" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" />
+    <SUITE FILE_PATH="coverage/monitoring_service$MeterValuesCommandTest_run_adminRole.ic" NAME="MeterValuesCommandTest.run_adminRole Coverage Results" MODIFIED="1706395178970" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="idea" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" />
+    <SUITE FILE_PATH="coverage/monitoring_service$AuditServiceImplTest_addAction.ic" NAME="AuditServiceImplTest.addAction Coverage Results" MODIFIED="1706455333728" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="idea" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" />
+    <SUITE FILE_PATH="coverage/monitoring_service$AuditServiceImplTest.ic" NAME="AuditServiceImplTest Coverage Results" MODIFIED="1706455829987" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="idea" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" />
+    <SUITE FILE_PATH="coverage/monitoring_service$ValidatorsImplTest_addValidator.ic" NAME="ValidatorsImplTest.addValidator Coverage Results" MODIFIED="1706433013710" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="idea" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" />
+    <SUITE FILE_PATH="coverage/monitoring_service$MeterValuesCommandTest.ic" NAME="MeterValuesCommandTest Coverage Results" MODIFIED="1706395393990" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="idea" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" />
+    <SUITE FILE_PATH="coverage/monitoring_service$MeterReadingServiceImplTest_getActualMeterByAddress.ic" NAME="MeterReadingServiceImplTest.getActualMeterByAddress Coverage Results" MODIFIED="1706398497979" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="idea" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" />
+    <SUITE FILE_PATH="coverage/monitoring_service$HistoryCommandTest_run_.ic" NAME="HistoryCommandTest.run_ Coverage Results" MODIFIED="1706386828449" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="idea" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" />
+    <SUITE FILE_PATH="coverage/monitoring_service$AddTypeMeterCommandTest_getCommand.ic" NAME="AddTypeMeterCommandTest.getCommand Coverage Results" MODIFIED="1706434909806" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="idea" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" />
+    <SUITE FILE_PATH="coverage/monitoring_service$RegistrationCommandTest.ic" NAME="RegistrationCommandTest Coverage Results" MODIFIED="1706179449430" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="idea" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" />
+    <SUITE FILE_PATH="coverage/monitoring_service$InMemoryAuditRepositoryTest_save.ic" NAME="InMemoryAuditRepositoryTest.save Coverage Results" MODIFIED="1706456409368" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="idea" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" />
+    <SUITE FILE_PATH="coverage/monitoring_service$MeterReadingServiceImplTest.ic" NAME="MeterReadingServiceImplTest Coverage Results" MODIFIED="1706399011711" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="idea" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" />
+    <SUITE FILE_PATH="coverage/monitoring_service$UserCommandTest.ic" NAME="UserCommandTest Coverage Results" MODIFIED="1706442284280" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="idea" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" />
+    <SUITE FILE_PATH="coverage/monitoring_service$HistoryCommandTest.ic" NAME="HistoryCommandTest Coverage Results" MODIFIED="1706387948041" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="idea" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" />
+    <SUITE FILE_PATH="coverage/monitoring_service$UserCommandTest_getHelpCommand_Admin.ic" NAME="UserCommandTest.getHelpCommand_Admin Coverage Results" MODIFIED="1706442069898" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="idea" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" />
+    <SUITE FILE_PATH="coverage/monitoring_service$MeterSendCommandTest_run.ic" NAME="MeterSendCommandTest.run Coverage Results" MODIFIED="1706391411435" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="idea" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" />
+    <SUITE FILE_PATH="coverage/monitoring_service$MeterSendCommandTest.ic" NAME="MeterSendCommandTest Coverage Results" MODIFIED="1706392830366" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="idea" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" />
+    <SUITE FILE_PATH="coverage/monitoring_service$DateParserFromRawParametersTest.ic" NAME="DateParserFromRawParametersTest Coverage Results" MODIFIED="1706373631666" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="idea" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" />
+    <SUITE FILE_PATH="coverage/monitoring_service$AddAddressCommandTest_run.ic" NAME="AddAddressCommandTest.run Coverage Results" MODIFIED="1706380969036" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="idea" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" />
+    <SUITE FILE_PATH="coverage/monitoring_service$AddAddressCommandTest_run_.ic" NAME="AddAddressCommandTest.run_ Coverage Results" MODIFIED="1706381086615" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="idea" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" />
   </component>
 </project>
