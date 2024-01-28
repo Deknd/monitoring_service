@@ -4,36 +4,61 @@ import com.denknd.entity.Role;
 import com.denknd.entity.User;
 import com.denknd.in.commands.functions.LongIdParserFromRawParameters;
 import com.denknd.in.commands.functions.MyFunction;
-import com.denknd.port.IGivingAudit;
 import com.denknd.services.UserService;
+import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 
 import java.util.Arrays;
 import java.util.List;
+/**
+ * Класс представляющий команду консоли, при помощи которой добавляется новый адрес
+ */
 @Setter
+@RequiredArgsConstructor
 public class UserCommand implements ConsoleCommand<String>{
-    
+    /**
+     * Команда, которая отвечает за работу этого класса
+     */
     private final String COMMAND = "user";
+    /**
+     * Дополнительный параметр, для получения информации о пользователи по емайл
+     */
     private final String EMAIL_PARAM = "email=";
+    /**
+     * Дополнительный параметр, для получения информации о пользователи по айди
+     */
     private final String ID_PARAM = "id=";
+    /**
+     * Сервис для работы с адресами
+     */
     private final UserService userService;
-    private MyFunction<String[], Long> longIdParserFromRawParameters;
+    /**
+     * Функция по извлечению из параметров числа
+     */
+    private MyFunction<String[], Long> longIdParserFromRawParameters = new LongIdParserFromRawParameters();
 
-    public UserCommand(UserService userService) {
-        this.userService = userService;
-        this.longIdParserFromRawParameters = new LongIdParserFromRawParameters();
-    }
-
+    /**
+     * Возвращает команду, которая запускает работу метода run
+     * @return команда для работы класса
+     */
     @Override
     public String getCommand() {
         return this.COMMAND;
     }
-
+    /**
+     * Возвращает пояснение работы класса
+     * @return пояснение, что делает класс, для аудита
+     */
     @Override
     public String getMakesAction() {
         return "Выдает информацию о пользователе";
     }
-
+    /**
+     * Основной метод класса
+     * @param command команда полученная из консоли
+     * @param userActive активный юзер
+     * @return возвращает сообщение об результате работы
+     */
     @Override
     public String run(String command, User userActive) {
         var userRole = Role.builder().roleName("USER").build();
@@ -61,10 +86,19 @@ public class UserCommand implements ConsoleCommand<String>{
         return null;
     }
 
+    /**
+     * Конвертирует пользователя в строку
+     * @param userActive
+     * @return
+     */
     private String userToStringConvert(User userActive) {
         return "id: "+userActive.getUserId() + ", " + userActive.getLastName() + " " + userActive.getFirstName() + ", " + userActive.getEmail();
     }
-
+    /**
+     * Подсказка для команды help
+     * @param roles роли доступные пользователю
+     * @return возвращает сообщение с подсказкой по работе с данной командой
+     */
     @Override
     public String getHelpCommand(List<Role> roles) {
         var userRole = Role.builder().roleName("USER").build();

@@ -28,6 +28,11 @@ public class AuditServiceImpl implements AuditService {
                         return "не известная команда: " + commandAndParam;
                     }
 
+                    @Override
+                    public String getMakesAction() {
+                        return "Не известно";
+                    }
+
                 });
        if (activeUser != null){
            var operation = "Введенная команда: " + commandAndParam + ", выполнилась команда: " + iGivingAudit.getCommand() + " - " + iGivingAudit.getMakesAction();

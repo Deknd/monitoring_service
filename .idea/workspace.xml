@@ -4,38 +4,24 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="67e803ab-0ce3-40cd-9d15-569ee2b2619c" name="Changes" comment="Проект почти готов, есть еще варианты для улучшения">
+    <list default="true" id="67e803ab-0ce3-40cd-9d15-569ee2b2619c" name="Changes" comment="добавлена большая часть комментариев">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/denknd/adapter/encoder/Sha256Encode.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/denknd/adapter/encoder/Sha256Encode.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/denknd/adapter/repository/InMemoryAddressRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/denknd/adapter/repository/InMemoryAddressRepository.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/denknd/adapter/repository/InMemoryAuditRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/denknd/adapter/repository/InMemoryAuditRepository.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/denknd/adapter/repository/InMemoryMeterRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/denknd/adapter/repository/InMemoryMeterRepository.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/denknd/adapter/repository/InMemoryRoleRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/denknd/adapter/repository/InMemoryRoleRepository.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/denknd/adapter/repository/InMemoryTypeMeterRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/denknd/adapter/repository/InMemoryTypeMeterRepository.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/denknd/adapter/repository/InMemoryUserRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/denknd/adapter/repository/InMemoryUserRepository.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/denknd/config/ManualConfig.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/denknd/config/ManualConfig.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/denknd/entity/Address.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/denknd/entity/Address.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/denknd/entity/Audit.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/denknd/entity/Audit.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/denknd/entity/Meter.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/denknd/entity/Meter.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/denknd/entity/MeterReading.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/denknd/entity/MeterReading.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/denknd/entity/Role.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/denknd/entity/Role.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/denknd/entity/TypeMeter.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/denknd/entity/TypeMeter.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/denknd/entity/User.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/denknd/entity/User.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/denknd/exception/UserAlreadyExistsException.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/denknd/exception/UserAlreadyExistsException.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/denknd/in/commands/AddAddressCommand.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/denknd/in/commands/AddAddressCommand.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/denknd/in/commands/AddTypeMeterCommand.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/denknd/in/commands/AddTypeMeterCommand.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/denknd/in/commands/ConsoleCommand.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/denknd/in/commands/ConsoleCommand.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/denknd/in/commands/ExitCommand.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/denknd/in/commands/ExitCommand.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/denknd/in/commands/GetAddressCommand.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/denknd/in/commands/GetAddressCommand.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/denknd/in/commands/HelpCommand.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/denknd/in/commands/HelpCommand.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/denknd/in/commands/HistoryCommand.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/denknd/in/commands/HistoryCommand.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/denknd/in/commands/functions/AbstractMyFunctionParser.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/denknd/in/commands/functions/AbstractMyFunctionParser.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/denknd/in/commands/functions/DateParserFromRawParameters.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/denknd/in/commands/functions/DateParserFromRawParameters.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/denknd/in/commands/functions/DefaultMeterReadingsToStringConverter.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/denknd/in/commands/functions/DefaultMeterReadingsToStringConverter.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/denknd/in/commands/functions/LongIdParserFromRawParameters.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/denknd/in/commands/functions/LongIdParserFromRawParameters.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/denknd/in/commands/functions/MeterReadingsHistoryToStringConverter.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/denknd/in/commands/functions/MeterReadingsHistoryToStringConverter.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/denknd/in/commands/functions/MyFunction.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/denknd/in/commands/functions/MyFunction.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/denknd/in/commands/functions/TypeMeterParametersParserFromRawParameters.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/denknd/in/commands/functions/TypeMeterParametersParserFromRawParameters.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/denknd/in/Console.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/denknd/in/Console.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/denknd/in/commands/UserCommand.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/denknd/in/commands/UserCommand.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/denknd/port/AddressRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/denknd/port/AddressRepository.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/denknd/port/AuditRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/denknd/port/AuditRepository.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/denknd/port/IGivingAudit.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/denknd/port/IGivingAudit.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/denknd/port/MeterReadingRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/denknd/port/MeterReadingRepository.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/denknd/port/PasswordEncoder.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/denknd/port/PasswordEncoder.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/denknd/port/RoleRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/denknd/port/RoleRepository.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/denknd/port/TypeMeterRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/denknd/port/TypeMeterRepository.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/denknd/port/UserRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/denknd/port/UserRepository.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/denknd/services/impl/AddressServiceImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/denknd/services/impl/AddressServiceImpl.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/denknd/services/impl/AuditServiceImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/denknd/services/impl/AuditServiceImpl.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/denknd/services/impl/MeterReadingServiceImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/denknd/services/impl/MeterReadingServiceImpl.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/denknd/services/impl/RoleServiceImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/denknd/services/impl/RoleServiceImpl.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/denknd/services/impl/TypeMeterServiceImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/denknd/services/impl/TypeMeterServiceImpl.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/denknd/services/impl/UserServiceImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/denknd/services/impl/UserServiceImpl.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -258,7 +244,7 @@
       <workItem from="1706163775888" duration="36012000" />
       <workItem from="1706250969186" duration="48171000" />
       <workItem from="1706338698595" duration="58570000" />
-      <workItem from="1706429542435" duration="36975000" />
+      <workItem from="1706429542435" duration="41478000" />
     </task>
     <task id="LOCAL-00001" summary="инициализация">
       <created>1706092461059</created>
@@ -274,7 +260,14 @@
       <option name="project" value="LOCAL" />
       <updated>1706462435175</updated>
     </task>
-    <option name="localTasksCounter" value="3" />
+    <task id="LOCAL-00003" summary="добавлена большая часть комментариев">
+      <created>1706471149080</created>
+      <option name="number" value="00003" />
+      <option name="presentableId" value="LOCAL-00003" />
+      <option name="project" value="LOCAL" />
+      <updated>1706471149080</updated>
+    </task>
+    <option name="localTasksCounter" value="4" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -306,7 +299,8 @@
   <component name="VcsManagerConfiguration">
     <MESSAGE value="инициализация" />
     <MESSAGE value="Проект почти готов, есть еще варианты для улучшения" />
-    <option name="LAST_COMMIT_MESSAGE" value="Проект почти готов, есть еще варианты для улучшения" />
+    <MESSAGE value="добавлена большая часть комментариев" />
+    <option name="LAST_COMMIT_MESSAGE" value="добавлена большая часть комментариев" />
   </component>
   <component name="com.intellij.coverage.CoverageDataManagerImpl">
     <SUITE FILE_PATH="coverage/monitoring_service$InMemoryMeterRepositoryTest_save.ic" NAME="InMemoryMeterRepositoryTest.save Coverage Results" MODIFIED="1706370233633" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="idea" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" />

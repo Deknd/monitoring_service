@@ -3,28 +3,42 @@ package com.denknd.in;
 import com.denknd.entity.User;
 import com.denknd.in.commands.ConsoleCommand;
 import com.denknd.services.AuditService;
+import lombok.RequiredArgsConstructor;
 
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Scanner;
 
+/**
+ * Консоль, которая служит для взаимодействия с пользователем
+ */
+@RequiredArgsConstructor
 public class Console {
-
-    private final Map<String, ConsoleCommand> consoleCommandMap;
+    /**
+     * Объект для хранения команд взаимодействие с пользователем. Ключ - команда, значение - класс для ее обработки.
+     */
+    private final Map<String, ConsoleCommand> consoleCommandMap = new HashMap<>();
+    /**
+     * Сканер для получения данных от пользователя
+     */
     private final Scanner scanner;
+    /**
+     * Сервис для сохранения аудита
+     */
     private final AuditService auditService;
+    /**
+     * Сообщения консоли
+     */
     private static final String MESSAGE = "monitoring_service: ";
-
-    private User activeUser;
-
-    public Console(Scanner scanner, AuditService auditService) {
-        this.consoleCommandMap = new HashMap<>();
-        this.scanner = scanner;
-        this.auditService = auditService;
-        this.activeUser = null;
-    }
+    /**
+     * Активный юзер, при заходе в систему
+     */
+    private User activeUser = null;
 
 
+    /**
+     * циклическая обработка команд пользователя, пока активен сканер
+     */
     public void run() {
         try {
             System.out.println("Получить информацию по доступным командам можно с помощью команды \"help\"");
@@ -75,17 +89,20 @@ public class Console {
 
     }
 
-
-    public void addCommand(ConsoleCommand command) {
-        this.consoleCommandMap.put(command.getCommand(), command);
-    }
-
+    /**
+     * Метод для добавления команд консоли
+     * @param command добавляет новые команды для обработки
+     */
     public void addCommand(ConsoleCommand... command) {
         for (ConsoleCommand consoleCommand : command) {
             this.consoleCommandMap.put(consoleCommand.getCommand(), consoleCommand);
         }
     }
 
+    /**
+     * Выдает мапу с доступными командами консоли
+     * @return мапа с текущими командами консоли
+     */
     public Map<String, ConsoleCommand> commands() {
         return this.consoleCommandMap;
     }
