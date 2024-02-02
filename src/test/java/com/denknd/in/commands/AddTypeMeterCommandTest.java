@@ -1,39 +1,43 @@
 package com.denknd.in.commands;
 
-import com.denknd.entity.Role;
-import com.denknd.entity.TypeMeter;
-import com.denknd.entity.User;
-import com.denknd.services.TypeMeterService;
-import com.denknd.validator.Validators;
+import com.denknd.controllers.TypeMeterController;
+import com.denknd.dto.TypeMeterDto;
+import com.denknd.entity.Roles;
+import com.denknd.security.UserSecurity;
+import com.denknd.validator.DataValidatorManager;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentCaptor;
+import org.mockito.Mock;
+import org.mockito.MockitoAnnotations;
 
 import java.util.List;
-import java.util.Scanner;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
 class AddTypeMeterCommandTest {
 
     private AddTypeMeterCommand addTypeMeterCommand;
-    private Validators validators;
-    private Scanner scanner;
-    private TypeMeterService typeMeterService;
+    @Mock
+    private DataValidatorManager dataValidatorManager;
+    @Mock
+    private TypeMeterController typeMeterController;
     private final String COMMAND = "add_type";
+    private AutoCloseable closeable;
 
     @BeforeEach
     void setUp() {
-        this.validators = mock(Validators.class);
-        this.scanner = mock(Scanner.class);
-        this.typeMeterService = mock(TypeMeterService.class);
-        this.addTypeMeterCommand = new AddTypeMeterCommand(this.validators, this.scanner, this.typeMeterService);
+        this.closeable = MockitoAnnotations.openMocks(this);
+        this.addTypeMeterCommand = new AddTypeMeterCommand(this.dataValidatorManager, this.typeMeterController);
     }
-
+    @AfterEach
+    void tearDown() throws Exception {
+        this.closeable.close();
+    }
     @Test
     @DisplayName("Проверяется, что команда ожидаемая")
     void getCommand() {
@@ -47,50 +51,50 @@ class AddTypeMeterCommandTest {
     @Test
     @DisplayName("Проверяет, что правильно собирается объект и вызывается сервис для его сохранения")
     void run() {
-        var user = mock(User.class);
-        var roles = List.of(Role.builder().roleName("ADMIN").build());
-        when(user.getRoles()).thenReturn(roles);
+        var user = mock(UserSecurity.class);
+        var roles = Roles.ADMIN;
+        when(user.role()).thenReturn(roles);
         var code = "test";
         var description = "description test";
         var metric = "min";
-        when(this.validators.isValid(any(), any(), any(), any())).thenReturn(code).thenReturn(description).thenReturn(metric);
-        when(this.validators.notNullValue(any(String[].class))).thenReturn(true);
-        when(this.typeMeterService.addNewTypeMeter(any())).thenReturn(mock(TypeMeter.class));
+        when(this.dataValidatorManager.getValidInput(any(), any(), any())).thenReturn(code).thenReturn(description).thenReturn(metric);
+        when(this.dataValidatorManager.areAllValuesNotNullAndNotEmpty(any(String[].class))).thenReturn(true);
+        when(this.typeMeterController.addNewType(any())).thenReturn(mock(TypeMeterDto.class));
 
         this.addTypeMeterCommand.run(this.COMMAND, user);
 
-        var typeCaptor = ArgumentCaptor.forClass(TypeMeter.class);
-        verify(this.typeMeterService, times(1)).addNewTypeMeter(typeCaptor.capture());
+        var typeCaptor = ArgumentCaptor.forClass(TypeMeterDto.class);
+        verify(this.typeMeterController, times(1)).addNewType(typeCaptor.capture());
         var type = typeCaptor.getValue();
-        assertThat(type.getTypeCode()).isEqualTo(code);
-        assertThat(type.getTypeDescription()).isEqualTo(description);
-        assertThat(type.getMetric()).isEqualTo(metric);
+        assertThat(type.typeCode()).isEqualTo(code);
+        assertThat(type.typeDescription()).isEqualTo(description);
+        assertThat(type.metric()).isEqualTo(metric);
     }
     @Test
     @DisplayName("Проверяет, что при не правильном заполнении, не вызывается сервис для сохранения")
     void run_nullData() {
-        var user = mock(User.class);
-        var roles = List.of(Role.builder().roleName("ADMIN").build());
-        when(user.getRoles()).thenReturn(roles);
+        var user = mock(UserSecurity.class);
+        var roles = Roles.ADMIN;
+        when(user.role()).thenReturn(roles);
 
-        when(this.validators.notNullValue(any(String[].class))).thenReturn(false);
+        when(this.dataValidatorManager.areAllValuesNotNullAndNotEmpty(any(String[].class))).thenReturn(false);
 
         this.addTypeMeterCommand.run(this.COMMAND, user);
 
-        verify(this.typeMeterService, times(0)).addNewTypeMeter(any());
+        verify(this.typeMeterController, times(0)).addNewType(any());
 
     }
     @Test
     @DisplayName("Проверяет, что ролью Юзера данный эндпоинт не доступен")
     void run_notAdmin() {
-        var user = mock(User.class);
-        var roles = List.of(Role.builder().roleName("USER").build());
-        when(user.getRoles()).thenReturn(roles);
+        var user = mock(UserSecurity.class);
+        var roles = Roles.USER;
+        when(user.role()).thenReturn(roles);
 
         this.addTypeMeterCommand.run(this.COMMAND, user);
 
-        verify(this.validators, times(0)).isValid(any(), any(), any(), any());
-        verify(this.typeMeterService, times(0)).addNewTypeMeter(any());
+        verify(this.dataValidatorManager, times(0)).getValidInput(any(), any(), any());
+        verify(this.typeMeterController, times(0)).addNewType(any());
 
     }
 
@@ -100,15 +104,15 @@ class AddTypeMeterCommandTest {
 
         this.addTypeMeterCommand.run(this.COMMAND, null);
 
-        verify(this.validators, times(0)).isValid(any(), any(), any(), any());
-        verify(this.typeMeterService, times(0)).addNewTypeMeter(any());
+        verify(this.dataValidatorManager, times(0)).getValidInput(any(), any(), any());
+        verify(this.typeMeterController, times(0)).addNewType(any());
 
     }
 
     @Test
     @DisplayName("Проверяет, что подсказка доступна пользователю с ролью админ")
     void getHelpCommand() {
-        var roles = List.of(Role.builder().roleName("ADMIN").build());
+        var roles = Roles.ADMIN;
 
         var helpCommand = this.addTypeMeterCommand.getHelpCommand(roles);
 
@@ -118,20 +122,13 @@ class AddTypeMeterCommandTest {
     @Test
     @DisplayName("Проверяет, что подсказка не доступна пользователю с ролью юзер")
     void getHelpCommand_notAdmin() {
-        var roles = List.of(Role.builder().roleName("USER").build());
+        var roles = Roles.USER;
 
         var helpCommand = this.addTypeMeterCommand.getHelpCommand(roles);
 
         assertThat(helpCommand).isNull();
     }
-    @Test
-    @DisplayName("Проверяет, что подсказка не доступна пользователю без роли")
-    void getHelpCommand_notRoles() {
 
-        var helpCommand = this.addTypeMeterCommand.getHelpCommand(List.of());
-
-        assertThat(helpCommand).isNull();
-    }
     @Test
     @DisplayName("Проверяет, что подсказка не доступна пользователю без роли")
     void getHelpCommand_null() {
@@ -143,7 +140,7 @@ class AddTypeMeterCommandTest {
     @Test
     @DisplayName("Проверяет, что выводит сообщение")
     void getMakesAction(){
-        var makesAction = this.addTypeMeterCommand.getMakesAction();
+        var makesAction = this.addTypeMeterCommand.getAuditActionDescription();
         assertThat(makesAction).isNotNull();
     }
 }

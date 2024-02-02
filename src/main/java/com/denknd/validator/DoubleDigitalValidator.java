@@ -1,15 +1,28 @@
 package com.denknd.validator;
 
-public class DoubleDigitalValidator implements IValidator {
+/**
+ * Валидатор, проверяющий, что строка является числом или числом с дробью.
+ */
+public class DoubleDigitalValidator implements Validator {
+  /**
+   * Возвращает тип валидации, к которому применяется данный валидатор.
+   *
+   * @return Название типа валидации.
+   */
+  @Override
+  public String nameValidator() {
+    return Validator.DOUBLE_TYPE;
+  }
 
-    @Override
-    public String nameValidator() {
-        return IValidator.DOUBLE_TYPE;
-    }
+  /**
+   * Проверяет, является ли переданная строка числом или числом с дробью.
+   *
+   * @param value Строка для проверки.
+   * @return true, если строка является числом или числом с дробью.
+   */
+  @Override
+  public boolean isValid(String value) {
+    return value.matches("\\d+(\\.\\d+)?");
 
-    @Override
-    public boolean isValidation(String value) {
-        return value.matches("\\d+(\\.\\d+)?");
-
-    }
+  }
 }

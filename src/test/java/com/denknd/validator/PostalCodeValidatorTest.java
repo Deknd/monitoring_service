@@ -5,7 +5,6 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.*;
 
 class PostalCodeValidatorTest {
     private PostalCodeValidator postalCodeValidator;
@@ -18,7 +17,7 @@ class PostalCodeValidatorTest {
     @Test
     @DisplayName("Проверяет, что имя ожидаемое")
     void nameValidator() {
-        var name = IValidator.POSTAL_CODE_TYPE;
+        var name = Validator.POSTAL_CODE_TYPE;
 
         var nameValidator = this.postalCodeValidator.nameValidator();
 
@@ -30,7 +29,7 @@ class PostalCodeValidatorTest {
     void isValidation() {
         var postCod = "123456";
 
-        var validation = this.postalCodeValidator.isValidation(postCod);
+        var validation = this.postalCodeValidator.isValid(postCod);
 
         assertThat(validation).isTrue();
     }
@@ -39,7 +38,7 @@ class PostalCodeValidatorTest {
     void isValidation_fewerNumbers() {
         var postCod = "12345";
 
-        var validation = this.postalCodeValidator.isValidation(postCod);
+        var validation = this.postalCodeValidator.isValid(postCod);
 
         assertThat(validation).isFalse();
     }
@@ -48,7 +47,7 @@ class PostalCodeValidatorTest {
     void isValidation_char() {
         var postCod = "12345в";
 
-        var validation = this.postalCodeValidator.isValidation(postCod);
+        var validation = this.postalCodeValidator.isValid(postCod);
 
         assertThat(validation).isFalse();
     }
@@ -57,7 +56,7 @@ class PostalCodeValidatorTest {
     void isValidation_moreNumbers() {
         var postCod = "1234523";
 
-        var validation = this.postalCodeValidator.isValidation(postCod);
+        var validation = this.postalCodeValidator.isValid(postCod);
 
         assertThat(validation).isFalse();
     }
@@ -66,7 +65,7 @@ class PostalCodeValidatorTest {
     void isValidation_null() {
 
 
-        var validation = this.postalCodeValidator.isValidation(null);
+        var validation = this.postalCodeValidator.isValid(null);
 
         assertThat(validation).isFalse();
     }

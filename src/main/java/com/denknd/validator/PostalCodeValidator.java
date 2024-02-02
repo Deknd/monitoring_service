@@ -2,22 +2,34 @@ package com.denknd.validator;
 
 import java.util.regex.Pattern;
 
-public class PostalCodeValidator implements IValidator{
+/**
+ * Проверяет, что строка является почтовым индексом.
+ */
+public class PostalCodeValidator implements Validator {
 
-    private static final String POSTAL_CODE_PATTERN = "^\\d{6}$";
-    private static final Pattern pattern = Pattern.compile(POSTAL_CODE_PATTERN);
+  /**
+   * Потерн, для валидации строки.
+   */
+  private static final Pattern pattern = Pattern.compile("^\\d{6}$");
 
+  /**
+   * Возвращает тип к которому будет применён данный валидатор.
+   *
+   * @return возвращает тип валидатора
+   */
+  @Override
+  public String nameValidator() {
+    return Validator.POSTAL_CODE_TYPE;
+  }
 
-    @Override
-    public String nameValidator() {
-        return IValidator.POSTAL_CODE_TYPE;
-    }
-
-    @Override
-    public boolean isValidation(String value) {
-        if(value == null){
-            return false;
-        }
-        return pattern.matcher(value).matches();
-    }
+  /**
+   * Проверяет входящую строку на валидность.
+   *
+   * @param value строка для проверки
+   * @return true если проверка прошла успешно
+   */
+  @Override
+  public boolean isValid(String value) {
+    return value != null && pattern.matcher(value).matches();
+  }
 }

@@ -1,59 +1,68 @@
 package com.denknd.in.commands;
 
-import com.denknd.entity.Role;
-import com.denknd.entity.User;
+import com.denknd.entity.Roles;
+import com.denknd.security.SecurityService;
+import com.denknd.security.UserSecurity;
+import lombok.RequiredArgsConstructor;
 
-import java.util.List;
 /**
- * Класс представляющий команду консоли, при помощи которой выходят из своего аккаунта
+ * Команда консоли для выхода из системы.
  */
-public class LogoutCommand implements ConsoleCommand<User>{
-    /**
-     * Команда, которая отвечает за работу этого класса
-     */
-    private final String COMMAND = "logout";
-    /**
-     * Возвращает команду, которая запускает работу метода run
-     * @return команда для работы класса
-     */
-    @Override
-    public String getCommand() {
-        return this.COMMAND;
+@RequiredArgsConstructor
+public class LogoutCommand implements ConsoleCommand {
+  /**
+   * Команда, отвечающая за выполнение данной команды.
+   */
+  private final String COMMAND_NAME = "logout";
+  private final SecurityService securityService;
+
+  /**
+   * Возвращает строку с командой, которая запускает выполнение метода run.
+   *
+   * @return строка с командой для выполнения действия класса
+   */
+  @Override
+  public String getCommand() {
+    return this.COMMAND_NAME;
+  }
+
+  /**
+   * Возвращает пояснение к работе класса.
+   *
+   * @return пояснение к работе класса для аудита
+   */
+  @Override
+  public String getAuditActionDescription() {
+    return "Выход из системы";
+  }
+
+  /**
+   * Основной метод класса.
+   *
+   * @param command    команда полученная из консоли
+   * @param userActive активный юзер
+   * @return возвращает сообщение об результате работы
+   */
+  @Override
+  public String run(String command, UserSecurity userActive) {
+    if (userActive == null) {
+      return null;
     }
-    /**
-     * Возвращает пояснение работы класса
-     * @return пояснение, что делает класс, для аудита
-     */
-    @Override
-    public String getMakesAction() {
-        return "Выход из системы";
+    if (command.equals(this.COMMAND_NAME)) {
+      this.securityService.logout();
+      return "До свидания!";
     }
-    /**
-     * Основной метод класса
-     * @param command команда полученная из консоли
-     * @param userActive активный юзер
-     * @return возвращает сообщение об результате работы
-     */
-    @Override
-    public User run(String command, User userActive) {
-        if(userActive == null){
-            return null;
-        }
-        if(command.equals(this.COMMAND)){
-            return new User();
-        }
-        System.out.println("Команда не поддерживается: " + command);
-        return null;
-    }
-    /**
-     * Подсказка для команды help
-     * @param roles роли доступные пользователю
-     * @return возвращает сообщение с подсказкой по работе с данной командой
-     */
-    @Override
-    public String getHelpCommand(List<Role> roles) {
-        if(roles != null && !roles.isEmpty()){
-            return this.COMMAND+" - выход из системы";
-        } else return null;
-    }
+    return "Команда не поддерживается: " + command;
+  }
+
+  /**
+   * Подсказка для команды help.
+   *
+   * @param role роль доступная пользователю
+   * @return возвращает сообщение с подсказкой по работе с данной командой
+   */
+  @Override
+  public String getHelpCommand(Roles role) {
+    return (role != null) ? COMMAND_NAME + " - выход из системы" : null;
+  }
 }

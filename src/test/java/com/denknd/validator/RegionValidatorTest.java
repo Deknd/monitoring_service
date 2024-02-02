@@ -5,7 +5,6 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.*;
 
 class RegionValidatorTest {
 
@@ -18,7 +17,7 @@ class RegionValidatorTest {
     @Test
     @DisplayName("Проверяет, что имя рано ожидаемому")
     void nameValidator() {
-        var name = IValidator.REGION_TYPE;
+        var name = Validator.REGION_TYPE;
 
         var nameValidator = this.regionValidator.nameValidator();
 
@@ -30,7 +29,7 @@ class RegionValidatorTest {
     void isValidation() {
         var name = "Москва";
 
-        var validation = this.regionValidator.isValidation(name);
+        var validation = this.regionValidator.isValid(name);
 
         assertThat(validation).isTrue();
     }
@@ -39,7 +38,7 @@ class RegionValidatorTest {
     void isValidation_failedRegion() {
         var name = "Москвasdа";
 
-        var validation = this.regionValidator.isValidation(name);
+        var validation = this.regionValidator.isValid(name);
 
         assertThat(validation).isFalse();
     }
@@ -47,7 +46,7 @@ class RegionValidatorTest {
     @DisplayName("Проверяет, что если введен null, то возвращает false")
     void isValidation_null() {
 
-        var validation = this.regionValidator.isValidation(null);
+        var validation = this.regionValidator.isValid(null);
 
         assertThat(validation).isFalse();
     }

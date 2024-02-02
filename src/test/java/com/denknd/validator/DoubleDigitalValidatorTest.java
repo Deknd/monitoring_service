@@ -5,7 +5,6 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.*;
 
 class DoubleDigitalValidatorTest {
 
@@ -30,7 +29,7 @@ class DoubleDigitalValidatorTest {
     void isValidation() {
         var dou = "123123.1233";
 
-        var validation = this.doubleDigitalValidator.isValidation(dou);
+        var validation = this.doubleDigitalValidator.isValid(dou);
 
         assertThat(validation).isTrue();
     }
@@ -39,7 +38,7 @@ class DoubleDigitalValidatorTest {
     void isValidation_noDouble() {
         var dou = "123123";
 
-        var validation = this.doubleDigitalValidator.isValidation(dou);
+        var validation = this.doubleDigitalValidator.isValid(dou);
 
         assertThat(validation).isTrue();
     }
@@ -48,7 +47,7 @@ class DoubleDigitalValidatorTest {
     void isValidation_noNumeric() {
         var dou = "1231asf23";
 
-        var validation = this.doubleDigitalValidator.isValidation(dou);
+        var validation = this.doubleDigitalValidator.isValid(dou);
 
         assertThat(validation).isFalse();
     }

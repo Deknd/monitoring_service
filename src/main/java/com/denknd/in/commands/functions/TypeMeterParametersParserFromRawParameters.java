@@ -1,5 +1,7 @@
 package com.denknd.in.commands.functions;
 
+import com.denknd.controllers.TypeMeterController;
+import com.denknd.dto.TypeMeterDto;
 import com.denknd.entity.TypeMeter;
 import com.denknd.services.TypeMeterService;
 import lombok.RequiredArgsConstructor;
@@ -10,26 +12,29 @@ import java.util.function.Function;
 import java.util.stream.Collectors;
 
 /**
- * проверяет какие есть доступные типы параметров
+ * Класс для парсинга доступных типов параметров из входных данных консоли.
  */
 @RequiredArgsConstructor
 public class TypeMeterParametersParserFromRawParameters implements Function<String[], Set<String>> {
 
-    /**
-     * Сервис для получения доступных типов параметров
-     */
-    private final TypeMeterService typeMeterService;
+  /**
+   * Контроллер для работы с типами параметров.
+   */
+  private final TypeMeterController typeMeterController;
 
-    /**
-     * отделяет принятые в консоле параметры от типов доступных параметров
-     * @param commandAndParam параметры из консоли
-     * @return сет из параметров, доступных показаний
-     */
-    @Override
-    public Set<String> apply(String[] commandAndParam) {
-        var availableOptions = this.typeMeterService.getTypeMeter().stream().map(TypeMeter::getTypeCode).toList();
-        return  Arrays.stream(commandAndParam)
-                .filter(param -> availableOptions.contains(param))
-                .collect(Collectors.toSet());
-    }
+  /**
+   * Извлекает доступные типы параметров из входных данных консоли.
+   *
+   * @param commandAndParam параметры из консоли
+   * @return множество доступных типов параметров
+   */
+  @Override
+  public Set<String> apply(String[] commandAndParam) {
+    var availableOptions = this.typeMeterController.getTypeMeterCodes().stream()
+            .map(TypeMeterDto::typeCode)
+            .collect(Collectors.toSet());
+    return Arrays.stream(commandAndParam)
+            .filter(availableOptions::contains)
+            .collect(Collectors.toSet());
+  }
 }

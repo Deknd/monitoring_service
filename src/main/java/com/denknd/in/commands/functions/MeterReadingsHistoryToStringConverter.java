@@ -1,7 +1,6 @@
 package com.denknd.in.commands.functions;
 
-import com.denknd.entity.MeterReading;
-import com.denknd.entity.TypeMeter;
+import com.denknd.dto.MeterReadingResponseDto;
 
 import java.util.Comparator;
 import java.util.List;
@@ -10,60 +9,64 @@ import java.util.function.Function;
 import java.util.stream.Collectors;
 
 /**
- * Конвертирует Лист показаний в строку, группирует по адресам и по типам показаний
+ * Класс для конвертации списка показаний счетчиков в строку, сгруппированную по адресам и типам показаний.
  */
-public class MeterReadingsHistoryToStringConverter implements Function<List<MeterReading>, String> {
-    /**
-     * Конвертирует лист показаний в строку, группируя его по адресам и типам показаний
-     * @param meterReadings лист показаний
-     * @return возвращает строку, со всеми показаниями
-     */
-    @Override
-    public String apply(List<MeterReading> meterReadings) {
+public class MeterReadingsHistoryToStringConverter implements Function<List<MeterReadingResponseDto>, String> {
+  /**
+   * Конвертирует список показаний в строку, группируя его по адресам и типам показаний.
+   *
+   * @param meterReadings список показаний
+   * @return строку, содержащую все показания
+   */
+  @Override
+  public String apply(List<MeterReadingResponseDto> meterReadings) {
 
-        var groupedByAddressAndTypeMeter = meterReadings.stream()
-                .collect(Collectors.groupingBy(MeterReading::getAddress,
-                        Collectors.groupingBy(meterReading -> meterReading.getTypeMeter().getTypeCode())));
+    var groupedByAddressAndTypeMeter = meterReadings.stream()
+            .collect(Collectors.groupingBy(MeterReadingResponseDto::addressId,
+                    Collectors.groupingBy(
+                            MeterReadingResponseDto::code)));
 
-        return groupedByAddressAndTypeMeter.keySet().stream()
-                .map(address -> {
-                    var typeMeterMap = groupedByAddressAndTypeMeter.get(address);
-                    return address.getAddressId() + " - " + address.getRegion() + ", н.п. " + address.getCity() + " д. " + address.getHouse() + ", кв. " + address.getApartment()+"\nИстория подачи \n" +
-                            convertingReadingsSameAddress(typeMeterMap);
-                }).collect(Collectors.joining("\n"));
+    return groupedByAddressAndTypeMeter.keySet().stream()
+            .map(addressId -> {
+              var typeMeterMap = groupedByAddressAndTypeMeter.get(addressId);
+              return "Адрес id: " + addressId + "\n"
+                      + convertReadingsSameAddress(typeMeterMap);
+            }).collect(Collectors.joining("\n"));
 
 
-    }
+  }
 
-    /**
-     * Групирует список показаний по адресам
-     * @param typeMeterMap список показаний
-     * @return строку с показаниями по одному типу
-     */
-    private String convertingReadingsSameAddress(Map<String, List<MeterReading>> typeMeterMap) {
-        return typeMeterMap.keySet().stream()
-                .map(typeMeter -> {
-                    var readings = typeMeterMap.get(typeMeter);
-                    var meterReading = readings.stream().findFirst().orElse(null);
-                    TypeMeter type = null;
-                    if (meterReading != null) {
-                        type = meterReading.getTypeMeter();
-                    }
-                    var message = type != null ? type.getTypeDescription() : "";
-                    readings.sort(Comparator.comparing(MeterReading::getSubmissionMonth));
-                    return  message + ": \n" +
-                            convertingReadingsSameType(readings);
-                }).collect(Collectors.joining("\n"));
-    }
+  /**
+   * Группирует список показаний по адресам и типам.
+   *
+   * @param typeMeterMap список показаний
+   * @return строку с показаниями для одного адреса
+   */
+  private String convertReadingsSameAddress(Map<String, List<MeterReadingResponseDto>> typeMeterMap) {
+    return typeMeterMap.keySet().stream()
+            .map(typeMeter -> {
+              var readings = typeMeterMap.get(typeMeter);
+              var meterReading = readings.stream().findFirst().orElse(null);
+              var message = "  " + meterReading.typeDescription();
+              readings.sort(Comparator.comparing(MeterReadingResponseDto::submissionMonth));
+              return message + ": \n"
+                      + convertReadingsSameType(readings);
+            }).collect(Collectors.joining("\n"));
+  }
 
-    /**
-     * конвертирует показания в строку
-     * @param readings список показаний
-     * @return возвращает список показаний
-     */
-    private String convertingReadingsSameType(List<MeterReading> readings) {
-        return readings.stream().map(mr ->
-                        "показание: " + mr.getMeterValue() + " " + mr.getTypeMeter().getMetric() + " период: " + mr.getSubmissionMonth() + " дата подачи: " + mr.getTimeSendMeter())
-                .collect(Collectors.joining("\n"));
-    }
+  /**
+   * Конвертирует список показаний в строку.
+   *
+   * @param readings список показаний
+   * @return строку с показаниями для одного типа
+   */
+  private String convertReadingsSameType(List<MeterReadingResponseDto> readings) {
+    return readings.stream().map(mr ->
+                    "   показание: "
+                            + mr.meterValue()
+                            + " " + mr.metric()
+                            + " период: " + mr.submissionMonth()
+                            + " дата подачи: " + mr.timeSendMeter())
+            .collect(Collectors.joining("\n"));
+  }
 }

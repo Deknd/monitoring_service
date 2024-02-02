@@ -5,7 +5,6 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.*;
 
 class DigitalValidatorTest {
 
@@ -30,7 +29,7 @@ class DigitalValidatorTest {
     void isValidation() {
         var testValues = "2133";
 
-        var validation = this.digitalValidator.isValidation(testValues);
+        var validation = this.digitalValidator.isValid(testValues);
 
         assertThat(validation).isTrue();
     }
@@ -39,7 +38,7 @@ class DigitalValidatorTest {
     void isValidation_fail() {
         var testValues = "2133asd";
 
-        var validation = this.digitalValidator.isValidation(testValues);
+        var validation = this.digitalValidator.isValid(testValues);
 
         assertThat(validation).isFalse();
     }

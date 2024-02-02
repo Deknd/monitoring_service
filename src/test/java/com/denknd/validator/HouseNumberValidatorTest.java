@@ -5,7 +5,6 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.*;
 
 class HouseNumberValidatorTest {
     private HouseNumberValidator validator;
@@ -18,7 +17,7 @@ class HouseNumberValidatorTest {
     @Test
     @DisplayName("проверяет, что валидатор выдает ожидаемое имя")
     void nameValidator() {
-        var name = IValidator.HOUSE_NUMBER_TYPE;
+        var name = Validator.HOUSE_NUMBER_TYPE;
 
         var nameValidator = this.validator.nameValidator();
 
@@ -30,7 +29,7 @@ class HouseNumberValidatorTest {
     void isValidation() {
         var num = "3";
 
-        var validation = this.validator.isValidation(num);
+        var validation = this.validator.isValid(num);
 
         assertThat(validation).isTrue();
 
@@ -40,7 +39,7 @@ class HouseNumberValidatorTest {
     void isValidation_charAndDash() {
         var num = "3-d";
 
-        var validation = this.validator.isValidation(num);
+        var validation = this.validator.isValid(num);
 
         assertThat(validation).isTrue();
 
@@ -50,7 +49,7 @@ class HouseNumberValidatorTest {
     void isValidation_fraction() {
         var num = "3/3";
 
-        var validation = this.validator.isValidation(num);
+        var validation = this.validator.isValid(num);
 
         assertThat(validation).isTrue();
 
@@ -61,7 +60,7 @@ class HouseNumberValidatorTest {
     void isValidation_char() {
         var num = "2s";
 
-        var validation = this.validator.isValidation(num);
+        var validation = this.validator.isValid(num);
 
         assertThat(validation).isTrue();
 
@@ -71,7 +70,7 @@ class HouseNumberValidatorTest {
   void isValidation_failedChar() {
         var num = "sssddsd";
 
-        var validation = this.validator.isValidation(num);
+        var validation = this.validator.isValid(num);
 
         assertThat(validation).isFalse();
 
@@ -81,7 +80,7 @@ class HouseNumberValidatorTest {
     void isValidation_failedEmpty() {
         var num = "";
 
-        var validation = this.validator.isValidation(num);
+        var validation = this.validator.isValid(num);
 
         assertThat(validation).isFalse();
 
@@ -90,7 +89,7 @@ class HouseNumberValidatorTest {
     @DisplayName("Проверяет, что null возвращают false")
     void isValidation_failedNull() {
 
-        var validation = this.validator.isValidation(null);
+        var validation = this.validator.isValid(null);
 
         assertThat(validation).isFalse();
 

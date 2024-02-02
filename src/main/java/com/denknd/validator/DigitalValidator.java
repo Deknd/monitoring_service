@@ -1,13 +1,27 @@
 package com.denknd.validator;
 
-public class DigitalValidator implements IValidator{
-    @Override
-    public String nameValidator() {
-        return IValidator.DIGITAL_TYPE;
-    }
+/**
+ * Валидатор, проверяющий, что строка является числом.
+ */
+public class DigitalValidator implements Validator {
+  /**
+   * Возвращает тип валидации, к которому применяется данный валидатор.
+   *
+   * @return Название типа валидации.
+   */
+  @Override
+  public String nameValidator() {
+    return Validator.DIGITAL_TYPE;
+  }
 
-    @Override
-    public boolean isValidation(String value) {
-        return value.matches("\\d+");
-    }
+  /**
+   * Проверяет, является ли переданная строка числом.
+   *
+   * @param value Строка для проверки.
+   * @return true, если строка является числом.
+   */
+  @Override
+  public boolean isValid(String value) {
+    return value.matches("\\d+");
+  }
 }

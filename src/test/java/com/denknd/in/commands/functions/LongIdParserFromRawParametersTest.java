@@ -8,47 +8,49 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 class LongIdParserFromRawParametersTest {
 
-    private LongIdParserFromRawParameters parserFromRawParameters;
-    @BeforeEach
-    void setUp() {
-        this.parserFromRawParameters = new LongIdParserFromRawParameters();
-    }
+  private LongIdParserFromRawParameters parserFromRawParameters;
 
-    @Test
-    @DisplayName("Проверят, что парсит из параметров цифру")
-    void apply() {
-        var command = "command";
-        var parameter = "param=";
-        var value = "1895";
-        var commandAndParam = new String[]{command, parameter + value, "value3", "value4"};
+  @BeforeEach
+  void setUp() {
+    this.parserFromRawParameters = new LongIdParserFromRawParameters();
+  }
 
-        var apply = this.parserFromRawParameters.apply(commandAndParam, parameter);
+  @Test
+  @DisplayName("Проверят, что парсит из параметров цифру")
+  void apply() {
+    var command = "command";
+    var parameter = "param=";
+    var value = "1895";
+    var commandAndParam = new String[]{command, parameter + value, "value3", "value4"};
 
-        assertThat(apply).isEqualTo(1895L);
-    }
-    @Test
-    @DisplayName("Проверят, что если нет параметра возвращает null")
-    void apply_notParam() {
-        var command = "command";
-        var parameter = "param=";
-        var value = "1895";
-        var commandAndParam = new String[]{command, value, "value3", "value4"};
+    var apply = this.parserFromRawParameters.apply(commandAndParam, parameter);
 
-        var apply = this.parserFromRawParameters.apply(commandAndParam, parameter);
+    assertThat(apply).isEqualTo(1895L);
+  }
 
-        assertThat(apply).isNull();
-    }
+  @Test
+  @DisplayName("Проверят, что если нет параметра возвращает null")
+  void apply_notParam() {
+    var command = "command";
+    var parameter = "param=";
+    var value = "1895";
+    var commandAndParam = new String[]{command, value, "value3", "value4"};
 
-    @Test
-    @DisplayName("Проверят, что если с параметров введена не цифра возвращает null")
-    void apply_notFailed() {
-        var command = "command";
-        var parameter = "param=";
-        var value = "1sad";
-        var commandAndParam = new String[]{command, parameter+value, "value3", "value4"};
+    var apply = this.parserFromRawParameters.apply(commandAndParam, parameter);
 
-        var apply = this.parserFromRawParameters.apply(commandAndParam, parameter);
+    assertThat(apply).isNull();
+  }
 
-        assertThat(apply).isNull();
-    }
+  @Test
+  @DisplayName("Проверят, что если с параметров введена не цифра возвращает null")
+  void apply_notFailed() {
+    var command = "command";
+    var parameter = "param=";
+    var value = "1sad";
+    var commandAndParam = new String[]{command, parameter + value, "value3", "value4"};
+
+    var apply = this.parserFromRawParameters.apply(commandAndParam, parameter);
+
+    assertThat(apply).isNull();
+  }
 }

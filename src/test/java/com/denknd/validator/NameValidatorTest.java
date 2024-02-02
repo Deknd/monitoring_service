@@ -5,7 +5,6 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.*;
 
 class NameValidatorTest {
 
@@ -18,7 +17,7 @@ class NameValidatorTest {
     @Test
     @DisplayName("Проверяет тип валидации")
     void nameValidator() {
-        var name = IValidator.NAME_TYPE;
+        var name = Validator.NAME_TYPE;
 
         var nameValidator = this.nameValidator.nameValidator();
 
@@ -31,7 +30,7 @@ class NameValidatorTest {
     void isValidation() {
         var name = "Name";
 
-        var validName = this.nameValidator.isValidation(name);
+        var validName = this.nameValidator.isValid(name);
 
         assertThat(validName).isTrue();
     }
@@ -41,7 +40,7 @@ class NameValidatorTest {
     void isValidation_noValidShort() {
         var name = "N";
 
-        var noValidName = this.nameValidator.isValidation(name);
+        var noValidName = this.nameValidator.isValid(name);
 
         assertThat(noValidName).isFalse();
     }
@@ -50,14 +49,14 @@ class NameValidatorTest {
     void isValidation_noValid() {
         var name = "N%dsfsd";
 
-        var noValidName = this.nameValidator.isValidation(name);
+        var noValidName = this.nameValidator.isValid(name);
 
         assertThat(noValidName).isFalse();
     }
     @Test
     @DisplayName("проверяет, что имя равное null возвращает false")
     void isValidation_null() {
-        var noValidName = this.nameValidator.isValidation(null);
+        var noValidName = this.nameValidator.isValid(null);
 
         assertThat(noValidName).isFalse();
     }

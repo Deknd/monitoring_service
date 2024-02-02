@@ -18,7 +18,7 @@ class EmailValidatorTest {
     @Test
     @DisplayName("Проверяет тип валидации")
     void nameValidator() {
-        var name = IValidator.EMAIL_TYPE;
+        var name = Validator.EMAIL_TYPE;
 
         var nameValidator = this.emailValidator.nameValidator();
 
@@ -30,7 +30,7 @@ class EmailValidatorTest {
     void isValidation() {
         var email = "test@email.cm";
 
-        var validEmail = this.emailValidator.isValidation(email);
+        var validEmail = this.emailValidator.isValid(email);
 
         assertThat(validEmail).isTrue();
     }
@@ -40,7 +40,7 @@ class EmailValidatorTest {
     void isValidation_noValid() {
         var email = "testemail.cm";
 
-        var noValidEmail = this.emailValidator.isValidation(email);
+        var noValidEmail = this.emailValidator.isValid(email);
 
         assertThat(noValidEmail).isFalse();
     }
@@ -49,7 +49,7 @@ class EmailValidatorTest {
     @DisplayName("Проверят, что email = null возвращает false")
     void isValidation_null() {
 
-        var noValidEmail = this.emailValidator.isValidation(null);
+        var noValidEmail = this.emailValidator.isValid(null);
 
         assertThat(noValidEmail).isFalse();
     }

@@ -1,34 +1,41 @@
-package com.denknd.in.commands.functions;
+  package com.denknd.in.commands.functions;
 
-import com.denknd.entity.MeterReading;
+  import com.denknd.dto.MeterReadingResponseDto;
+  import com.denknd.entity.MeterReading;
 
-import java.util.List;
-import java.util.function.Function;
-import java.util.stream.Collectors;
+  import java.util.List;
+  import java.util.function.Function;
+  import java.util.stream.Collectors;
 
-/**
- * Конвертирует показания счетчиков в строку
- */
-public class DefaultMeterReadingsToStringConverter implements Function<List<MeterReading>, String> {
+  /**
+   * Класс для конвертации показаний счетчиков в строку.
+   */
+  public class DefaultMeterReadingsToStringConverter implements Function<List<MeterReadingResponseDto>, String> {
     /**
-     * Принимает список показаний, делит его по адресам, и выдает по каждому адресу
+     * Принимает список показаний, группирует их по адресам и формирует строку для каждого адреса.
      *
-     * @param meterReadings список показаний счетчика
-     * @return строка форматирована из списка показаний
+     * @param meterReadings список показаний счетчиков
+     * @return строка, сформированная из списка показаний
      */
     @Override
-    public String apply(List<MeterReading> meterReadings) {
-        var collect = meterReadings.stream().collect(Collectors.groupingBy(MeterReading::getAddress));
-        return collect.keySet().stream()
-                .map(
-                        address -> address.toString()
-                                + collect.get(address)
-                                .stream().map(meterReading -> "\n" + meterReading.getTypeMeter().getTypeDescription()
-                                        + ", счетчик: " + meterReading.getMeterValue() + " "
-                                        + meterReading.getTypeMeter().getMetric() + ", месяц: "
-                                        + meterReading.getSubmissionMonth()).collect(Collectors.joining(", "))
-                )
-                .collect(Collectors.joining("\n"));
+    public String apply(List<MeterReadingResponseDto> meterReadings) {
+      var readingsByAddress = meterReadings.stream().collect(Collectors.groupingBy(MeterReadingResponseDto::addressId));
+      return readingsByAddress.keySet().stream()
+              .map(
+                      address -> address.toString()
+                              + readingsByAddress.get(address)
+                              .stream()
+                              .map(
+                                      meterReading ->
+                                              "\n" + meterReading.typeDescription()
+                                                      + ", счетчик: "
+                                                      + meterReading.meterValue() + " "
+                                                      + meterReading.metric()
+                                                      + ", месяц: "
+                                                      + meterReading.submissionMonth())
+                              .collect(Collectors.joining(", "))
+              )
+              .collect(Collectors.joining("\n"));
 
     }
-}
+  }

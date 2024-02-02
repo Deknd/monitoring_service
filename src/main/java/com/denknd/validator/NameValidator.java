@@ -1,26 +1,32 @@
 package com.denknd.validator;
 
-public class NameValidator implements IValidator{
+/**
+ * Проверяет имя, чтоб имя было валидна.
+ */
+public class NameValidator implements Validator {
+  /**
+   * Минимальная длина имени.
+   */
+  private static final int MIN_LENGTH = 2;
 
-    private static final int MIN_LENGTH = 2;
+  /**
+   * Возвращает тип к которому будет применён данный валидатор.
+   *
+   * @return тип валидации
+   */
+  @Override
+  public String nameValidator() {
+    return Validator.NAME_TYPE;
+  }
 
-
-    @Override
-    public String nameValidator() {
-        return IValidator.NAME_TYPE;
-    }
-
-    @Override
-    public boolean isValidation(String name) {
-        if (name == null) {
-            return false;
-        }
-        if (name.length() < MIN_LENGTH) {
-            return false;
-        }
-        if (!name.matches("[a-zA-Z\\-\\s]+")) {
-            return false;
-        }
-        return true;
-    }
+  /**
+   * Проверяет входящую строку на валидность.
+   *
+   * @param name строка для проверки
+   * @return true если проверка прошла успешно
+   */
+  @Override
+  public boolean isValid(String name) {
+    return (name != null) && (name.length() >= MIN_LENGTH) && name.matches("[a-zA-Z\\-\\s]+");
+  }
 }

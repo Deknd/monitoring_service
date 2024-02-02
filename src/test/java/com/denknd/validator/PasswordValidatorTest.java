@@ -18,7 +18,7 @@ class PasswordValidatorTest {
     @Test
     @DisplayName("Проверяет тип валидации")
     void nameValidator() {
-        var name = IValidator.PASSWORD_TYPE;
+        var name = Validator.PASSWORD_TYPE;
 
         var nameValidator = this.passwordValidator.nameValidator();
 
@@ -32,7 +32,7 @@ class PasswordValidatorTest {
     void isValidation() {
         var password = "password";
 
-        var validPassword = this.passwordValidator.isValidation(password);
+        var validPassword = this.passwordValidator.isValid(password);
 
         assertThat(validPassword).isTrue();
     }
@@ -42,7 +42,7 @@ class PasswordValidatorTest {
     void isValidation_noValid() {
         var password = "pa";
 
-        var noValidPassword = this.passwordValidator.isValidation(password);
+        var noValidPassword = this.passwordValidator.isValid(password);
 
         assertThat(noValidPassword).isFalse();
     }
@@ -51,7 +51,7 @@ class PasswordValidatorTest {
     @DisplayName("Проверяет, что пароль равный null возвращает false")
     void isValidation_null() {
 
-        var noValidPassword = this.passwordValidator.isValidation(null);
+        var noValidPassword = this.passwordValidator.isValid(null);
 
         assertThat(noValidPassword).isFalse();
     }

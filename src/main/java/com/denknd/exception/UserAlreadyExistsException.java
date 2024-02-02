@@ -4,13 +4,13 @@ import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 
 /**
- * Эксепшен выбрасывается, при попытке зарегистрировать пользователя с емайлом, который существует
+ * Эксепшен выбрасывается, при попытке зарегистрировать пользователя с емайлом, который существует.
  */
 @RequiredArgsConstructor
 @Getter
 public class UserAlreadyExistsException extends Exception {
-    /**
-     * Сообщение об ошибке
-     */
-    private final String message;
+  /**
+   * Сообщение об ошибке.
+   */
+  private final String message;
 }

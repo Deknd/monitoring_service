@@ -1,230 +1,212 @@
 package com.denknd.in.commands;
 
-import com.denknd.entity.Address;
-import com.denknd.entity.MeterReading;
-import com.denknd.entity.Role;
-import com.denknd.entity.User;
+import com.denknd.controllers.AddressController;
+import com.denknd.controllers.MeterReadingController;
+import com.denknd.controllers.TypeMeterController;
+import com.denknd.dto.MeterReadingRequestDto;
+import com.denknd.entity.Roles;
+import com.denknd.exception.MeterReadingConflictError;
 import com.denknd.in.commands.functions.TypeMeterParametersParserFromRawParameters;
-import com.denknd.services.AddressService;
-import com.denknd.services.MeterReadingService;
-import com.denknd.services.TypeMeterService;
-import com.denknd.validator.IValidator;
-import com.denknd.validator.Validators;
+import com.denknd.security.UserSecurity;
+import com.denknd.validator.DataValidatorManager;
+import com.denknd.validator.Validator;
 import lombok.Setter;
 
-import java.time.OffsetDateTime;
-import java.time.YearMonth;
-import java.util.List;
-import java.util.Scanner;
 import java.util.Set;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
 /**
- * Класс представляющий команду консоли, при помощи которой отправляются показания счетчиков
+ * Класс представляющий команду консоли, при помощи которой отправляются показания счетчиков.
  */
 @Setter
-public class MeterSendCommand implements ConsoleCommand<String> {
-    /**
-     * Команда, которая отвечает за работу этого класса
-     */
-    private final String COMMAND = "send";
-    /**
-     * Роль пользователя
-     */
-    private final Role USER_ROLE = Role.builder().roleName("USER").build();
-    /**
-     * Сервис для работы с типами данных
-     */
-    private final TypeMeterService typeMeterService;
-    /**
-     * Сервис для работы с адресами
-     */
-    private final AddressService addressService;
-    /**
-     * Сервис для работы с показаниями
-     */
-    private final MeterReadingService meterReadingService;
-    /**
-     * функция, которая достает из массива с параматерами, нужные типы показаний
-     */
-    private Function<String[], Set<String>> typeMeterParametersParserFromRawParameters;
-    /**
-     * Валидатор принятых данных
-     */
-    private final Validators validators;
-    /**
-     * Сканер консоли
-     */
-    private final Scanner scanner;
+public class MeterSendCommand implements ConsoleCommand {
+  /**
+   * Команда, отвечающая за работу данного класса.
+   */
+  private final String COMMAND_NAME = "send";
 
-    /**
-     * Основной конструктор
-     * @param typeMeterService сервис для работы с типами показаний
-     * @param addressService сервис для работы с адресами
-     * @param meterReadingService сервис для работы с показаниями
-     * @param validators валидатор входящих данных
-     * @param scanner сканер консоли
-     */
-    public MeterSendCommand(TypeMeterService typeMeterService, AddressService addressService, MeterReadingService meterReadingService, Validators validators, Scanner scanner) {
-        this.typeMeterService = typeMeterService;
-        this.addressService = addressService;
-        this.meterReadingService = meterReadingService;
-        this.validators = validators;
-        this.scanner = scanner;
-        this.typeMeterParametersParserFromRawParameters = new TypeMeterParametersParserFromRawParameters(this.typeMeterService);
+
+  /**
+   * Контролер для работы с адресами.
+   */
+  private final AddressController addressController;
+  /**
+   * Контролер для работы с показаниями.
+   */
+  private final MeterReadingController meterReadingController;
+  /**
+   * Контролер для работы с типами показаний.
+   */
+  private final TypeMeterController typeMeterController;
+
+  /**
+   * Функция, извлекающая из массива с параметрами нужные типы показаний.
+   */
+  private Function<String[], Set<String>> typeMeterParametersParserFromRawParameters;
+  /**
+   * Валидатор принятых данных.
+   */
+  private final DataValidatorManager dataValidatorManager;
+
+
+  /**
+   * Основной конструктор.
+   *
+   * @param typeMeterController    Контроллер для работы с типами показаний
+   * @param addressController      Контроллер для работы с адресами
+   * @param meterReadingController Контроллер для работы с показаниями
+   * @param dataValidatorManager   Валидатор входящих данных
+   */
+  public MeterSendCommand(
+          TypeMeterController typeMeterController,
+          AddressController addressController,
+          MeterReadingController meterReadingController,
+          DataValidatorManager dataValidatorManager
+  ) {
+    this.typeMeterController = typeMeterController;
+    this.addressController = addressController;
+    this.meterReadingController = meterReadingController;
+    this.dataValidatorManager = dataValidatorManager;
+    this.typeMeterParametersParserFromRawParameters
+            = new TypeMeterParametersParserFromRawParameters(
+            typeMeterController);
+  }
+
+  /**
+   * Возвращает команду, которая запускает выполнение метода run.
+   *
+   * @return команда для работы класса
+   */
+  @Override
+  public String getCommand() {
+    return this.COMMAND_NAME;
+  }
+
+  /**
+   * Возвращает пояснение работы класса.
+   *
+   * @return пояснение, что делает класс, для аудита
+   */
+  @Override
+  public String getAuditActionDescription() {
+    return "Отправляет показания";
+  }
+
+  /**
+   * Основной метод класса.
+   *
+   * @param command    команда, полученная из консоли
+   * @param userActive активный пользователь
+   * @return возвращает сообщение об результате работы
+   */
+  @Override
+  public String run(String command, UserSecurity userActive) {
+    if (userActive == null) {
+      return null;
     }
-    /**
-     * Возвращает команду, которая запускает работу метода run
-     * @return команда для работы класса
-     */
-    @Override
-    public String getCommand() {
-        return this.COMMAND;
-    }
-    /**
-     * Возвращает пояснение работы класса
-     * @return пояснение, что делает класс, для аудита
-     */
-    @Override
-    public String getMakesAction() {
-        return "Отправляет показания";
-    }
-    /**
-     * Основной метод класса
-     * @param command команда полученная из консоли
-     * @param userActive активный юзер
-     * @return возвращает сообщение об результате работы
-     */
-    @Override
-    public String run(String command, User userActive) {
-        if (userActive == null) {
-            return null;
+    if (userActive.role().equals(Roles.USER)) {
+      var commands = command.split(" ");
+      var parameterForSubmittingReadings
+              = this.typeMeterParametersParserFromRawParameters.apply(commands)
+              .stream()
+              .findAny()
+              .orElse(null);
+      if (parameterForSubmittingReadings != null) {
+        var idAddress = getIdAddress(userActive.userId());
+        if (idAddress == null) {
+          return "Обязательно нужно вводить идентификатор адреса";
         }
-        if (userActive.getRoles().contains(this.USER_ROLE)) {
-            //получаем доступные адреса пользователя
-            var addresses = this.addressService.getAddresses(userActive.getUserId());
-            if (addresses.isEmpty()) {
-                return "У вас не добавлено ни одного адреса";
-            }
-
-            var commands = command.split(" ");
-            //достаем доп параметр из команды
-            var typeMeterParam = this.typeMeterParametersParserFromRawParameters.apply(commands).stream().findAny().orElse(null);
-            //получаем доступные типы показаний
-            var typeMeterList = this.typeMeterService.getTypeMeter();
-            //проверяем, что полученный от пользователя код, есть в нашем списке
-            if (typeMeterParam!=null) {
-                //Достаем из списка адресов, все айдишники
-                var collectId = addresses.stream().map(Address::getAddressId).toList();
-                //получаем от пользователя айди адреса, на который он хочет подать показания
-                var idAddress = getIdAddress(addresses);
-                if (!collectId.contains(idAddress)) {
-                    return "Данный адрес записан не на вас";
-                }
-                //Достаем из списка адресов, адрес по введенному айди
-                var address = addresses.stream().filter(addr -> addr.getAddressId().equals(idAddress)).findFirst().get();
-
-                //получаем из списка объект с типом показаний
-                var typeMeter = typeMeterList.stream().filter(type -> type.getTypeCode().equals(typeMeterParam)).findFirst().get();
-
-                //Получаем актуальные показания по данному типу
-                var actualMeter = this.meterReadingService.getActualMeter(idAddress, typeMeterParam);
-                var submissionMonth = YearMonth.now();
-                //Проверяем, что данные за данный месяц еще не внесены
-                if (actualMeter!= null && submissionMonth.isBefore(actualMeter.getSubmissionMonth())
-                        || actualMeter != null &&submissionMonth.equals(actualMeter.getSubmissionMonth())) {
-                    return "Данные за " + submissionMonth + " уже внесены";
-                }
-                //получаем от пользователя показания
-                var meterValue = getMeterValue();
-                if (meterValue == null) {
-                    return "Нужно обязательно вводить показания";
-                }
-                if (actualMeter == null || actualMeter.getMeter() == null) {
-                    System.out.println("Нужно вызвать мастера для проверки и пломбирования счетчика");
-                }
-                //Если были показания до этого и они меньше, чем сейчас переданные, то работа метода прекращается
-                if (actualMeter != null && Double.compare(meterValue, actualMeter.getMeterValue()) < 0) {
-                    return "Не верные показания или новый счетчик. Вызовите мастера для проверки и пломбирования счетчика";
-                }
-
-                var meterReadingValue = MeterReading.builder()
-                        .address(address)
-                        .typeMeter(typeMeter)
-                        .meterValue(meterValue)
-                        .submissionMonth(submissionMonth)
-                        .meter(actualMeter!=null && actualMeter.getMeter() != null ? actualMeter.getMeter() : null)
-                        .timeSendMeter(OffsetDateTime.now())
-                        .build();
-                var meterReadingResult = this.meterReadingService.addMeterValue(meterReadingValue);
-                return "Показания приняты: \n" + meterReadingResult;
-
-            }
+        var meterValue = getMeterValue();
+        if (meterValue == null) {
+          return "Нужно обязательно вводить показания";
         }
-
-        return null;
-    }
-
-    /**
-     * получает ввод из консоли
-     * @param addresses лист адресов пользователя
-     * @return возвращает айди адреса
-     */
-
-    private Long getIdAddress(List<Address> addresses) {
-        var collectAddresses = addresses.stream().map(address -> address.getAddressId() + " - " + address.toString()).collect(Collectors.joining("\n"));
-        System.out.println("Ваши адреса:\n" + collectAddresses);
-        var addressIdRaw = this.validators.isValid(
-                "Введите Id вашего адреса: ",
-                IValidator.DIGITAL_TYPE,
-                "Нужно ввести Id вашего адреса, он выведен выше",
-                this.scanner
-        );
+        var meterReadingDto = MeterReadingRequestDto.builder()
+                .meterValue(meterValue)
+                .addressId(idAddress)
+                .code(parameterForSubmittingReadings)
+                .build();
         try {
-            return Long.parseLong(addressIdRaw);
-        } catch (NumberFormatException | NullPointerException e) {
-            return null;
+          var meterReadingResult
+                  = this.meterReadingController.addMeterReadingValue(meterReadingDto, userActive.userId());
+          return "Показания приняты: \n" + meterReadingResult;
+        } catch (MeterReadingConflictError e) {
+          return e.getMessage();
         }
+      }
     }
+    return null;
+  }
 
-    /**
-     * Получает с консоли показания
-     * @return показания в формате Double
-     */
-    private Double getMeterValue() {
-        var meterValue = this.validators.isValid(
-                "Введите показания: ",
-                IValidator.DOUBLE_TYPE,
-                "Введите цифры с счетчика(прим. \"12345\", \"234234.234\")",
-                this.scanner
-        );
-        try {
-            return Double.parseDouble(meterValue);
-        } catch (NumberFormatException | NullPointerException e) {
-            return null;
-        }
+  /**
+   * Получает ввод из консоли.
+   *
+   * @param userId Идентификатор пользователя
+   * @return возвращает айди адреса
+   */
+  private Long getIdAddress(Long userId) {
+    var addressesByActiveUser
+            = this.addressController.getAddress(userId);
+    if (addressesByActiveUser.isEmpty()) {
+      System.out.println("У вас не добавлено адресов. Добавьте адрес, чтоб подать показания");
+      return null;
     }
-    /**
-     * Подсказка для команды help
-     * @param roles роли доступные пользователю
-     * @return возвращает сообщение с подсказкой по работе с данной командой
-     */
-    @Override
-    public String getHelpCommand(List<Role> roles) {
-        if (roles.isEmpty()) {
-            return null;
-        }
-        if (roles.contains(Role.builder().roleName("USER").build())) {
-            var typeMeterList = this.typeMeterService.getTypeMeter();
-            var collect = typeMeterList.stream().map(typeMeter -> typeMeter.getTypeCode() + " - " + typeMeter.getTypeDescription()).collect(Collectors.joining(", "));
-            return this.COMMAND +
-                    " - используется для отправки показаний счетчиков. Обязательный параметры: "
-                    + collect + ". Пример: " + this.COMMAND + " " + typeMeterList.get(0).getTypeCode();
-
-        }
-        return null;
+    var collectAddresses = addressesByActiveUser
+            .stream()
+            .map(Record::toString)
+            .collect(Collectors.joining("\n"));
+    System.out.println("Ваши адреса:\n" + collectAddresses);
+    var addressIdRaw = this.dataValidatorManager.getValidInput(
+            "Введите Id вашего адреса: ",
+            Validator.DIGITAL_TYPE,
+            "Нужно ввести Id вашего адреса, он выведен выше"
+    );
+    try {
+      return Long.parseLong(addressIdRaw);
+    } catch (NumberFormatException | NullPointerException e) {
+      return null;
     }
+  }
 
+  /**
+   * Получает с консоли показания.
+   *
+   * @return показания в формате Double
+   */
+  private Double getMeterValue() {
+    var meterValue = this.dataValidatorManager.getValidInput(
+            "Введите показания: ",
+            Validator.DOUBLE_TYPE,
+            "Введите цифры с счетчика(прим. \"12345\", \"234234.234\")"
+    );
+    try {
+      return Double.parseDouble(meterValue);
+    } catch (NumberFormatException | NullPointerException e) {
+      return null;
+    }
+  }
 
+  /**
+   * Подсказка для команды help.
+   *
+   * @param role роль, доступная пользователю
+   * @return возвращает сообщение с подсказкой по работе с данной командой
+   */
+  @Override
+  public String getHelpCommand(Roles role) {
+    if (role == null) {
+      return null;
+    }
+    if (role.equals(Roles.USER)) {
+      var typeMeters = this.typeMeterController.getTypeMeterCodes();
+      var collect = typeMeters
+              .stream()
+              .map(typeMeter -> typeMeter.typeCode() + " - " + typeMeter.typeDescription())
+              .collect(Collectors.joining(", "));
+      return this.COMMAND_NAME
+              + " - используется для отправки показаний счетчиков. Обязательный параметры: "
+              + collect + ". Пример: " + this.COMMAND_NAME + " " + typeMeters.stream().findAny().get().typeCode();
+    }
+    return null;
+  }
 }

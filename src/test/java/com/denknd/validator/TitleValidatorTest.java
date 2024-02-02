@@ -5,7 +5,6 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.*;
 
 class TitleValidatorTest {
 
@@ -18,7 +17,7 @@ class TitleValidatorTest {
     @Test
     @DisplayName("Проверяет, что возвращает ожидаемое имя")
     void nameValidator() {
-        var name = IValidator.TITLE_TYPE;
+        var name = Validator.TITLE_TYPE;
 
         var nameValidator = this.titleValidator.nameValidator();
 
@@ -30,7 +29,7 @@ class TitleValidatorTest {
     void isValidation() {
         var title = "title";
 
-        var validation = this.titleValidator.isValidation(title);
+        var validation = this.titleValidator.isValid(title);
 
         assertThat(validation).isTrue();
     }
@@ -40,14 +39,14 @@ class TitleValidatorTest {
     void isValidation_short() {
         var title = "t";
 
-        var validation = this.titleValidator.isValidation(title);
+        var validation = this.titleValidator.isValid(title);
 
         assertThat(validation).isFalse();
     }
     @Test
     @DisplayName("Проверяет, что null не валиден")
     void isValidation_null() {
-        var validation = this.titleValidator.isValidation(null);
+        var validation = this.titleValidator.isValid(null);
 
         assertThat(validation).isFalse();
     }

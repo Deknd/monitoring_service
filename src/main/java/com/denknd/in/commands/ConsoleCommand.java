@@ -1,31 +1,34 @@
 package com.denknd.in.commands;
 
-import com.denknd.entity.Role;
-import com.denknd.entity.User;
-import com.denknd.port.IGivingAudit;
-
-import java.util.List;
+import com.denknd.entity.Roles;
+import com.denknd.out.audit.AuditInfoProvider;
+import com.denknd.security.UserSecurity;
 
 /**
- * Интерфейс представляющий команду консоли, при помощи которого добавляются новые команды для консоли
+ * Интерфейс представляющий команду консоли, при помощи которого добавляются новые команды для консоли.
  */
-public interface ConsoleCommand<T>  extends IGivingAudit {
-    /**
-     * Возвращает команду, которая запускает работу метода run
-     * @return команда для работы класса
-     */
-    String getCommand();
-    /**
-     * Основной метод класса
-     * @param command команда полученная из консоли
-     * @param userActive активный юзер
-     * @return возвращает результат работы метода
-     */
-    T run(String command, User userActive);
-    /**
-     * Подсказка для команды help
-     * @param roles роли доступные пользователю
-     * @return возвращает сообщение с подсказкой по работе с данной командой
-     */
-    String getHelpCommand(List<Role> roles);
+public interface ConsoleCommand extends AuditInfoProvider {
+  /**
+   * Возвращает строку с командой, которая запускает выполнение метода run.
+   *
+   * @return строка с командой для выполнения действия класса
+   */
+  String getCommand();
+
+  /**
+   * Основной метод класса, выполняющий команду.
+   *
+   * @param command    команда полученная из консоли
+   * @param userActive активный пользователь
+   * @return строка, содержащая результат работы метода
+   */
+  String run(String command, UserSecurity userActive);
+
+  /**
+   * Возвращает подсказку для команды help.
+   *
+   * @param role роль, доступная пользователю
+   * @return строка с подсказкой по работе с данной командой
+   */
+  String getHelpCommand(Roles role);
 }

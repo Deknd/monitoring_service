@@ -55,7 +55,7 @@ class DateParserFromRawParametersTest {
         assertThat(apply).isNull();
     }
     @Test
-    @DisplayName("Проверяет, что c параметром и датой не в формате MM-yyyy возвращает null")
+    @DisplayName("Проверяет, что c параметром и датой в виде рандомной строки возвращает null")
     void apply_notDate() {
         var command = "command";
         var parameter = "param=";
