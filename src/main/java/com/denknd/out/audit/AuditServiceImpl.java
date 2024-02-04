@@ -5,6 +5,7 @@ import com.denknd.repository.AuditRepository;
 import com.denknd.security.UserSecurity;
 import lombok.RequiredArgsConstructor;
 
+import java.sql.SQLException;
 import java.time.OffsetDateTime;
 import java.util.Map;
 
@@ -57,7 +58,11 @@ public class AuditServiceImpl implements AuditService {
               .operation(operation)
               .build();
 
-      this.auditRepository.save(audit);
+      try {
+        this.auditRepository.save(audit);
+      } catch (SQLException e) {
+        System.out.println("Ошибка сохраения аудита");
+      }
     }
   }
 }

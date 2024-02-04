@@ -1,6 +1,7 @@
 package com.denknd.services;
 
 import com.denknd.entity.Address;
+import com.denknd.exception.AddressDatabaseException;
 
 import java.util.List;
 
@@ -22,7 +23,7 @@ public interface AddressService {
    * @param address Заполненный объект адреса без идентификатора.
    * @return Копия сохраненного адреса с идентификатором.
    */
-  Address addAddressByUser(Address address);
+  Address addAddressByUser(Address address) throws AddressDatabaseException;
   /**
    * Получение адреса по его идентификатору.
    *

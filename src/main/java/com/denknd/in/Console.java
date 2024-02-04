@@ -67,7 +67,7 @@ public class Console {
    */
   private void printConsolePrompt() {
     String message = (this.securityService.isAuthentication())
-            ? this.securityService.getUserSecurity().name() + "@" + MESSAGE
+            ? this.securityService.getUserSecurity().firstName() + "@" + MESSAGE
             : MESSAGE;
     System.out.print(message);
   }

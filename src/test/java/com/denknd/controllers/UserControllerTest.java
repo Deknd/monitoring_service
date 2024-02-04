@@ -3,9 +3,9 @@ package com.denknd.controllers;
 import com.denknd.dto.UserCreateDto;
 import com.denknd.entity.Roles;
 import com.denknd.entity.User;
+import com.denknd.exception.InvalidUserDataException;
 import com.denknd.exception.UserAlreadyExistsException;
 import com.denknd.mappers.UserMapper;
-import com.denknd.services.RoleService;
 import com.denknd.services.UserService;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -27,8 +27,6 @@ class UserControllerTest {
   @Mock
   private UserService userService;
   @Mock
-  private RoleService roleService;
-  @Mock
   private UserMapper userMapper;
   private UserController userController;
   private AutoCloseable closeable;
@@ -36,7 +34,7 @@ class UserControllerTest {
   @BeforeEach
   void setUp() {
     this.closeable = MockitoAnnotations.openMocks(this);
-    this.userController = new UserController(this.userService, this.roleService,  this.userMapper);
+    this.userController = new UserController(this.userService, this.userMapper);
   }
   @AfterEach
   void tearDown() throws Exception {
@@ -44,14 +42,13 @@ class UserControllerTest {
   }
   @Test
   @DisplayName("Проверяет, что метод вызывает все сервисы")
-  void createUser() throws UserAlreadyExistsException, NoSuchAlgorithmException {
+  void createUser() throws UserAlreadyExistsException, NoSuchAlgorithmException, InvalidUserDataException {
     var userCreateDto = mock(UserCreateDto.class);
     when(this.userMapper.mapUserCreateDtoToUser(eq(userCreateDto))).thenReturn(mock(User.class));
     when(this.userService.registrationUser(any())).thenReturn(mock(User.class));
 
     this.userController.createUser(userCreateDto);
 
-    verify(this.roleService, times(1)).addRoles(any(), eq(Roles.USER));
     verify(this.userService, times(1)).registrationUser(any());
   }
 

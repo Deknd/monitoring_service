@@ -1,6 +1,7 @@
 package com.denknd.services;
 
 import com.denknd.entity.User;
+import com.denknd.exception.InvalidUserDataException;
 import com.denknd.exception.UserAlreadyExistsException;
 
 import java.security.NoSuchAlgorithmException;
@@ -16,7 +17,7 @@ public interface UserService {
    * @return Полностью созданный объект пользователя с айди.
    * @throws UserAlreadyExistsException Если пользователь с указанным email уже существует.
    */
-  User registrationUser(User create) throws UserAlreadyExistsException, NoSuchAlgorithmException;
+  User registrationUser(User create) throws UserAlreadyExistsException, NoSuchAlgorithmException, InvalidUserDataException;
 
   /**
    * Проверяет существование пользователя по его айди.

@@ -1,6 +1,7 @@
 package com.denknd.services.impl;
 
 import com.denknd.entity.User;
+import com.denknd.exception.InvalidUserDataException;
 import com.denknd.exception.UserAlreadyExistsException;
 import com.denknd.util.PasswordEncoder;
 import com.denknd.repository.UserRepository;
@@ -10,6 +11,9 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
+
+import java.security.NoSuchAlgorithmException;
+import java.sql.SQLException;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
@@ -33,7 +37,7 @@ class UserServiceImplTest {
     }
     @Test
     @DisplayName("Проверяет, что пароль кодируется и вызывается метод репозитория save")
-    void registrationUser() throws UserAlreadyExistsException {
+    void registrationUser() throws UserAlreadyExistsException, InvalidUserDataException, NoSuchAlgorithmException, SQLException {
 
         var testPassword = "testPassword";
         var user = User.builder()
@@ -41,15 +45,31 @@ class UserServiceImplTest {
                 .password(testPassword)
                 .build();
 
-//        this.userServiceImpl.registrationUser(user);
-//
-//        verify(this.userRepository, times(1)).save(any(User.class));
-//        verify(this.passwordEncoder, times(1)).encode(eq(testPassword));
+        this.userServiceImpl.registrationUser(user);
+
+        verify(this.userRepository, times(1)).save(any(User.class));
+        verify(this.passwordEncoder, times(1)).encode(eq(testPassword));
+    }
+    @Test
+    @DisplayName("Проверяет, что пароль кодируется и вызывается метод репозитория save, а репозиторий выкидывает ошибку")
+    void registrationUser_repositoryException() throws  NoSuchAlgorithmException, SQLException {
+
+        var testPassword = "testPassword";
+        var user = User.builder()
+                .email("test@email.com")
+                .password(testPassword)
+                .build();
+        when(this.userRepository.save(any(User.class))).thenThrow(SQLException.class);
+
+        assertThatThrownBy(()-> this.userServiceImpl.registrationUser(user));
+
+        verify(this.userRepository, times(1)).save(any(User.class));
+        verify(this.passwordEncoder, times(1)).encode(eq(testPassword));
     }
 
     @Test
     @DisplayName("Проверяет, то выкидывается исключение, если пользователь существует")
-    void registrationUser_throwException() {
+    void registrationUser_throwException() throws SQLException, NoSuchAlgorithmException {
 
         var testPassword = "testPassword";
         var user = User.builder()
@@ -61,7 +81,7 @@ class UserServiceImplTest {
         assertThatThrownBy(()->this.userServiceImpl.registrationUser(user)).isInstanceOf(UserAlreadyExistsException.class);
 
         verify(this.userRepository, times(0)).save(any(User.class));
-//        verify(this.passwordEncoder, times(0)).encode(eq(testPassword));
+        verify(this.passwordEncoder, times(0)).encode(eq(testPassword));
     }
 
 

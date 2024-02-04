@@ -1,0 +1,30 @@
+<databaseChangeLog xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.6.xsd">
+
+    <changeSet id="001__add_data_type_meters" author="den">
+        <insert tableName="type_meters" schemaName="${defaultSchema}">
+            <column name="type_code" value="cold"/>
+            <column name="type_description" value="Холодная вода"/>
+            <column name="metric" value="м3"/>
+        </insert>
+        <comment>Добавления типа показаний: Холодая вода</comment>
+    </changeSet>
+    <changeSet id="002__add_data_type_meters" author="den">
+        <insert tableName="type_meters" schemaName="${defaultSchema}">
+            <column name="type_code" value="warm"/>
+            <column name="type_description" value="Горячая вода"/>
+            <column name="metric" value="м3"/>
+        </insert>
+        <comment>Добавления типа показаний: Горячая вода</comment>
+
+    </changeSet>
+    <changeSet id="003__add_data_type_meters" author="den">
+        <insert tableName="type_meters" schemaName="${defaultSchema}">
+            <column name="type_code" value="heat"/>
+            <column name="type_description" value="Отопление"/>
+            <column name="metric" value="Гкал"/>
+        </insert>
+        <comment>Добавления типа показаний: Отопление</comment>
+    </changeSet>
+</databaseChangeLog>

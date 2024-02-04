@@ -4,6 +4,7 @@ import com.denknd.dto.UserCreateDto;
 import com.denknd.entity.Address;
 import com.denknd.entity.Roles;
 import com.denknd.entity.User;
+import com.denknd.security.UserSecurity;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -73,10 +74,38 @@ class UserMapperTest {
 
   }
   @Test
-  @DisplayName("Проверяет, что правильно маппит User в UserCreateDto")
+  @DisplayName("Проверяет, что если отправить null, то вернет null")
   void mapUserToUserDto_null() {
     var userDto = this.userMapper.mapUserToUserDto(null);
-
     assertThat(userDto).isNull();
+  }
+
+  @Test
+  @DisplayName("Проверяет, что правильно маппит User в UserSecurity")
+  void mapUserToUserSecurity(){
+    var user = User.builder()
+            .userId(1L)
+            .firstName("firstName")
+            .lastName("lastName")
+            .email("email")
+            .password("password")
+            .addresses(List.of(Address.builder().build()))
+            .role(Roles.USER)
+            .build();
+
+    var userSecurity = this.userMapper.mapUserToUserSecurity(user);
+
+    assertThat(userSecurity).isNotNull();
+    assertThat(userSecurity.userId()).isEqualTo(user.getUserId());
+    assertThat(userSecurity.firstName()).isEqualTo(user.getFirstName());
+    assertThat(userSecurity.role()).isEqualTo(user.getRole());
+    assertThat(userSecurity.password()).isEqualTo(user.getPassword());
+  }
+  @Test
+  @DisplayName("Проверяет, что если отправить null, то вернет null")
+  void mapUserToUserSecurity_null(){
+    var userSecurity = this.userMapper.mapUserToUserSecurity(null);
+
+    assertThat(userSecurity).isNull();
   }
 }

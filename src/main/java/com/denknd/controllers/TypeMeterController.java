@@ -1,6 +1,7 @@
 package com.denknd.controllers;
 
 import com.denknd.dto.TypeMeterDto;
+import com.denknd.exception.TypeMeterAdditionException;
 import com.denknd.mappers.TypeMeterMapper;
 import com.denknd.services.TypeMeterService;
 import lombok.RequiredArgsConstructor;
@@ -26,8 +27,9 @@ public class TypeMeterController {
    *
    * @param typeMeterDto тип показаний, который нужно добавить
    * @return возвращает добавленный тип показаний
+   * @throws TypeMeterAdditionException при не соблюдения ограничений базы данных
    */
-  public TypeMeterDto addNewType(TypeMeterDto typeMeterDto) {
+  public TypeMeterDto addNewType(TypeMeterDto typeMeterDto) throws TypeMeterAdditionException {
     var typeMeter = this.typeMeterMapper.mapTypeMeterDtoToTypeMeter(typeMeterDto);
     var result = this.typeMeterService.addNewTypeMeter(typeMeter);
     return this.typeMeterMapper.typeMeterToTypeMeterDto(result);

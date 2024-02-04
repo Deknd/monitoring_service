@@ -1,0 +1,46 @@
+<databaseChangeLog xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.6.xsd">
+
+    <changeSet id="001__create_addresses_sequence" author="den">
+        <createSequence sequenceName="id_address_seq" startValue="1" incrementBy="1" schemaName="${defaultSchema}"/>
+        <comment>Последовательность для таблицы адресов</comment>
+    </changeSet>
+    <changeSet id="002__create_addresses_table" author="den">
+        <createTable tableName="addresses" schemaName="${defaultSchema}">
+            <column name="address_id" type="BIGINT" defaultValueSequenceNext="id_address_seq">
+                <constraints primaryKey="true" nullable="false" primaryKeyName="address_pkey" unique="true"/>
+            </column>
+            <column name="user_id" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="postal_code" type="NUMERIC(6)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="region" type="VARCHAR(50)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="city" type="VARCHAR(50)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="street" type="VARCHAR(50)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="house" type="VARCHAR(5)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="apartment" type="VARCHAR(5)">
+                <constraints nullable="true"/>
+            </column>
+        </createTable>
+        <comment>Таблица для адресов</comment>
+    </changeSet>
+    <changeSet id="003__create_addresses_сonstraint" author="den">
+        <addForeignKeyConstraint baseTableSchemaName="${defaultSchema}" baseTableName="addresses" baseColumnNames="user_id" constraintName="fk_addresses_users"
+                                 referencedTableSchemaName="${defaultSchema}" referencedTableName="users" referencedColumnNames="user_id" onDelete="CASCADE"/>
+        <comment>Связь с таблицей пользователей</comment>
+
+    </changeSet>
+
+</databaseChangeLog>

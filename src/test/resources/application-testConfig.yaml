@@ -1,0 +1,8 @@
+db:
+  username: "test_container"
+  password: "password_test"
+  url: jdbc:postgresql://localhost:33020/test_db
+liquibase:
+  technical_schema: "public"
+  default_schema: "public"
+  changelog: "db/changelog/changelog-master.xml"

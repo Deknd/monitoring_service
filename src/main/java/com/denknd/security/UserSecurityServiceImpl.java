@@ -1,6 +1,6 @@
 package com.denknd.security;
 
-import com.denknd.services.RoleService;
+import com.denknd.mappers.UserMapper;
 import com.denknd.services.UserService;
 import lombok.RequiredArgsConstructor;
 
@@ -14,9 +14,9 @@ public class UserSecurityServiceImpl implements UserSecurityService {
    */
   private final UserService userService;
   /**
-   * Сервис для работы с ролями пользователей.
+   * Маппер для пользователя.
    */
-  private final RoleService roleService;
+  private final UserMapper userMapper;
 
   /**
    * Получает пользователя из базы данных и преобразует его в объект {@link UserSecurity}.
@@ -28,8 +28,7 @@ public class UserSecurityServiceImpl implements UserSecurityService {
   public UserSecurity getUserSecurity(String email) {
     if (this.userService.existUserByEmail(email)) {
       var userByEmail = this.userService.getUserByEmail(email);
-      var roles = this.roleService.getRoles(userByEmail.getUserId());
-      return new UserSecurity(userByEmail.getFirstName(), userByEmail.getUserId(), roles, userByEmail.getPassword());
+      return this.userMapper.mapUserToUserSecurity(userByEmail);
     }
     return null;
   }

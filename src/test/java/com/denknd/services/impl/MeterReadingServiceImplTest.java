@@ -14,6 +14,7 @@ import org.mockito.ArgumentCaptor;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
+import java.sql.SQLException;
 import java.time.OffsetDateTime;
 import java.time.YearMonth;
 import java.util.List;
@@ -45,7 +46,7 @@ class MeterReadingServiceImplTest {
 
     @Test
     @DisplayName("Проверяет, что вызывается репозиторий с ожидаемым аргументом")
-    void addMeterValue() throws MeterReadingConflictError {
+    void addMeterValue() throws MeterReadingConflictError, SQLException {
         var address = Address.builder().addressId(12L).build();
         var typeMeter = TypeMeter.builder().build();
         var meterReading = MeterReading.builder()
@@ -66,7 +67,7 @@ class MeterReadingServiceImplTest {
 
     @Test
     @DisplayName("Проверяет, что при подаче повторных показаний выпадает ошибка")
-    void addMeterValue_repeatedReadings() {
+    void addMeterValue_repeatedReadings() throws SQLException {
         var address = Address.builder().addressId(12L).build();
         var typeMeter = TypeMeter.builder().build();
         var meterReading = MeterReading.builder()
@@ -86,7 +87,7 @@ class MeterReadingServiceImplTest {
 
     @Test
     @DisplayName("Проверяет, что при подаче повторных показаний выпадает ошибка")
-    void addMeterValue_noValidMeter() {
+    void addMeterValue_noValidMeter() throws SQLException {
         var address = Address.builder().addressId(12L).build();
         var typeMeter = TypeMeter.builder().build();
         var meterReading = MeterReading.builder()
@@ -96,7 +97,7 @@ class MeterReadingServiceImplTest {
                 .build();
         var meterReadingActual = MeterReading.builder()
                 .submissionMonth(YearMonth.now().minusMonths(1))
-                .meterValue(21321412)
+                .meterValue(21321412D)
                 .build();
         when(this.readingRepository.findActualMeterReading(any(), any())).thenReturn(Optional.of(meterReadingActual));
 
@@ -171,10 +172,10 @@ class MeterReadingServiceImplTest {
     @DisplayName("Проверяет работу фильтров")
     void getHistoryMeterByAddress() {
         var stringType = "test";
-        var type1 = TypeMeter.builder().typeCode(stringType).build();
+        var type1 = TypeMeter.builder().typeMeterId(1L).typeCode(stringType).build();
         var typeCode = "type2";
-        var type2 = TypeMeter.builder().typeCode(typeCode).build();
-        var type3 = TypeMeter.builder().typeCode("type3").build();
+        var type2 = TypeMeter.builder().typeMeterId(2L).typeCode(typeCode).build();
+        var type3 = TypeMeter.builder().typeMeterId(3L).typeCode("type3").build();
 
         var meter1 = MeterReading.builder()
                 .submissionMonth(YearMonth.now().minusMonths(2))
@@ -190,6 +191,7 @@ class MeterReadingServiceImplTest {
                 .typeMeter(type3).timeSendMeter(OffsetDateTime.now()).build();
         var meterReadings = List.of(meter1, meter2, meter3, meter4);
         when(this.readingRepository.findMeterReadingByAddressId(any())).thenReturn(meterReadings);
+        when(this.typeMeterService.getTypeMeter()).thenReturn(List.of(type1, type2, type3));
 
         var historyMeterByAddress = this.meterReadingService.getHistoryMeterByAddress(Set.of(1L), Set.of(stringType, typeCode), YearMonth.now().minusMonths(4), YearMonth.now().minusMonths(1));
 

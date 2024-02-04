@@ -2,6 +2,7 @@ package com.denknd.repository;
 
 import com.denknd.entity.User;
 
+import java.sql.SQLException;
 import java.util.Optional;
 
 /**
@@ -31,7 +32,7 @@ public interface UserRepository {
    * @param user Полностью заполненный объект пользователя, без идентификатора.
    * @return Полностью заполненный объект пользователя с присвоенным идентификатором.
    */
-  User save(User user);
+  User save(User user) throws SQLException;
 
   /**
    * Ищет пользователя по электронному адресу.

@@ -1,0 +1,14 @@
+version: '3.9'
+services:
+  postgres:
+    image: "postgres:16.0"
+    container_name: "monitoring_service"
+    environment:
+      POSTGRES_DB: "monitoringDB"
+      POSTGRES_USER: "monitoringUser"
+      POSTGRES_PASSWORD: "monitoringPassword"
+    ports:
+      - "5432:5432"
+    volumes:
+      - ./postgres_data:/var/lib/postgresql/data
+      - ./src/main/resources/db/db-init/:/docker-entrypoint-initdb.d

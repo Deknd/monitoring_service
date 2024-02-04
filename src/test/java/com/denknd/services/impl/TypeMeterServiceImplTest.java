@@ -1,6 +1,7 @@
 package com.denknd.services.impl;
 
 import com.denknd.entity.TypeMeter;
+import com.denknd.exception.TypeMeterAdditionException;
 import com.denknd.repository.TypeMeterRepository;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -10,9 +11,11 @@ import org.mapstruct.Mapping;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
+import java.sql.SQLException;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.Mockito.*;
 
 class TypeMeterServiceImplTest {
@@ -41,8 +44,17 @@ class TypeMeterServiceImplTest {
 
   @Test
   @DisplayName("Проверяет, что сервис обращается в репозиторий")
-  void addNewTypeMeter() {
+  void addNewTypeMeter() throws SQLException, TypeMeterAdditionException {
     this.typeMeterService.addNewTypeMeter(mock(TypeMeter.class));
+
+    verify(this.repository, times(1)).save(any(TypeMeter.class));
+  }
+  @Test
+  @DisplayName("Проверяет, что если в репозитории выкинется ошибка, то тут ее обработают")
+  void addNewTypeMeter_error() throws SQLException, TypeMeterAdditionException {
+    when(this.repository.save(any())).thenThrow(SQLException.class);
+
+    assertThatThrownBy(()->this.typeMeterService.addNewTypeMeter(mock(TypeMeter.class))).isInstanceOf(TypeMeterAdditionException.class);
 
     verify(this.repository, times(1)).save(any(TypeMeter.class));
   }

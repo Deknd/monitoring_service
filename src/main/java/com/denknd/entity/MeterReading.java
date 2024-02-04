@@ -32,7 +32,7 @@ public class MeterReading {
   /**
    * Показания.
    */
-  private double meterValue;
+  private Double meterValue;
   /**
    * Период в котором подали данные показания.
    */

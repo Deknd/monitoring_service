@@ -1,6 +1,7 @@
 package com.denknd.controllers;
 
 import com.denknd.dto.TypeMeterDto;
+import com.denknd.exception.TypeMeterAdditionException;
 import com.denknd.mappers.TypeMeterMapper;
 import com.denknd.services.TypeMeterService;
 import org.junit.jupiter.api.AfterEach;
@@ -34,7 +35,7 @@ class TypeMeterControllerTest {
   }
   @Test
   @DisplayName("Проверяет, что метод обращается в нужный сервис")
-  void addNewType() {
+  void addNewType() throws TypeMeterAdditionException {
     var typeMeterDto = mock(TypeMeterDto.class);
 
     this.typeMeterController.addNewType(typeMeterDto);

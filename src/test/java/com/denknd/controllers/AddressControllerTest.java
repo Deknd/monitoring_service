@@ -2,6 +2,7 @@ package com.denknd.controllers;
 
 import com.denknd.dto.AddressDto;
 import com.denknd.entity.Address;
+import com.denknd.exception.AddressDatabaseException;
 import com.denknd.mappers.AddressMapper;
 import com.denknd.services.AddressService;
 import com.denknd.services.UserService;
@@ -44,13 +45,14 @@ class AddressControllerTest {
 
   @Test
   @DisplayName("Проверяет, что вызываются нужные сервисы, с нужными аргументами")
-  void addAddress() {
+  void addAddress() throws AddressDatabaseException {
     var addressDto = mock(AddressDto.class);
     var userId = 1L;
     var address = mock(Address.class);
     when(this.addressMapper.mapAddressDtoToAddress(eq(addressDto))).thenReturn(address);
 
     this.addressController.addAddress(addressDto, userId);
+
     verify(this.userService, times(1)).getUserById(eq(userId));
     verify(address, times(1)).setOwner(any());
     verify(this.addressService, times(1)).addAddressByUser(any());

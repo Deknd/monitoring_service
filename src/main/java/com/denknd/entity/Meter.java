@@ -1,6 +1,7 @@
 package com.denknd.entity;
 
 import lombok.Builder;
+import lombok.Data;
 
 import java.time.OffsetDateTime;
 
@@ -8,11 +9,12 @@ import java.time.OffsetDateTime;
  * Класс для хранения информации о счетчике.
  */
 @Builder
+@Data
 public class Meter {
   /**
    * Идентификатор сущности.
    */
-  private Long id;
+  private Long meterCountId;
   /**
    * серийный номер.
    */

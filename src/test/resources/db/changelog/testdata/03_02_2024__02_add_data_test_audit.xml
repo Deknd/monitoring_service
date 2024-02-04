@@ -1,0 +1,14 @@
+<databaseChangeLog xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.6.xsd">
+
+    <changeSet id="001__add_data_test_audit" author="den">
+        <insert tableName="audits" schemaName="${defaultSchema}">
+            <column name="operation" value="test audit operation"/>
+            <column name="operation_time" valueDate="NOW()"/>
+            <column name="user_id" value="1"/>
+        </insert>
+        <comment>Добавления аудита для теста</comment>
+    </changeSet>
+
+</databaseChangeLog>

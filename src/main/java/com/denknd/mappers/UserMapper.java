@@ -3,6 +3,7 @@ package com.denknd.mappers;
 import com.denknd.dto.UserCreateDto;
 import com.denknd.dto.UserDto;
 import com.denknd.entity.User;
+import com.denknd.security.UserSecurity;
 import org.mapstruct.Mapper;
 import org.mapstruct.NullValuePropertyMappingStrategy;
 import org.mapstruct.factory.Mappers;
@@ -27,4 +28,11 @@ public interface UserMapper {
    * @return юзер для пользователя
    */
   UserDto mapUserToUserDto(User user);
+
+  /**
+   * Преобразует User в UserSecurity
+   * @param user юзер от сервиса
+   * @return юзер для секьюрити
+   */
+  UserSecurity mapUserToUserSecurity(User user);
 }

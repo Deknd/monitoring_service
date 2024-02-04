@@ -2,15 +2,13 @@ package com.denknd.controllers;
 
 import com.denknd.dto.UserCreateDto;
 import com.denknd.dto.UserDto;
-import com.denknd.entity.Roles;
+import com.denknd.exception.InvalidUserDataException;
 import com.denknd.exception.UserAlreadyExistsException;
 import com.denknd.mappers.UserMapper;
-import com.denknd.services.RoleService;
 import com.denknd.services.UserService;
 import lombok.RequiredArgsConstructor;
 
 import java.security.NoSuchAlgorithmException;
-import java.util.List;
 
 /**
  * Контроллер для работы с пользователями
@@ -21,10 +19,6 @@ public class UserController {
    * Сервис для управления пользователями
    */
   private final UserService userService;
-  /**
-   * Сервис для управления ролями.
-   */
-  private final RoleService roleService;
 
   /**
    * Маппер пользователей
@@ -38,11 +32,10 @@ public class UserController {
    * @return возвращает созданного пользователя
    * @throws UserAlreadyExistsException если данный пользователь уже создан
    */
-  public UserDto createUser(UserCreateDto userCreateDto) throws UserAlreadyExistsException, NoSuchAlgorithmException {
+  public UserDto createUser(UserCreateDto userCreateDto) throws UserAlreadyExistsException, NoSuchAlgorithmException, InvalidUserDataException {
 
     var user = this.userMapper.mapUserCreateDtoToUser(userCreateDto);
     var result = this.userService.registrationUser(user);
-    this.roleService.addRoles(result.getUserId(), Roles.USER);
     return this.userMapper.mapUserToUserDto(result);
   }
 

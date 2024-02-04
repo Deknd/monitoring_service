@@ -2,6 +2,7 @@ package com.denknd.repository;
 
 import com.denknd.entity.Address;
 
+import java.sql.SQLException;
 import java.util.List;
 import java.util.Optional;
 
@@ -14,8 +15,9 @@ public interface AddressRepository {
    *
    * @param address Объект адреса, не содержащий идентификатор.
    * @return Объект адреса с присвоенным идентификатором.
+   * @throws SQLException выкидывается, если не соблюдены ограничения БД
    */
-  Address addAddress(Address address);
+  Address addAddress(Address address) throws SQLException;
 
   /**
    * Ищет все адреса, доступные пользователю с указанным идентификатором.

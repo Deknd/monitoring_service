@@ -133,6 +133,7 @@ public class HistoryCommand implements ConsoleCommand {
                         startDate,
                         endDate);
 
+
         return this.meterReadingsHistoryToStringConverter.apply(meterReadings);
       } else if (userActive.role().equals(Roles.USER)) {
         var meterReadings =
@@ -143,7 +144,6 @@ public class HistoryCommand implements ConsoleCommand {
                         startDate,
                         endDate
                 );
-
         return this.meterReadingsHistoryToStringConverter.apply(meterReadings);
       }
     }
