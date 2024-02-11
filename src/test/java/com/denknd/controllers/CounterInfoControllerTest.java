@@ -31,13 +31,11 @@ class CounterInfoControllerTest {
   private MeterCountService meterCountService;
   @Mock
   private MeterCountMapper meterCountMapper;
-  @Mock
-  private TypeMeterService typeMeterService;
 
   @BeforeEach
   void setUp() {
     this.closeable = MockitoAnnotations.openMocks(this);
-    this.counterInfoController = new CounterInfoController(meterCountService, meterCountMapper, typeMeterService);
+    this.counterInfoController = new CounterInfoController(meterCountService, meterCountMapper);
   }
   @AfterEach
   void tearDown() throws Exception {
@@ -48,7 +46,6 @@ class CounterInfoControllerTest {
   void addInfoForMeter() throws SQLException {
     var counterInfoDto = mock(CounterInfoDto.class);
     when(this.meterCountMapper.mapCounterInfoDtoToMeter(eq(counterInfoDto))).thenReturn(mock(Meter.class));
-    when(this.typeMeterService.getTypeMeterByCode(any())).thenReturn(mock(TypeMeter.class));
 
     this.counterInfoController.addInfoForMeter(counterInfoDto);
 
