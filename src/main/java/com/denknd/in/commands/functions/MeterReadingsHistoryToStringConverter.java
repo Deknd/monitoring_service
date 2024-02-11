@@ -22,7 +22,7 @@ public class MeterReadingsHistoryToStringConverter implements Function<List<Mete
   public String apply(List<MeterReadingResponseDto> meterReadings) {
 
     var groupedByAddressAndTypeMeter = meterReadings.stream()
-            .collect(Collectors.groupingBy(MeterReadingResponseDto::addressId,
+            .collect(Collectors.groupingBy(meterReadingResponseDto -> meterReadingResponseDto.addressId(),
                     Collectors.groupingBy(
                             MeterReadingResponseDto::code)));
 

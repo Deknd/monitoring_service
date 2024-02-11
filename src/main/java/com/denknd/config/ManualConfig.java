@@ -9,7 +9,6 @@ import com.denknd.entity.MeterReading;
 import com.denknd.entity.Roles;
 import com.denknd.entity.User;
 import com.denknd.exception.MeterReadingConflictError;
-import com.denknd.exception.UserAlreadyExistsException;
 import com.denknd.in.Console;
 import com.denknd.in.commands.AddAddressCommand;
 import com.denknd.in.commands.AddTypeMeterCommand;
@@ -29,26 +28,25 @@ import com.denknd.mappers.TypeMeterMapper;
 import com.denknd.mappers.UserMapper;
 import com.denknd.out.audit.AuditService;
 import com.denknd.out.audit.AuditServiceImpl;
-import com.denknd.out.audit.InMemoryAuditRepository;
-import com.denknd.repository.impl.InMemoryAddressRepository;
-import com.denknd.repository.impl.InMemoryMeterReadingRepository;
-import com.denknd.repository.impl.InMemoryRoleRepository;
-import com.denknd.repository.impl.InMemoryTypeMeterRepository;
-import com.denknd.repository.impl.InMemoryUserRepository;
+import com.denknd.out.audit.PostgresAuditRepository;
+import com.denknd.repository.impl.PostgresAddressRepository;
+import com.denknd.repository.impl.PostgresMeterReadingRepository;
+import com.denknd.repository.impl.PostgresTypeMeterRepository;
+import com.denknd.repository.impl.PostgresUserRepository;
 import com.denknd.security.SecurityService;
 import com.denknd.security.SecurityServiceImpl;
 import com.denknd.security.UserSecurityServiceImpl;
-import com.denknd.services.AddressService;
 import com.denknd.services.MeterReadingService;
-import com.denknd.services.RoleService;
 import com.denknd.services.TypeMeterService;
-import com.denknd.services.UserService;
 import com.denknd.services.impl.AddressServiceImpl;
 import com.denknd.services.impl.MeterReadingServiceImpl;
-import com.denknd.services.impl.RoleServiceImpl;
 import com.denknd.services.impl.TypeMeterServiceImpl;
 import com.denknd.services.impl.UserServiceImpl;
+import com.denknd.util.DataBaseConnection;
+import com.denknd.util.impl.DataBaseConnectionImpl;
+import com.denknd.util.impl.LiquibaseMigration;
 import com.denknd.util.impl.Sha256PasswordEncoderImpl;
+import com.denknd.util.impl.YamlParserImpl;
 import com.denknd.validator.DataValidatorManager;
 import com.denknd.validator.DataValidatorManagerImpl;
 import com.denknd.validator.DigitalValidator;
@@ -61,7 +59,7 @@ import com.denknd.validator.PostalCodeValidator;
 import com.denknd.validator.RegionValidator;
 import com.denknd.validator.TitleValidator;
 
-import java.security.NoSuchAlgorithmException;
+import java.io.FileNotFoundException;
 import java.time.OffsetDateTime;
 import java.time.YearMonth;
 import java.util.Scanner;
@@ -78,10 +76,20 @@ public class ManualConfig {
   /**
    * Собирает весь контекст приложения.
    */
-  public ManualConfig() {
-
+  public ManualConfig(String yamlPath, DataBaseConnection dataBaseConnectionArg) throws FileNotFoundException, ClassNotFoundException {
     var scanner = new Scanner(System.in);
     var passwordEncoder = new Sha256PasswordEncoderImpl();
+    var yamlParser = new YamlParserImpl();
+    if(yamlPath != null){
+      yamlParser.setPathToApplicationYml(yamlPath);
+    }
+    DataBaseConnection dataBaseConnection;
+    if (dataBaseConnectionArg != null){
+      dataBaseConnection = dataBaseConnectionArg;
+    }else {
+      dataBaseConnection = new DataBaseConnectionImpl(yamlParser.dbConfig());
+    }
+    new LiquibaseMigration(dataBaseConnection, yamlParser.liquibaseConfig()).migration();
 
     var validators = createValidators(scanner);
 
@@ -90,20 +98,19 @@ public class ManualConfig {
     var typeMeterMapper = TypeMeterMapper.INSTANCE;
     var userMapper = UserMapper.INSTANCE;
 
-    var userService = new UserServiceImpl(new InMemoryUserRepository(), passwordEncoder);
-    var roleService = new RoleServiceImpl(new InMemoryRoleRepository());
-    var addressService = new AddressServiceImpl(new InMemoryAddressRepository());
-    var typeMeterService = new TypeMeterServiceImpl(new InMemoryTypeMeterRepository());
-    var meterReadingService = new MeterReadingServiceImpl(new InMemoryMeterReadingRepository(), typeMeterService);
-    var auditService = new AuditServiceImpl(new InMemoryAuditRepository());
-    var securityService = new SecurityServiceImpl(new UserSecurityServiceImpl(userService, roleService), passwordEncoder);
+    var userService = new UserServiceImpl(new PostgresUserRepository(dataBaseConnection), passwordEncoder);
+    var addressService = new AddressServiceImpl(new PostgresAddressRepository(dataBaseConnection));
+    var typeMeterService = new TypeMeterServiceImpl(new PostgresTypeMeterRepository(dataBaseConnection));
+    var meterReadingService = new MeterReadingServiceImpl(new PostgresMeterReadingRepository(dataBaseConnection), typeMeterService);
+    var auditService = new AuditServiceImpl(new PostgresAuditRepository(dataBaseConnection));
+    var securityService = new SecurityServiceImpl(new UserSecurityServiceImpl(userService, userMapper), passwordEncoder);
 
-    this.addTestUsers(userService, roleService, addressService, meterReadingService, typeMeterService);
+    this.addTestUsers( meterReadingService, typeMeterService);
 
     var addressController = new AddressController(addressService, userService, addressMapper);
     var meterReadingController = new MeterReadingController(meterReadingService, addressService, typeMeterService, meterReadingMapper);
     var typeMeterController = new TypeMeterController(typeMeterService, typeMeterMapper);
-    var userController = new UserController(userService, roleService, userMapper);
+    var userController = new UserController(userService, userMapper);
 
     this.console = this.createConsole(
             scanner,
@@ -192,45 +199,27 @@ public class ManualConfig {
   /**
    * Добавляет тестовые данные для проверки работоспособности
    *
-   * @param userService         для добавления пользователя
-   * @param roleService         для добавления данных о ролях
-   * @param addressService      для добавления адресов
    * @param meterReadingService для добавления показаний
    * @param typeMeterService    для выбора типа показаний
    */
   private void addTestUsers(
-          UserService userService,
-          RoleService roleService,
-          AddressService addressService,
           MeterReadingService meterReadingService,
           TypeMeterService typeMeterService) {
-    try {
-      var testAdmin = User.builder()
-              .email("admin@admin.com")
-              .password("123")
-              .firstName("Admin")
-              .lastName("LastName")
-              .build();
+
+
       var testUser = User.builder()
               .email("test@mail.com")
               .password("123")
               .firstName("TestName")
               .lastName("TestLastName")
+              .role(Roles.USER)
               .build();
-      testUser = userService.registrationUser(testUser);
-      testAdmin = userService.registrationUser(testAdmin);
 
       System.out.println("Тестовые данные:\n   "
-              + "User:  id - " + testUser.getUserId()
-              + ", email - " + testUser.getEmail() + "   password - 123\n   "
-              + "Admin: id - " + testAdmin.getUserId()
-              + ", email - " + testAdmin.getEmail() + " password - 123");
-      var roleForTestUser = Roles.USER;
-      var roleAdmin = Roles.ADMIN;
-
-      roleService.addRoles(testUser.getUserId(), roleForTestUser);
-      roleService.addRoles(testAdmin.getUserId(), roleAdmin);
+              + "User:  email - test@mail.com , password - 123\n   "
+              + "Admin: email - admin@admin.com , password - 123");
       var testAddress = Address.builder()
+              .addressId(1L)
               .owner(testUser)
               .postalCode(184040L)
               .region("Мурманская область")
@@ -240,7 +229,7 @@ public class ManualConfig {
               .apartment("1")
               .build();
 
-      addressService.addAddressByUser(testAddress);
+
 
       var testData = MeterReading.builder()
               .address(testAddress)
@@ -250,14 +239,9 @@ public class ManualConfig {
               .timeSendMeter(OffsetDateTime.now())
               .build();
 
-      meterReadingService.addMeterValue(testData);
+      //meterReadingService.addMeterValue(testData);
 
-    } catch (UserAlreadyExistsException | MeterReadingConflictError e) {
-      e.printStackTrace();
 
-    } catch (NoSuchAlgorithmException e) {
-      throw new RuntimeException(e);
-    }
   }
 
 

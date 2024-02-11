@@ -3,6 +3,7 @@ package com.denknd.in.commands;
 import com.denknd.controllers.TypeMeterController;
 import com.denknd.dto.TypeMeterDto;
 import com.denknd.entity.Roles;
+import com.denknd.exception.TypeMeterAdditionException;
 import com.denknd.security.UserSecurity;
 import com.denknd.validator.DataValidatorManager;
 import org.junit.jupiter.api.AfterEach;
@@ -50,7 +51,7 @@ class AddTypeMeterCommandTest {
 
     @Test
     @DisplayName("Проверяет, что правильно собирается объект и вызывается сервис для его сохранения")
-    void run() {
+    void run() throws TypeMeterAdditionException {
         var user = mock(UserSecurity.class);
         var roles = Roles.ADMIN;
         when(user.role()).thenReturn(roles);
@@ -71,8 +72,30 @@ class AddTypeMeterCommandTest {
         assertThat(type.metric()).isEqualTo(metric);
     }
     @Test
+    @DisplayName("Проверяет, что правильно собирается объект и вызывается сервис, но не прошли ограничение БД")
+    void run_error() throws TypeMeterAdditionException {
+        var user = mock(UserSecurity.class);
+        var roles = Roles.ADMIN;
+        when(user.role()).thenReturn(roles);
+        var code = "test";
+        var description = "description test";
+        var metric = "min";
+        when(this.dataValidatorManager.getValidInput(any(), any(), any())).thenReturn(code).thenReturn(description).thenReturn(metric);
+        when(this.dataValidatorManager.areAllValuesNotNullAndNotEmpty(any(String[].class))).thenReturn(true);
+        when(this.typeMeterController.addNewType(any())).thenThrow(TypeMeterAdditionException.class);
+
+        this.addTypeMeterCommand.run(this.COMMAND, user);
+
+        var typeCaptor = ArgumentCaptor.forClass(TypeMeterDto.class);
+        verify(this.typeMeterController, times(1)).addNewType(typeCaptor.capture());
+        var type = typeCaptor.getValue();
+        assertThat(type.typeCode()).isEqualTo(code);
+        assertThat(type.typeDescription()).isEqualTo(description);
+        assertThat(type.metric()).isEqualTo(metric);
+    }
+    @Test
     @DisplayName("Проверяет, что при не правильном заполнении, не вызывается сервис для сохранения")
-    void run_nullData() {
+    void run_nullData() throws TypeMeterAdditionException {
         var user = mock(UserSecurity.class);
         var roles = Roles.ADMIN;
         when(user.role()).thenReturn(roles);
@@ -86,7 +109,7 @@ class AddTypeMeterCommandTest {
     }
     @Test
     @DisplayName("Проверяет, что ролью Юзера данный эндпоинт не доступен")
-    void run_notAdmin() {
+    void run_notAdmin() throws TypeMeterAdditionException {
         var user = mock(UserSecurity.class);
         var roles = Roles.USER;
         when(user.role()).thenReturn(roles);
@@ -100,7 +123,7 @@ class AddTypeMeterCommandTest {
 
     @Test
     @DisplayName("Проверяет, что не авторизованному пользователю данный эндпоинт не доступен")
-    void run_notUser() {
+    void run_notUser() throws TypeMeterAdditionException {
 
         this.addTypeMeterCommand.run(this.COMMAND, null);
 

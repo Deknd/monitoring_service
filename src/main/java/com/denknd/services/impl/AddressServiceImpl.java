@@ -1,10 +1,12 @@
 package com.denknd.services.impl;
 
 import com.denknd.entity.Address;
+import com.denknd.exception.AddressDatabaseException;
 import com.denknd.repository.AddressRepository;
 import com.denknd.services.AddressService;
 import lombok.RequiredArgsConstructor;
 
+import java.sql.SQLException;
 import java.util.List;
 
 /**
@@ -39,8 +41,12 @@ public class AddressServiceImpl implements AddressService {
    * @return Полностью заполненный объект адреса с присвоенным айди.
    */
   @Override
-  public Address addAddressByUser(Address address) {
-    return this.addressRepository.addAddress(address);
+  public Address addAddressByUser(Address address) throws AddressDatabaseException {
+    try {
+      return this.addressRepository.addAddress(address);
+    } catch (SQLException e) {
+      throw new AddressDatabaseException("Данные переданные для сохранения адреса не валидны: "+e.getMessage());
+    }
   }
 
   /**

@@ -1,6 +1,7 @@
 package com.denknd.services.impl;
 
 import com.denknd.entity.Address;
+import com.denknd.exception.AddressDatabaseException;
 import com.denknd.repository.AddressRepository;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -9,6 +10,10 @@ import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
+import java.sql.SQLException;
+
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.Mockito.*;
 
 class AddressServiceImplTest {
@@ -44,10 +49,20 @@ class AddressServiceImplTest {
     }
     @Test
     @DisplayName("Проверяет, что сервис обращается в репозиторий")
-    void addAddressByUser() {
+    void addAddressByUser() throws AddressDatabaseException, SQLException {
         var address = mock(Address.class);
 
         this.addressService.addAddressByUser(address);
+
+        verify(this.addressRepository, times(1)).addAddress(eq(address));
+    }
+    @Test
+    @DisplayName("Проверяет, что сервис обращается в репозиторий и репозиторий выкидывает ошибку")
+    void addAddressByUser_sqlException() throws SQLException {
+        var address = mock(Address.class);
+        when(this.addressRepository.addAddress(any())).thenThrow(SQLException.class);
+
+        assertThatThrownBy(()-> this.addressService.addAddressByUser(address)).isInstanceOf(AddressDatabaseException.class);
 
         verify(this.addressRepository, times(1)).addAddress(eq(address));
     }

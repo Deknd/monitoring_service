@@ -1,6 +1,7 @@
 package com.denknd.controllers;
 
 import com.denknd.dto.AddressDto;
+import com.denknd.exception.AddressDatabaseException;
 import com.denknd.mappers.AddressMapper;
 import com.denknd.services.AddressService;
 import com.denknd.services.UserService;
@@ -33,7 +34,7 @@ public class AddressController {
    * @param userId     идентификатор пользователя, к которому нужно добавить адрес
    * @return возвращает добавленный адрес
    */
-  public AddressDto addAddress(AddressDto addressDto, Long userId) {
+  public AddressDto addAddress(AddressDto addressDto, Long userId) throws AddressDatabaseException {
     var address = this.addressMapper.mapAddressDtoToAddress(addressDto);
     var user = this.userService.getUserById(userId);
     address.setOwner(user);

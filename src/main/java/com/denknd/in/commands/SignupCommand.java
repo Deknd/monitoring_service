@@ -3,6 +3,7 @@ package com.denknd.in.commands;
 import com.denknd.controllers.UserController;
 import com.denknd.dto.UserCreateDto;
 import com.denknd.entity.Roles;
+import com.denknd.exception.InvalidUserDataException;
 import com.denknd.exception.UserAlreadyExistsException;
 import com.denknd.security.UserSecurity;
 import com.denknd.validator.DataValidatorManager;
@@ -97,7 +98,7 @@ public class SignupCommand implements ConsoleCommand {
         try {
           var user = this.userController.createUser(newUser);
           return "Пользователь создан " + user;
-        } catch (UserAlreadyExistsException | NoSuchAlgorithmException e) {
+        } catch (UserAlreadyExistsException | NoSuchAlgorithmException | InvalidUserDataException e) {
           return e.getMessage();
         }
       }

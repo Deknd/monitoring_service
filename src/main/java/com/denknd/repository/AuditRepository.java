@@ -2,6 +2,8 @@ package com.denknd.repository;
 
 import com.denknd.out.audit.Audit;
 
+import java.sql.SQLException;
+
 /**
  * Интерфейс репозитория для хранения и получения объектов аудита.
  */
@@ -12,5 +14,5 @@ public interface AuditRepository {
    * @param audit Объект аудита, не содержащий идентификатор.
    * @return Объект аудита с присвоенным идентификатором.
    */
-  Audit save(Audit audit);
+  Audit save(Audit audit) throws SQLException;
 }

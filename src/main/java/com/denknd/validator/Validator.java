@@ -11,7 +11,7 @@ public interface Validator {
   /**
    * Тип валидатора для проверки имен.
    */
-  String NAME_TYPE = "name";
+  String NAME_TYPE = "firstName";
   /**
    * Тип валидатора для проверки паролей.
    */

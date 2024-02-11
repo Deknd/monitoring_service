@@ -1,6 +1,8 @@
 package com.denknd.services.impl;
 
+import com.denknd.entity.Roles;
 import com.denknd.entity.User;
+import com.denknd.exception.InvalidUserDataException;
 import com.denknd.exception.UserAlreadyExistsException;
 import com.denknd.repository.UserRepository;
 import com.denknd.services.UserService;
@@ -8,6 +10,7 @@ import com.denknd.util.PasswordEncoder;
 import lombok.RequiredArgsConstructor;
 
 import java.security.NoSuchAlgorithmException;
+import java.sql.SQLException;
 
 /**
  * Реализация сервиса для работы с пользователями.
@@ -26,17 +29,22 @@ public class UserServiceImpl implements UserService {
   /**
    * Регистрирует нового пользователя.
    *
-   * @param create Полностью заполненный объект пользователя без идентификатора.
+   * @param user Полностью заполненный объект пользователя без идентификатора.
    * @return Полностью заполненный объект пользователя с идентификатором.
    * @throws UserAlreadyExistsException Если пользователь с таким электронным адресом уже существует.
    */
   @Override
-  public User registrationUser(User create) throws UserAlreadyExistsException, NoSuchAlgorithmException {
-    if (this.userRepository.existUser(create.getEmail())) {
+  public User registrationUser(User user) throws UserAlreadyExistsException, NoSuchAlgorithmException, InvalidUserDataException {
+    if (this.userRepository.existUser(user.getEmail())) {
       throw new UserAlreadyExistsException("Данный пользователь уже существует");
     }
-    create.setPassword(this.passwordEncoder.encode(create.getPassword()));
-    return this.userRepository.save(create);
+    user.setPassword(this.passwordEncoder.encode(user.getPassword()));
+    user.setRole(Roles.USER);
+    try {
+      return this.userRepository.save(user);
+    } catch (SQLException e) {
+        throw new InvalidUserDataException("Данные переданные пользователям не валидные: "+e.getMessage());
+    }
   }
 
 

@@ -3,6 +3,7 @@ package com.denknd.in.commands;
 import com.denknd.controllers.TypeMeterController;
 import com.denknd.dto.TypeMeterDto;
 import com.denknd.entity.Roles;
+import com.denknd.exception.TypeMeterAdditionException;
 import com.denknd.security.UserSecurity;
 import com.denknd.validator.DataValidatorManager;
 import com.denknd.validator.Validator;
@@ -83,11 +84,14 @@ public class AddTypeMeterCommand implements ConsoleCommand {
               .typeDescription(description)
               .metric(metric)
               .build();
-      var newTypeMeter = this.typeMeterController.addNewType(typeMeter);
-
-      return "Новый тип показаний добавлен: "
-              + newTypeMeter.typeCode()
-              + " - " + newTypeMeter.typeDescription();
+      try {
+        var newTypeMeter = this.typeMeterController.addNewType(typeMeter);
+        return "Новый тип показаний добавлен: "
+                + newTypeMeter.typeCode()
+                + " - " + newTypeMeter.typeDescription();
+      } catch (TypeMeterAdditionException e) {
+        return "Данные введены не корректно. "+e.getMessage();
+      }
     }
     return null;
   }

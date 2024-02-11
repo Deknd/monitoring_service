@@ -3,6 +3,7 @@ package com.denknd.in.commands;
 import com.denknd.controllers.AddressController;
 import com.denknd.dto.AddressDto;
 import com.denknd.entity.Roles;
+import com.denknd.exception.AddressDatabaseException;
 import com.denknd.security.UserSecurity;
 import com.denknd.validator.DataValidatorManager;
 import org.junit.jupiter.api.AfterEach;
@@ -53,7 +54,7 @@ class AddAddressCommandTest {
 
   @Test
   @DisplayName("проверяет что данная команда вызывает сервис с полностью собранным адресом")
-  void run() {
+  void run() throws AddressDatabaseException {
     var command = "add_addr";
     var userSecurity = UserSecurity.builder().role(Roles.USER).build();
     var region = "region";
@@ -81,8 +82,35 @@ class AddAddressCommandTest {
   }
 
   @Test
+  @DisplayName("проверяет что данная команда вызывает сервис с полностью собранным адресом и получает ошибку из контроллера")
+  void run_AddressDatabaseException() throws AddressDatabaseException {
+    var command = "add_addr";
+    var userSecurity = UserSecurity.builder().role(Roles.USER).build();
+    var region = "region";
+    var city = "city";
+    var street = " street";
+    var house = "house";
+    var apartment = "apartment";
+    var postalCode = "123456";
+    when(this.dataValidatorManager.getValidInput(any(), any(), any())).thenReturn(region).thenReturn(city).thenReturn(street).thenReturn(house).thenReturn(apartment).thenReturn(postalCode);
+    when(this.dataValidatorManager.areAllValuesNotNullAndNotEmpty(any(String[].class))).thenReturn(true);
+    when(this.addressController.addAddress(any(), any())).thenThrow(AddressDatabaseException.class);
+
+    this.addAddressCommand.run(command, userSecurity);
+
+    var addressCapture = ArgumentCaptor.forClass(AddressDto.class);
+    verify(this.addressController, times(1)).addAddress(addressCapture.capture(), any());
+    var addressCaptureValue = addressCapture.getValue();
+    assertThat(addressCaptureValue.region()).isEqualTo(region);
+    assertThat(addressCaptureValue.city()).isEqualTo(city);
+    assertThat(addressCaptureValue.street()).isEqualTo(street);
+    assertThat(addressCaptureValue.house()).isEqualTo(house);
+    assertThat(addressCaptureValue.apartment()).isEqualTo(apartment);
+    assertThat(String.valueOf(addressCaptureValue.postalCode())).isEqualTo(postalCode);
+  }
+  @Test
   @DisplayName("проверяет что данная команда вызывает сервис с полностью собранным адресом и создает новый лист адресов")
-  void run_newList() {
+  void run_newList() throws AddressDatabaseException {
     var command = "add_addr";
     var userSecurity = UserSecurity.builder().role(Roles.USER).build();
     var region = "region";
@@ -114,7 +142,7 @@ class AddAddressCommandTest {
 
   @Test
   @DisplayName("проверяет что при вводе не корректных данных, метод не вызывается addressService")
-  void run_failedValue() {
+  void run_failedValue() throws AddressDatabaseException {
     var command = "add_addr";
     var user = UserSecurity.builder().role(Roles.USER).build();
     when(this.dataValidatorManager.areAllValuesNotNullAndNotEmpty(any(String[].class))).thenReturn(false);
@@ -128,7 +156,7 @@ class AddAddressCommandTest {
 
   @Test
   @DisplayName("проверяет что при вводе дополнительных параметров, сервис не вызывается")
-  void run_failedParam() {
+  void run_failedParam() throws AddressDatabaseException {
     var command = "add_addr sdsd";
     var user = mock(UserSecurity.class);
 
@@ -141,7 +169,7 @@ class AddAddressCommandTest {
 
   @Test
   @DisplayName("проверяет что при вызове не авторизированным, сервис не вызывается")
-  void run_notUser() {
+  void run_notUser() throws AddressDatabaseException {
     var command = "add_addr";
 
     var run = this.addAddressCommand.run(command, null);

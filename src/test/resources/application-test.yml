@@ -1,0 +1,8 @@
+db:
+  username: "testUserDb"
+  password: "testPasswordDb"
+  url: jdbc:test://test:5432/test
+liquibase:
+  technical_schema: "technical_schema"
+  default_schema: "default_schema"
+  changelog: "src/test/resources/db/changelog/changelog-test.xml"

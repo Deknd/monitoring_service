@@ -59,7 +59,7 @@ class UserCommandTest {
 
     var user = UserSecurity.builder()
             .userId(1L)
-            .name("FirstName")
+            .firstName("FirstName")
             .role(userRole)
             .build();
     when(userController.getUser(eq(user.userId()))).thenReturn(mock(UserDto.class));
@@ -78,7 +78,7 @@ class UserCommandTest {
   void run_Admin() {
     var user = UserSecurity.builder()
             .userId(1L)
-            .name("FirstName")
+            .firstName("FirstName")
             .role(Roles.ADMIN)
             .build();
     var userFindId = 4L;
@@ -106,7 +106,7 @@ class UserCommandTest {
   void run_AdminByEmail() {
     var user = UserSecurity.builder()
             .userId(1L)
-            .name("FirstName")
+            .firstName("FirstName")
             .role(Roles.ADMIN)
             .build();
 
@@ -135,7 +135,7 @@ class UserCommandTest {
   void run_AdminNotData() {
     var user = UserSecurity.builder()
             .userId(1L)
-            .name("FirstName")
+            .firstName("FirstName")
             .role(Roles.ADMIN)
             .build();
 
@@ -164,7 +164,7 @@ class UserCommandTest {
   void run_unknownRole() {
     var user = UserSecurity.builder()
             .userId(1L)
-            .name("FirstName")
+            .firstName("FirstName")
             .role(null)
             .build();
 

@@ -1,0 +1,71 @@
+<databaseChangeLog xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.6.xsd">
+
+    <changeSet id="001__create_meter_readings_sequence" author="den">
+        <createSequence sequenceName="id_meter_readings_seq" startValue="1" incrementBy="1"
+                        schemaName="${defaultSchema}"/>
+        <comment>Последовательность для таблицы показаний</comment>
+    </changeSet>
+    <changeSet id="002__create_meter_readings_table" author="den">
+        <createTable tableName="meter_readings" schemaName="${defaultSchema}">
+            <column name="meter_id" type="BIGINT" defaultValueSequenceNext="id_meter_readings_seq">
+                <constraints primaryKey="true" nullable="false" primaryKeyName="meter_readings_pkey" unique="true"/>
+            </column>
+            <column name="address_id" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="type_meter_id" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="meter_count_id" type="BIGINT">
+                <constraints nullable="true"/>
+            </column>
+            <column name="meter_value" type="NUMERIC(10,3)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="submission_month" type="VARCHAR(7)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="time_send_meter" type="TIMESTAMP WITH TIME ZONE">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+        <comment>Таблица для показаний</comment>
+    </changeSet>
+    <changeSet id="003__create_fk_address_id" author="den">
+        <addForeignKeyConstraint baseTableSchemaName="${defaultSchema}"
+                                 baseTableName="meter_readings"
+                                 baseColumnNames="address_id"
+                                 constraintName="fk_meter_readings_address"
+                                 referencedTableSchemaName="${defaultSchema}"
+                                 referencedTableName="addresses"
+                                 referencedColumnNames="address_id"
+                                 onDelete="CASCADE"/>
+        <comment>Добавления внешнего ключа для связи с таблицей адресов</comment>
+    </changeSet>
+
+    <changeSet id="004__create_fk_type_meter_id" author="den">
+        <addForeignKeyConstraint baseTableSchemaName="${defaultSchema}"
+                                 baseTableName="meter_readings"
+                                 baseColumnNames="type_meter_id"
+                                 constraintName="fk_meter_readings_type_meter"
+                                 referencedTableSchemaName="${defaultSchema}"
+                                 referencedTableName="type_meters"
+                                 referencedColumnNames="type_meter_id"
+                                 onDelete="CASCADE"/>
+        <comment>Добавления внешнего ключа для связи с таблицей типов показаний</comment>
+    </changeSet>
+    <changeSet id="005__create_fk_meter_count_id" author="den">
+        <addForeignKeyConstraint baseTableSchemaName="${defaultSchema}"
+                                 baseTableName="meter_readings"
+                                 baseColumnNames="meter_count_id"
+                                 constraintName="fk_meter_readings_meter_count"
+                                 referencedTableSchemaName="${defaultSchema}"
+                                 referencedTableName="meters"
+                                 referencedColumnNames="meter_count_id"
+                                 onDelete="SET NULL"/>
+        <comment>Добавление внешнего ключа для связи с таблицей счетчиков</comment>
+    </changeSet>
+
+</databaseChangeLog>

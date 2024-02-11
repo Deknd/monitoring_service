@@ -3,6 +3,7 @@ package com.denknd.in.commands;
 import com.denknd.controllers.AddressController;
 import com.denknd.dto.AddressDto;
 import com.denknd.entity.Roles;
+import com.denknd.exception.AddressDatabaseException;
 import com.denknd.security.UserSecurity;
 import com.denknd.validator.DataValidatorManager;
 import com.denknd.validator.Validator;
@@ -99,8 +100,13 @@ public class AddAddressCommand implements ConsoleCommand {
               .apartment(apartment)
               .postalCode(postalCode).build();
 
-      var addressByUser = this.addressController.addAddress(address, userActive.userId());
-      return "Адрес добавлен (ID адреса: " + addressByUser + ")";
+      try {
+        var addressByUser = this.addressController.addAddress(address, userActive.userId());
+        return "Адрес добавлен (ID адреса: " + addressByUser + ")";
+      } catch (AddressDatabaseException e) {
+        return "Данные введены некорректно. " + e.getMessage();
+      }
+
 
     } else {
       return "Команда не поддерживается: " + command;

@@ -2,6 +2,7 @@ package com.denknd.repository;
 
 import com.denknd.entity.TypeMeter;
 
+import java.sql.SQLException;
 import java.util.List;
 
 /**
@@ -20,7 +21,8 @@ public interface TypeMeterRepository {
    *
    * @param typeMeter Полностью заполненный объект без идентификатора.
    * @return Полностью заполненный объект с присвоенным идентификатором.
+   * @throws SQLException возникает, когда данный не совпадают с ограничениями базы данных
    */
-  TypeMeter save(TypeMeter typeMeter);
+  TypeMeter save(TypeMeter typeMeter) throws SQLException;
 
 }

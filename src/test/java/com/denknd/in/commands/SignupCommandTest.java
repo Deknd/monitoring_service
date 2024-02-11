@@ -3,6 +3,7 @@ package com.denknd.in.commands;
 import com.denknd.controllers.UserController;
 import com.denknd.dto.UserCreateDto;
 import com.denknd.entity.Roles;
+import com.denknd.exception.InvalidUserDataException;
 import com.denknd.exception.UserAlreadyExistsException;
 import com.denknd.security.UserSecurity;
 import com.denknd.validator.DataValidatorManager;
@@ -50,7 +51,7 @@ class SignupCommandTest {
 
     @Test
     @DisplayName("Проверяет, что пользователь собирается правильно")
-    void run() throws UserAlreadyExistsException, NoSuchAlgorithmException {
+    void run() throws UserAlreadyExistsException, NoSuchAlgorithmException, InvalidUserDataException {
         var command = "signup";
         var email = "emailadsf@emaildsf.com";
         var password = "password";
@@ -74,7 +75,7 @@ class SignupCommandTest {
 
     @Test
     @DisplayName("Проверяет, что пользователь не собирается, если не вводить данные")
-    void run_exit() throws UserAlreadyExistsException, NoSuchAlgorithmException {
+    void run_exit() throws UserAlreadyExistsException, NoSuchAlgorithmException, InvalidUserDataException {
         var command = "signup";
 
         this.signupCommand.run(command, null);
@@ -86,7 +87,7 @@ class SignupCommandTest {
 
     @Test
     @DisplayName("Проверяет, что метод не доступен, когда пользователь авторизован")
-    void run_NotCommandWhenAuth() throws UserAlreadyExistsException, NoSuchAlgorithmException {
+    void run_NotCommandWhenAuth() throws UserAlreadyExistsException, NoSuchAlgorithmException, InvalidUserDataException {
         var command = "signup";
         var userActive = mock(UserSecurity.class);
         when(userActive.role()).thenReturn(null);
@@ -98,7 +99,7 @@ class SignupCommandTest {
 
     @Test
     @DisplayName("Проверяет, что если userService выдает ошибку, выходит из метода с сообщением от ошибки")
-    void run_throwException() throws UserAlreadyExistsException, NoSuchAlgorithmException {
+    void run_throwException() throws UserAlreadyExistsException, NoSuchAlgorithmException, InvalidUserDataException {
         var command = "signup";
         var email = "emailadsf@emaildsf.com";
         var password = "password";

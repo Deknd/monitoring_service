@@ -2,6 +2,7 @@ package com.denknd.repository;
 
 import com.denknd.entity.MeterReading;
 
+import java.sql.SQLException;
 import java.time.YearMonth;
 import java.util.List;
 import java.util.Optional;
@@ -16,7 +17,7 @@ public interface MeterReadingRepository {
    * @param meterReading Полностью заполненный объект показаний без идентификатора.
    * @return Полностью заполненный объект показаний с присвоенным идентификатором.
    */
-  MeterReading save(MeterReading meterReading);
+  MeterReading save(MeterReading meterReading) throws SQLException;
 
   /**
    * Ищет все доступные показания по указанному адресу.
