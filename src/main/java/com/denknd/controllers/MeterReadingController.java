@@ -11,6 +11,7 @@ import com.denknd.services.AddressService;
 import com.denknd.services.MeterReadingService;
 import com.denknd.services.TypeMeterService;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.log4j.Log4j2;
 
 import java.time.YearMonth;
 import java.util.List;
@@ -21,6 +22,7 @@ import java.util.stream.Collectors;
  * Контроллер для работы с показаниями данных.
  */
 @RequiredArgsConstructor
+@Log4j2
 public class MeterReadingController {
   /**
    * Сервис для управления показаниями.

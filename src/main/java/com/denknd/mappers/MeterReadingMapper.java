@@ -66,7 +66,6 @@ public interface MeterReadingMapper {
             .meterId(resultSet.getLong("meter_id"))
             .address(Address.builder().addressId(resultSet.getLong("address_id")).build())
             .typeMeter(TypeMeter.builder().typeMeterId(resultSet.getLong("type_meter_id")).build())
-            .meter(Meter.builder().meterCountId(resultSet.getLong("meter_count_id")).build())
             .meterValue(resultSet.getDouble("meter_value"))
             .submissionMonth(YearMonth.parse(resultSet.getString("submission_month"), DateTimeFormatter.ofPattern("yyyy-MM")))
             .timeSendMeter(OffsetDateTime.ofInstant(resultSet.getTimestamp("time_send_meter").toInstant(), ZoneId.systemDefault()))

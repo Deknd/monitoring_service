@@ -49,6 +49,7 @@ import com.denknd.util.impl.Sha256PasswordEncoderImpl;
 import com.denknd.util.impl.Validators;
 import com.denknd.util.impl.YamlParserImpl;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import com.nimbusds.jose.JWEDecrypter;
 import com.nimbusds.jose.JWEEncrypter;
 import com.nimbusds.jose.KeyLengthException;
@@ -171,6 +172,7 @@ public class ManualConfig {
   public ManualConfig(String yamlPath, DataBaseConnection dataBaseConnectionArg) throws FileNotFoundException, KeyLengthException, ParseException {
     try {
       this.objectMapper = new ObjectMapper();
+      this.objectMapper.registerModule(new JavaTimeModule());
       var passwordEncoder = new Sha256PasswordEncoderImpl();
       var yamlParser = new YamlParserImpl();
       if (yamlPath != null) {

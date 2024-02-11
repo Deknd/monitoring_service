@@ -9,6 +9,7 @@ import com.denknd.services.MeterCountService;
 import com.denknd.services.MeterReadingService;
 import com.denknd.services.TypeMeterService;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.log4j.Log4j2;
 
 import java.sql.SQLException;
 import java.time.OffsetDateTime;
@@ -22,6 +23,7 @@ import java.util.Set;
  * Сервис для работы с показаниями.
  */
 @RequiredArgsConstructor
+@Log4j2
 public class MeterReadingServiceImpl implements MeterReadingService {
   /**
    * Репозиторий для работы с показаниями.
@@ -121,7 +123,6 @@ public class MeterReadingServiceImpl implements MeterReadingService {
                 .toList();
       }
     }
-    System.out.println(result.size());
     return result.stream()
             .peek(meterReading -> {
               var typeMeter

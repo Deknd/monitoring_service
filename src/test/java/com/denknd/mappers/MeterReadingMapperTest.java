@@ -155,7 +155,6 @@ class MeterReadingMapperTest {
     when(resultSet.getLong(eq("meter_id"))).thenReturn(1L);
     when(resultSet.getLong(eq("address_id"))).thenReturn(1L);
     when(resultSet.getLong(eq("type_meter_id"))).thenReturn(1L);
-    when(resultSet.getLong(eq("meter_count_id"))).thenReturn(1L);
     when(resultSet.getDouble("meter_value")).thenReturn(123.34);
     when(resultSet.getString("submission_month")).thenReturn("1999-11");
     var offsetDateTime = OffsetDateTime.parse("2024-02-07T15:30:45.123456+03:00");
@@ -164,7 +163,12 @@ class MeterReadingMapperTest {
 
     var meterReading = this.meterReadingMapper.mapResultSetToMeterReading(resultSet);
 
-    assertThat(meterReading).hasNoNullFieldsOrProperties();
+    assertThat(meterReading.getMeterId()).isEqualTo(1L);
+    assertThat(meterReading.getAddress().getAddressId()).isEqualTo(1L);
+    assertThat(meterReading.getTypeMeter().getTypeMeterId()).isEqualTo(1L);
+    assertThat(meterReading.getMeterValue()).isEqualTo(123.34);
+    assertThat(meterReading.getSubmissionMonth()).isNotNull();
+    assertThat(meterReading.getTimeSendMeter()).isNotNull();
   }
 
   @Test
@@ -173,8 +177,7 @@ class MeterReadingMapperTest {
     var resultSet = mock(ResultSet.class);
     when(resultSet.getLong(eq("meter_id"))).thenReturn(1L);
     when(resultSet.getLong(eq("address_id"))).thenReturn(1L);
-    when(resultSet.getLong(eq("type_meter_id"))).thenReturn(1L);
-    when(resultSet.getLong(eq("meter_count_id"))).thenThrow(SQLException.class);
+    when(resultSet.getLong(eq("type_meter_id"))).thenThrow(SQLException.class);
     when(resultSet.getDouble("meter_value")).thenReturn(123.34);
     when(resultSet.getString("submission_month")).thenReturn("1999-11");
     var offsetDateTime = OffsetDateTime.parse("2024-02-07T15:30:45.123456+03:00");

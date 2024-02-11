@@ -1,21 +1,16 @@
 package com.denknd.repository.impl;
 
-import com.denknd.entity.Address;
-import com.denknd.entity.Meter;
 import com.denknd.entity.MeterReading;
-import com.denknd.entity.TypeMeter;
 import com.denknd.mappers.MeterReadingMapper;
 import com.denknd.repository.MeterReadingRepository;
 import com.denknd.util.DataBaseConnection;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.log4j.Log4j2;
 
-import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.sql.Types;
-import java.time.OffsetDateTime;
 import java.time.YearMonth;
-import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -26,6 +21,7 @@ import java.util.Optional;
  * Реализация интерфейса для хранения показаний в БД.
  */
 @RequiredArgsConstructor
+@Log4j2
 public class PostgresMeterReadingRepository implements MeterReadingRepository {
   /**
    * Выдает соединение с базой данных
@@ -100,6 +96,7 @@ public class PostgresMeterReadingRepository implements MeterReadingRepository {
         return meterReadings;
       }
     } catch (SQLException e) {
+      log.error(e.getMessage());
       return Collections.emptyList();
     }
   }
@@ -127,6 +124,7 @@ public class PostgresMeterReadingRepository implements MeterReadingRepository {
         }
       }
     } catch (SQLException e) {
+      log.error(e.getMessage());
       return Optional.empty();
     }
   }
