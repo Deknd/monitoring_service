@@ -246,7 +246,7 @@ public class ManualConfig {
     this.meterReadingController = new MeterReadingController(this.meterReadingService, this.addressService, this.typeMeterService, this.meterReadingMapper);
     this.typeMeterController = new TypeMeterController(this.typeMeterService, this.typeMeterMapper);
     this.userController = new UserController(this.userService, this.userMapper);
-    this.counterInfoController = new CounterInfoController(this.meterCountService, this.meterCountMapper, this.typeMeterService);
+    this.counterInfoController = new CounterInfoController(this.meterCountService, this.meterCountMapper);
   }
 
   /**
