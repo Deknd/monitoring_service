@@ -2,24 +2,40 @@ package com.denknd.repository.impl;
 
 import com.denknd.entity.Roles;
 import com.denknd.entity.User;
+import com.denknd.mappers.UserMapper;
 import com.denknd.repository.TestContainer;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.mockito.Mock;
+import org.mockito.MockitoAnnotations;
 
 import java.sql.SQLException;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 class PostgresUserRepositoryTest extends TestContainer {
   private PostgresUserRepository repository;
+  @Mock
+  private UserMapper userMapper;
+  private AutoCloseable closeable;
 
   @BeforeEach
   void setUp() {
-    this.repository = new PostgresUserRepository(postgresContainer.getDataBaseConnection());
+    this.closeable = MockitoAnnotations.openMocks(this);
+    this.repository = new PostgresUserRepository(postgresContainer.getDataBaseConnection(), this.userMapper);
   }
-
+  @AfterEach
+  void tearDown() throws Exception {
+    this.closeable.close();
+  }
   @Test
   @DisplayName("Проверяет, что пользователь существует")
   void existUser() {
@@ -103,19 +119,15 @@ class PostgresUserRepositoryTest extends TestContainer {
 
   @Test
   @DisplayName("Проверяет, что пользователь достается из памяти")
-  void find(){
+  void find() throws SQLException {
     var email = "test@email.com";
+    when(this.userMapper.mapResultSetToUser(any())).thenReturn(mock(User.class));
 
     var optionalUser = this.repository.find(email);
 
     assertThat(optionalUser).isPresent();
-    var user = optionalUser.get();
-    assertThat(user.getUserId()).isNotNull();
-    assertThat(user.getEmail()).isEqualTo("test@email.com");
-    assertThat(user.getRole()).isEqualTo(Roles.USER);
-    assertThat(user.getPassword()).isEqualTo("a665a45920422f9d417e4867efdc4fb8a04a1f3fff1fa07e998e86f7f7a27ae3");
-    assertThat(user.getFirstName()).isEqualTo("Danil");
-    assertThat(user.getLastName()).isEqualTo("Random");
+    verify(this.userMapper, times(1)).mapResultSetToUser(any());
+
   }
   @Test
   @DisplayName("Проверяет, что пользователь достается из памяти")
@@ -128,10 +140,10 @@ class PostgresUserRepositoryTest extends TestContainer {
   }
   @Test
   @DisplayName("проверяет что пользователь с данным айди существует")
-  void existUserByUserId(){
-    var userId = this.repository.find("test@email.com").get().getUserId();
+  void existUserByUserId() throws SQLException {
+    when(this.userMapper.mapResultSetToUser(any())).thenReturn(mock(User.class));
 
-    var result = this.repository.existUserByUserId(userId);
+    var result = this.repository.existUserByUserId(3L);
 
     assertThat(result).isTrue();
   }
@@ -146,10 +158,10 @@ class PostgresUserRepositoryTest extends TestContainer {
   }
   @Test
   @DisplayName("проверяет, что по айди достается пользователь")
-  void findById(){
-    var userId = this.repository.find("test@email.com").get().getUserId();
+  void findById() throws SQLException {
+    when(this.userMapper.mapResultSetToUser(any())).thenReturn(mock(User.class));
 
-    var result = this.repository.findById(userId);
+    var result = this.repository.findById(3L);
 
     assertThat(result).isPresent();
   }

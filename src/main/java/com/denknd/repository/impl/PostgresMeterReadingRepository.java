@@ -4,8 +4,8 @@ import com.denknd.entity.Address;
 import com.denknd.entity.Meter;
 import com.denknd.entity.MeterReading;
 import com.denknd.entity.TypeMeter;
+import com.denknd.mappers.MeterReadingMapper;
 import com.denknd.repository.MeterReadingRepository;
-import com.denknd.repository.TypeMeterRepository;
 import com.denknd.util.DataBaseConnection;
 import lombok.RequiredArgsConstructor;
 
@@ -31,6 +31,10 @@ public class PostgresMeterReadingRepository implements MeterReadingRepository {
    * Выдает соединение с базой данных
    */
   private final DataBaseConnection dataBaseConnection;
+  /**
+   * Маппер для мапинга показаний
+   */
+  private final MeterReadingMapper meterReadingMapper;
 
   /**
    * Сохраняет показания в памяти.
@@ -43,24 +47,20 @@ public class PostgresMeterReadingRepository implements MeterReadingRepository {
     if (meterReading.getMeterId() != null) {
       throw new SQLException("Ошибка сохранения новых показаний. Переданные показания уже содержат идентификатор");
     }
-
-    var sql = "INSERT INTO meter_readings (address_id, type_meter_id, meter_count_id, meter_value, submission_month, time_send_meter) VALUES (?, ?, ?, ?, ?, ?)";
+    var sql = "INSERT INTO meter_readings (address_id, type_meter_id, meter_value, submission_month, time_send_meter) VALUES (?, ?, ?, ?, ?)";
     var connection = dataBaseConnection.createConnection();
     connection.setAutoCommit(false);
-    var meterCountId = meterReading.getMeter() == null ? null : meterReading.getMeter().getMeterCountId();
     try (var preparedStatement = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
       preparedStatement.setLong(1, meterReading.getAddress().getAddressId());
       preparedStatement.setLong(2, meterReading.getTypeMeter().getTypeMeterId());
-      preparedStatement.setObject(3, meterCountId, Types.BIGINT);
-      preparedStatement.setDouble(4, meterReading.getMeterValue());
-      preparedStatement.setString(5, meterReading.getSubmissionMonth().format(DateTimeFormatter.ofPattern("MM-yyyy")));
-      preparedStatement.setObject(6, meterReading.getTimeSendMeter(), Types.TIMESTAMP_WITH_TIMEZONE);
+      preparedStatement.setDouble(3, meterReading.getMeterValue());
+      preparedStatement.setString(4, meterReading.getSubmissionMonth().format(DateTimeFormatter.ofPattern("yyyy-MM")));
+      preparedStatement.setObject(5, meterReading.getTimeSendMeter(), Types.TIMESTAMP_WITH_TIMEZONE);
       var affectedRows = preparedStatement.executeUpdate();
       if (affectedRows == 0) {
         connection.rollback();
         throw new SQLException("Ошибка сохранения показаний, ни одной строки не добавлено");
       }
-
       try (var generatedKeys = preparedStatement.getGeneratedKeys()) {
         if (generatedKeys.next()) {
           meterReading.setMeterId(generatedKeys.getLong(1));
@@ -94,7 +94,7 @@ public class PostgresMeterReadingRepository implements MeterReadingRepository {
       try (var resultSet = preparedStatement.executeQuery()) {
         var meterReadings = new ArrayList<MeterReading>();
         while (resultSet.next()) {
-          var meterReading = mapResultSetToMeterReading(resultSet);
+          var meterReading = this.meterReadingMapper.mapResultSetToMeterReading(resultSet);
           meterReadings.add(meterReading);
         }
         return meterReadings;
@@ -120,7 +120,7 @@ public class PostgresMeterReadingRepository implements MeterReadingRepository {
       preparedStatement.setLong(2, typeMeterId);
       try (var resultSet = preparedStatement.executeQuery()) {
         if (resultSet.next()) {
-          var meterReading = mapResultSetToMeterReading(resultSet);
+          var meterReading = this.meterReadingMapper.mapResultSetToMeterReading(resultSet);
           return Optional.of(meterReading);
         } else {
           return Optional.empty();
@@ -153,7 +153,7 @@ public class PostgresMeterReadingRepository implements MeterReadingRepository {
 
     if (date != null) {
       sql += " AND submission_month = ?";
-      params.add(date.format(DateTimeFormatter.ofPattern("MM-yyyy")));
+      params.add(date.format(DateTimeFormatter.ofPattern("yyyy-MM")));
     }
 
     sql += " LIMIT 1";
@@ -167,7 +167,7 @@ public class PostgresMeterReadingRepository implements MeterReadingRepository {
 
       try (var resultSet = preparedStatement.executeQuery()) {
         if (resultSet.next()) {
-          var meterReading = mapResultSetToMeterReading(resultSet);
+          var meterReading = this.meterReadingMapper.mapResultSetToMeterReading(resultSet);
           return Optional.of(meterReading);
         } else {
           return Optional.empty();
@@ -178,15 +178,4 @@ public class PostgresMeterReadingRepository implements MeterReadingRepository {
     }
   }
 
-  private MeterReading mapResultSetToMeterReading(ResultSet resultSet) throws SQLException {
-    return MeterReading.builder()
-            .meterId(resultSet.getLong("meter_id"))
-            .address(Address.builder().addressId(resultSet.getLong("address_id")).build())
-            .typeMeter(TypeMeter.builder().typeMeterId(resultSet.getLong("type_meter_id")).build())
-            .meter(Meter.builder().meterCountId(resultSet.getLong("meter_count_id")).build())
-            .meterValue(resultSet.getDouble("meter_value"))
-            .submissionMonth(YearMonth.parse(resultSet.getString("submission_month"), DateTimeFormatter.ofPattern("MM-yyyy")))
-            .timeSendMeter(OffsetDateTime.ofInstant(resultSet.getTimestamp("time_send_meter").toInstant(), ZoneId.systemDefault()))
-            .build();
-  }
 }

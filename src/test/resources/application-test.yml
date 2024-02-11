@@ -6,3 +6,6 @@ liquibase:
   technical_schema: "technical_schema"
   default_schema: "default_schema"
   changelog: "src/test/resources/db/changelog/changelog-test.xml"
+jwt:
+  cookie_token_key: "cookie_token_key"
+  expiration: 2

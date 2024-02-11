@@ -1,6 +1,6 @@
 package com.denknd.out.audit;
 
-import com.denknd.security.UserSecurity;
+import com.denknd.security.entity.UserSecurity;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;

@@ -6,6 +6,8 @@ import org.mapstruct.Mapper;
 import org.mapstruct.NullValuePropertyMappingStrategy;
 import org.mapstruct.factory.Mappers;
 
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.List;
 
 /**
@@ -36,4 +38,20 @@ public interface TypeMeterMapper {
    * @return показания для пользователя
    */
   List<TypeMeterDto> typeMetersToTypeMetersDto(List<TypeMeter> typeMeterList);
+
+  /**
+   * Создает объект TypeMeter
+   *
+   * @param resultSet данные из базы данных
+   * @return заполненный объект
+   * @throws SQLException не верные данные из Бд
+   */
+ default TypeMeter mapResultSetToTypeMeter(ResultSet resultSet) throws SQLException {
+    return TypeMeter.builder()
+            .typeMeterId(resultSet.getLong("type_meter_id"))
+            .typeCode(resultSet.getString("type_code"))
+            .typeDescription(resultSet.getString("type_description"))
+            .metric(resultSet.getString("metric"))
+            .build();
+  }
 }

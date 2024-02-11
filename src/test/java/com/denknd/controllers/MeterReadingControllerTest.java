@@ -59,7 +59,7 @@ class MeterReadingControllerTest {
   void getHistoryMeterReading() {
     var addressId = 2L;
     var userId = 1L;
-    var parameters = Set.of("param1", "param2");
+    var parameters = Set.of(1L, 2L);
     var startDate = YearMonth.now().minusMonths(5);
     var endDate = YearMonth.now().minusMonths(1);
     var address = mock(Address.class);
@@ -77,7 +77,7 @@ class MeterReadingControllerTest {
   void getHistoryMeterReading_nutAddress() {
     var addressId = 2L;
     var userId = 1L;
-    var parameters = Set.of("param1", "param2");
+    var parameters = Set.of(1L, 2L);
     var startDate = YearMonth.now().minusMonths(5);
     var endDate = YearMonth.now().minusMonths(1);
     var address = mock(Address.class);
@@ -94,17 +94,18 @@ class MeterReadingControllerTest {
   @DisplayName("Проверяет, что метод вызывает все сервисы и отправляет показания на обработку")
   void addMeterReadingValue() throws MeterReadingConflictError {
     var meterReadingRequestDto = MeterReadingRequestDto.builder()
-            .code("test")
-            .addressId(5L)
+            .codeType(1L)
+            .addressId(1L)
             .build();
     var userId = 1L;
     var address = mock(Address.class);
     when(address.getAddressId()).thenReturn(meterReadingRequestDto.addressId());
     when(this.addressService.getAddresses(eq(userId))).thenReturn(List.of(address));
+    when(this.typeMeterService.getTypeMeter()).thenReturn(List.of(TypeMeter.builder().typeMeterId(1L).build()));
 
     this.meterReadingController.addMeterReadingValue(meterReadingRequestDto, userId);
 
-    verify(this.typeMeterService, times(1)).getTypeMeterByCode(eq(meterReadingRequestDto.code()));
+    verify(this.typeMeterService, times(1)).getTypeMeter();
     verify(this.addressService, times(1)).getAddressByAddressId(eq(meterReadingRequestDto.addressId()));
     verify(this.meterReadingService, times(1)).addMeterValue(any());
   }
@@ -113,7 +114,7 @@ class MeterReadingControllerTest {
   @DisplayName("Проверяет, что когда у пользователя нет адресов, выкидывает ошибку")
   void addMeterReadingValue_notOwnerAddress() throws MeterReadingConflictError {
     var meterReadingRequestDto = MeterReadingRequestDto.builder()
-            .code("test")
+            .codeType(1L)
             .addressId(5L)
             .build();
     var userId = 1L;
@@ -122,7 +123,7 @@ class MeterReadingControllerTest {
     assertThatThrownBy(() -> this.meterReadingController.addMeterReadingValue(meterReadingRequestDto, userId)).isInstanceOf(MeterReadingConflictError.class);
 
 
-    verify(this.typeMeterService, times(0)).getTypeMeterByCode(any());
+    verify(this.typeMeterService, times(0)).getTypeMeter();
     verify(this.addressService, times(0)).getAddressByAddressId(any());
     verify(this.meterReadingService, times(0)).addMeterValue(any());
   }
@@ -132,7 +133,7 @@ class MeterReadingControllerTest {
   void getMeterReadings() {
     var addressId = 1L;
     var userId = 2L;
-    var types = Set.of("type","type2");
+    var types = Set.of(1L, 2L);
     var date = YearMonth.now();
     var address = mock(Address.class);
     when(address.getAddressId()).thenReturn(addressId);
@@ -153,7 +154,7 @@ class MeterReadingControllerTest {
   void getMeterReadings_notAddress() {
     var addressId = 1L;
     var userId = 2L;
-    var types = Set.of("type","type2");
+    var types = Set.of(1L, 2L);
     var date = YearMonth.now();
     when(this.addressService.getAddresses(eq(userId))).thenReturn(List.of());
 

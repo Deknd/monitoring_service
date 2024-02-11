@@ -10,4 +10,6 @@
     <include file="03_02_2024__02_add_data_test_audit.xml" relativeToChangelogFile="true" />
     <include file="03_02_2024__03_add_data_test_address.xml" relativeToChangelogFile="true" />
     <include file="03_02_2024__04_add_data_test_meter_readings.xml" relativeToChangelogFile="true" />
+    <include file="03_02_2024__05_add_data_test_meter_counter.xml" relativeToChangelogFile="true" />
+    <include file="10_02_2024__06_add_data_test_token_block.xml" relativeToChangelogFile="true" />
 </databaseChangeLog>

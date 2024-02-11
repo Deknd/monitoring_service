@@ -1,6 +1,7 @@
 package com.denknd.repository.impl;
 
 import com.denknd.entity.TypeMeter;
+import com.denknd.mappers.TypeMeterMapper;
 import com.denknd.repository.TypeMeterRepository;
 import com.denknd.util.DataBaseConnection;
 import lombok.RequiredArgsConstructor;
@@ -20,6 +21,10 @@ public class PostgresTypeMeterRepository implements TypeMeterRepository {
    * Выдает соединение с базой данных
    */
   private final DataBaseConnection dataBaseConnection;
+  /**
+   * Маппер для маппинга типов показаний
+   */
+  private final TypeMeterMapper typeMeterMapper;
 
   /**
    * Ищет все доступные типы показаний.
@@ -37,7 +42,7 @@ public class PostgresTypeMeterRepository implements TypeMeterRepository {
     ) {
 
       while (resultSet.next()) {
-        var typeMeter = mapResultSetToTypeMeter(resultSet);
+        var typeMeter = this.typeMeterMapper.mapResultSetToTypeMeter(resultSet);
         typeMeters.add(typeMeter);
       }
 
@@ -94,19 +99,4 @@ public class PostgresTypeMeterRepository implements TypeMeterRepository {
 
   }
 
-  /**
-   * Создает объект TypeMeter
-   *
-   * @param resultSet данные из базы данных
-   * @return заполненный объект
-   * @throws SQLException не верные данные из Бд
-   */
-  private TypeMeter mapResultSetToTypeMeter(ResultSet resultSet) throws SQLException {
-    return TypeMeter.builder()
-            .typeMeterId(resultSet.getLong("type_meter_id"))
-            .typeCode(resultSet.getString("type_code"))
-            .typeDescription(resultSet.getString("type_description"))
-            .metric(resultSet.getString("metric"))
-            .build();
-  }
 }
