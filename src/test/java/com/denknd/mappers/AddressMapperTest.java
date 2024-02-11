@@ -8,11 +8,15 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.*;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
 class AddressMapperTest {
   private AddressMapper addressMapper;
@@ -53,6 +57,7 @@ class AddressMapperTest {
     );
 
   }
+
   @Test
   @DisplayName("Проверяет, что null не маппится")
   void mapAddressDtoToAddress_null() {
@@ -90,6 +95,7 @@ class AddressMapperTest {
               assertThat(result.postalCode()).isEqualTo(address.getPostalCode());
             });
   }
+
   @Test
   @DisplayName("Проверяет, что правильно маппит Address в AddressDto")
   void mapAddressToAddressDto_null() {
@@ -147,5 +153,45 @@ class AddressMapperTest {
     var addressDtos = this.addressMapper.mapAddressesToAddressesDto(null);
 
     assertThat(addressDtos).isNull();
+  }
+
+  @Test
+  @DisplayName("Проверяет, что маппится ResultSet в Address")
+  void mapResultSetToAddress() throws SQLException {
+    var resultSet = mock(ResultSet.class);
+    when(resultSet.getLong(eq("address_id"))).thenReturn(1L);
+    when(resultSet.getLong(eq("user_id"))).thenReturn(2L);
+    when(resultSet.getLong(eq("user_id"))).thenReturn(3L);
+    when(resultSet.getString(eq("region"))).thenReturn("region set");
+    when(resultSet.getString(eq("city"))).thenReturn("city set");
+    when(resultSet.getString(eq("street"))).thenReturn("street set");
+    when(resultSet.getString(eq("house"))).thenReturn("house set");
+    when(resultSet.getString(eq("apartment"))).thenReturn("apartment set");
+
+    var address = this.addressMapper.mapResultSetToAddress(resultSet);
+
+    assertThat(address.getAddressId()).isNotNull();
+    assertThat(address.getOwner()).isNotNull();
+    assertThat(address.getPostalCode()).isNotNull();
+    assertThat(address.getRegion()).isNotNull();
+    assertThat(address.getCity()).isNotNull();
+    assertThat(address.getHouse()).isNotNull();
+    assertThat(address.getApartment()).isNotNull();
+  }
+
+  @Test
+  @DisplayName("Проверяет, что выпадает ошибка, когда не находится нужная колонка")
+  void mapResultSetToAddress_() throws SQLException {
+    var resultSet = mock(ResultSet.class);
+    when(resultSet.getLong(eq("address_id"))).thenReturn(1L);
+    when(resultSet.getLong(eq("user_id"))).thenReturn(2L);
+    when(resultSet.getLong(eq("user_id"))).thenReturn(3L);
+    when(resultSet.getString(eq("region"))).thenThrow(SQLException.class);
+    when(resultSet.getString(eq("city"))).thenReturn("city set");
+    when(resultSet.getString(eq("street"))).thenReturn("street set");
+    when(resultSet.getString(eq("house"))).thenReturn("house set");
+    when(resultSet.getString(eq("apartment"))).thenReturn("apartment set");
+
+    assertThatThrownBy(() -> this.addressMapper.mapResultSetToAddress(resultSet));
   }
 }

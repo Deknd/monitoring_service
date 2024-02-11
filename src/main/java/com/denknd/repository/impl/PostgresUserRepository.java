@@ -1,7 +1,7 @@
 package com.denknd.repository.impl;
 
-import com.denknd.entity.Roles;
 import com.denknd.entity.User;
+import com.denknd.mappers.UserMapper;
 import com.denknd.repository.UserRepository;
 import com.denknd.util.DataBaseConnection;
 import lombok.RequiredArgsConstructor;
@@ -19,6 +19,10 @@ public class PostgresUserRepository implements UserRepository {
    * Выдает соединение с базой данных
    */
   private final DataBaseConnection dataBaseConnection;
+  /**
+   * Маппер для объектов пользователя.
+   */
+  private final UserMapper userMapper;
   /**
    * Проверяет, существует ли пользователь с указанным email.
    *
@@ -97,14 +101,14 @@ public class PostgresUserRepository implements UserRepository {
         throw new SQLException("Пользователь не создан, ни одной строки не добавлено в БД");
       }
 
-      try (ResultSet generatedKeys = preparedStatement.getGeneratedKeys()) {
+      try (var generatedKeys = preparedStatement.getGeneratedKeys()) {
         if (generatedKeys.next()) {
           user.setUserId(generatedKeys.getLong(1));
           connection.commit();
           return user;
         } else {
           connection.rollback();
-          throw new SQLException("Creating user failed, no ID obtained.");
+          throw new SQLException("Пользователь не создан, не сгенерирован идентификатор");
         }
       }
     } finally {
@@ -129,7 +133,8 @@ public class PostgresUserRepository implements UserRepository {
       preparedStatement.setString(1, email);
       try (var resultSet = preparedStatement.executeQuery()) {
         if (resultSet.next()) {
-          var user = mapUser(resultSet);
+
+          var user = this.userMapper.mapResultSetToUser(resultSet);
           return Optional.of(user);
         }
       }
@@ -154,29 +159,12 @@ public class PostgresUserRepository implements UserRepository {
       preparedStatement.setLong(1, id);
       try (var resultSet = preparedStatement.executeQuery()) {
         if (resultSet.next()) {
-          return Optional.of(mapUser(resultSet));
+          return Optional.of(this.userMapper.mapResultSetToUser(resultSet));
         }
       }
     } catch (SQLException e) {
       e.printStackTrace();
     }
     return Optional.empty();
-  }
-
-  /**
-   * преобразует данные из БД в объект пользователя
-   * @param resultSet данные из БД
-   * @return объект пользователя
-   * @throws SQLException ошибка при извлечении данных
-   */
-  private User mapUser(ResultSet resultSet) throws SQLException {
-    return User.builder()
-            .userId(resultSet.getLong("user_id"))
-            .email(resultSet.getString("email"))
-            .password(resultSet.getString("password"))
-            .firstName(resultSet.getString("user_name"))
-            .lastName(resultSet.getString("user_last_name"))
-            .role(Roles.valueOf(resultSet.getString("roles")))
-            .build();
   }
 }

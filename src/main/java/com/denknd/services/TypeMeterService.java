@@ -32,4 +32,5 @@ public interface TypeMeterService {
    * @return Полностью заполненный объект.
    */
   TypeMeter getTypeMeterByCode(String code);
+
 }

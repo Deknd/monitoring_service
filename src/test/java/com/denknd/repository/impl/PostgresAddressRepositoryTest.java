@@ -2,25 +2,41 @@ package com.denknd.repository.impl;
 
 import com.denknd.entity.Address;
 import com.denknd.entity.User;
+import com.denknd.mappers.AddressMapper;
 import com.denknd.repository.TestContainer;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.mockito.Mock;
+import org.mockito.MockitoAnnotations;
 
 import java.sql.SQLException;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 class PostgresAddressRepositoryTest extends TestContainer {
   private PostgresAddressRepository addressRepository;
+  @Mock
+  private AddressMapper addressMapper;
+  private AutoCloseable closeable;
+
 
   @BeforeEach
   void setUp() {
-    this.addressRepository = new PostgresAddressRepository(postgresContainer.getDataBaseConnection());
+    this.closeable = MockitoAnnotations.openMocks(this);
+    this.addressRepository = new PostgresAddressRepository(postgresContainer.getDataBaseConnection(), this.addressMapper);
+  }
+  @AfterEach
+  void tearDown() throws Exception {
+    this.closeable.close();
   }
 
   @Test
@@ -212,14 +228,17 @@ class PostgresAddressRepositoryTest extends TestContainer {
   }
   @Test
   @DisplayName("ищет адрес по идентификатору адреса")
-  void findAddress(){
+  void findAddress() throws SQLException {
     var addressId = 1L;
+    var mock = mock(Address.class);
+    when(this.addressMapper.mapResultSetToAddress(any())).thenReturn(mock);
 
     var addressOptional = this.addressRepository.findAddress(addressId);
 
     assertThat(addressOptional).isPresent();
     var address = addressOptional.get();
-    assertThat(address.getAddressId()).isEqualTo(addressId);
+    assertThat(address).isEqualTo(mock);
+    verify(this.addressMapper, times(1)).mapResultSetToAddress(any());
 
   }
   @Test

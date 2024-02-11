@@ -6,7 +6,9 @@ import com.denknd.exception.InvalidUserDataException;
 import com.denknd.exception.UserAlreadyExistsException;
 import com.denknd.mappers.UserMapper;
 import com.denknd.services.UserService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.log4j.Log4j2;
 
 import java.security.NoSuchAlgorithmException;
 
@@ -14,6 +16,7 @@ import java.security.NoSuchAlgorithmException;
  * Контроллер для работы с пользователями
  */
 @RequiredArgsConstructor
+@Log4j2
 public class UserController {
   /**
    * Сервис для управления пользователями
@@ -31,9 +34,10 @@ public class UserController {
    * @param userCreateDto пользователь полученный от пользователя
    * @return возвращает созданного пользователя
    * @throws UserAlreadyExistsException если данный пользователь уже создан
+   * @throws NoSuchAlgorithmException если не получилось использовать алгоритм шифрования
+   * @throws InvalidUserDataException если произошла ошибка при сохранении в БД
    */
   public UserDto createUser(UserCreateDto userCreateDto) throws UserAlreadyExistsException, NoSuchAlgorithmException, InvalidUserDataException {
-
     var user = this.userMapper.mapUserCreateDtoToUser(userCreateDto);
     var result = this.userService.registrationUser(user);
     return this.userMapper.mapUserToUserDto(result);

@@ -6,3 +6,6 @@ liquibase:
   technical_schema: "public"
   default_schema: "public"
   changelog: "db/changelog/changelog-master.xml"
+jwt:
+  cookie_token_key: "{\"kty\":\"oct\",\"use\":\"enc\",\"k\":\"iGJzlxHw5WqHUVW2LDnsxLkWuUnxclpnhWtaDgvbmt4\"}"
+  expiration: 24

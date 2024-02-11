@@ -10,12 +10,18 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Timestamp;
 import java.time.OffsetDateTime;
 import java.time.YearMonth;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
 class MeterReadingMapperTest {
   private MeterReadingMapper meterReadingMapper;
@@ -30,7 +36,7 @@ class MeterReadingMapperTest {
   void mapMeterReadingRequestDtoToMeterReading() {
     var meterReadingRequestDto = MeterReadingRequestDto.builder()
             .addressId(1L)
-            .code("code")
+            .codeType(2L)
             .meterValue(12314.124)
             .build();
     var address = mock(Address.class);
@@ -135,9 +141,46 @@ class MeterReadingMapperTest {
     assertThat(meterReadingResponseDtos.size()).isEqualTo(3);
   }
   @Test
+  @DisplayName("Проверяет, что если передать null, то вернется null")
   void mapMeterReadingsToMeterReadingResponsesDto_null() {
     var meterReadingResponseDtos = this.meterReadingMapper.mapMeterReadingsToMeterReadingResponsesDto(null);
 
     assertThat(meterReadingResponseDtos).isNull();
+  }
+
+  @Test
+  @DisplayName("Проверяет, что маппится данные из ResultSet в MeterReading")
+  void mapResultSetToMeterReading () throws SQLException {
+    var resultSet = mock(ResultSet.class);
+    when(resultSet.getLong(eq("meter_id"))).thenReturn(1L);
+    when(resultSet.getLong(eq("address_id"))).thenReturn(1L);
+    when(resultSet.getLong(eq("type_meter_id"))).thenReturn(1L);
+    when(resultSet.getLong(eq("meter_count_id"))).thenReturn(1L);
+    when(resultSet.getDouble("meter_value")).thenReturn(123.34);
+    when(resultSet.getString("submission_month")).thenReturn("1999-11");
+    var offsetDateTime = OffsetDateTime.parse("2024-02-07T15:30:45.123456+03:00");
+    var timestamp = Timestamp.from(offsetDateTime.toInstant());
+    when(resultSet.getTimestamp(eq("time_send_meter"))).thenReturn(timestamp);
+
+    var meterReading = this.meterReadingMapper.mapResultSetToMeterReading(resultSet);
+
+    assertThat(meterReading).hasNoNullFieldsOrProperties();
+  }
+
+  @Test
+  @DisplayName("Проверяет, что при отсутствие столбца выпадает ошибка")
+  void mapResultSetToMeterReading_SQLException () throws SQLException {
+    var resultSet = mock(ResultSet.class);
+    when(resultSet.getLong(eq("meter_id"))).thenReturn(1L);
+    when(resultSet.getLong(eq("address_id"))).thenReturn(1L);
+    when(resultSet.getLong(eq("type_meter_id"))).thenReturn(1L);
+    when(resultSet.getLong(eq("meter_count_id"))).thenThrow(SQLException.class);
+    when(resultSet.getDouble("meter_value")).thenReturn(123.34);
+    when(resultSet.getString("submission_month")).thenReturn("1999-11");
+    var offsetDateTime = OffsetDateTime.parse("2024-02-07T15:30:45.123456+03:00");
+    var timestamp = Timestamp.from(offsetDateTime.toInstant());
+    when(resultSet.getTimestamp(eq("time_send_meter"))).thenReturn(timestamp);
+
+   assertThatThrownBy(()->this.meterReadingMapper.mapResultSetToMeterReading(resultSet)).isInstanceOf(SQLException.class);
   }
 }

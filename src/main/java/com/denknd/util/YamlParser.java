@@ -18,6 +18,8 @@ public interface YamlParser {
    * @throws FileNotFoundException когда нет доступа к файлу с конфигурациями
    */
   DbConfig dbConfig() throws FileNotFoundException;
+
+  JwtConfig jwtConfig() throws FileNotFoundException;
   /**
    * Настройка пути к файлу с конфигурациями
    * @param pathToApplicationYml путь к файлу с конфигурациями

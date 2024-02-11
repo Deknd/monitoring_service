@@ -16,7 +16,10 @@ public interface UserService {
    * @param create Полностью созданный объект пользователя, без айди.
    * @return Полностью созданный объект пользователя с айди.
    * @throws UserAlreadyExistsException Если пользователь с указанным email уже существует.
+   * @throws NoSuchAlgorithmException
+   * @throws InvalidUserDataException
    */
+
   User registrationUser(User create) throws UserAlreadyExistsException, NoSuchAlgorithmException, InvalidUserDataException;
 
   /**

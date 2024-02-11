@@ -6,10 +6,16 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.ArgumentMatchers.eq;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
 class TypeMeterMapperTest {
 
@@ -104,5 +110,33 @@ class TypeMeterMapperTest {
     var typeMeterDtos = this.typeMeterMapper.typeMetersToTypeMetersDto(null);
 
     assertThat(typeMeterDtos).isNull();
+  }
+
+  @Test
+  @DisplayName("Проверяет, что правильно маппит из данных БД в TypeMeter")
+  void mapResultSetToTypeMeter() throws SQLException {
+    var resultSet = mock(ResultSet.class);
+    when(resultSet.getLong(eq("type_meter_id"))).thenReturn(1L);
+    when(resultSet.getString(eq("type_code"))).thenReturn("code");
+    when(resultSet.getString(eq("type_description"))).thenReturn("description");
+    when(resultSet.getString(eq("metric"))).thenReturn("metric");
+
+    var typeMeter = this.typeMeterMapper.mapResultSetToTypeMeter(resultSet);
+
+    assertThat(typeMeter).hasNoNullFieldsOrProperties();
+
+  }
+
+  @Test
+  @DisplayName("Проверяет, что при выкидывании ошибки, она нормально пропускается")
+  void mapResultSetToTypeMeter_SQLException() throws SQLException {
+    var resultSet = mock(ResultSet.class);
+    when(resultSet.getLong(eq("type_meter_id"))).thenReturn(1L);
+    when(resultSet.getString(eq("type_code"))).thenReturn("code");
+    when(resultSet.getString(eq("type_description"))).thenThrow(SQLException.class);
+    when(resultSet.getString(eq("metric"))).thenReturn("metric");
+
+    assertThatThrownBy(()-> this.typeMeterMapper.mapResultSetToTypeMeter(resultSet));
+
   }
 }

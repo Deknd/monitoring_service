@@ -2,6 +2,7 @@ package com.denknd.repository.impl;
 
 import com.denknd.entity.Address;
 import com.denknd.entity.User;
+import com.denknd.mappers.AddressMapper;
 import com.denknd.repository.AddressRepository;
 import com.denknd.util.DataBaseConnection;
 import lombok.RequiredArgsConstructor;
@@ -23,6 +24,10 @@ public class PostgresAddressRepository implements AddressRepository {
    * Выдает соединение с базой данных
    */
   private final DataBaseConnection dataBaseConnection;
+  /**
+   * Маппер для мапинга адресов.
+   */
+  private final AddressMapper addressMapper;
 
   /**
    * Добавляет новый адрес в хранилище.
@@ -88,7 +93,7 @@ public class PostgresAddressRepository implements AddressRepository {
         var addresses = new ArrayList<Address>();
 
         while (resultSet.next()) {
-          var address = mapResultSetToAddress(resultSet);
+          var address = this.addressMapper.mapResultSetToAddress(resultSet);
           addresses.add(address);
         }
         return addresses;
@@ -114,7 +119,7 @@ public class PostgresAddressRepository implements AddressRepository {
 
       try (var resultSet = preparedStatement.executeQuery()) {
         if (resultSet.next()) {
-          var address = mapResultSetToAddress(resultSet);
+          var address = this.addressMapper.mapResultSetToAddress(resultSet);
           return Optional.of(address);
         } else {
           return Optional.empty();
@@ -124,22 +129,5 @@ public class PostgresAddressRepository implements AddressRepository {
       return  Optional.empty();
     }
   }
-  /**
-   * Собирает новый объект Address.
-   * @param resultSet данные полученные из БД
-   * @return Заполненный объект Address
-   * @throws SQLException ошибка получения данных
-   */
-  private Address mapResultSetToAddress(ResultSet resultSet) throws SQLException {
-    return Address.builder()
-            .addressId(resultSet.getLong("address_id"))
-            .owner(User.builder().userId(resultSet.getLong("user_id")).build())
-            .postalCode(resultSet.getLong("postal_code"))
-            .region(resultSet.getString("region"))
-            .city(resultSet.getString("city"))
-            .street(resultSet.getString("street"))
-            .house(resultSet.getString("house"))
-            .apartment(resultSet.getString("apartment"))
-            .build();
-  }
+
 }

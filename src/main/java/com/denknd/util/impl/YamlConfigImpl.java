@@ -17,5 +17,9 @@ public class YamlConfigImpl {
    * Конфигурация ликвибаз
    */
   private LiquibaseConfigImpl liquibase;
+  /**
+   * Конфигурация для шифрования и дешифрования токенов
+   */
+  private JwtConfigImpl jwt;
 
 }

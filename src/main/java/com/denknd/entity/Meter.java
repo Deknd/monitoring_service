@@ -16,13 +16,21 @@ public class Meter {
    */
   private Long meterCountId;
   /**
+   * Адрес к которому относиться данный счетчик.
+   */
+  private Long addressId;
+  /**
+   * Тип показаний к которому он относится.
+   */
+  private Long typeMeterId;
+  /**
    * серийный номер.
    */
   private String serialNumber;
   /**
-   * Дата установки.
+   * Дата регистрации счетчика.
    */
-  private OffsetDateTime installationDate;
+  private OffsetDateTime registrationDate;
   /**
    * Дата последней проверки.
    */
