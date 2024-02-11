@@ -172,7 +172,8 @@ public class PostgresMeterReadingRepository implements MeterReadingRepository {
         }
       }
     } catch (SQLException e) {
-      throw new RuntimeException("Error while searching for meter readings for the specified month", e);
+      log.error(e.getMessage());
+      return Optional.empty();
     }
   }
 
