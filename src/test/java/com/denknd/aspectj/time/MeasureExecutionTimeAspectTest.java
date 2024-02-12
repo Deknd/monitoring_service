@@ -2,13 +2,11 @@ package com.denknd.aspectj.time;
 
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.Signature;
-import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.Assertions.assertThatCode;
-import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
@@ -27,6 +25,6 @@ class MeasureExecutionTimeAspectTest {
     var joinPoint = mock(ProceedingJoinPoint.class);
     when(joinPoint.getSignature()).thenReturn(mock(Signature.class));
 
-    assertThatCode(()->this.measureExecutionTimeAspect.logging(joinPoint)).doesNotThrowAnyException();
+    assertThatCode(() -> this.measureExecutionTimeAspect.logging(joinPoint)).doesNotThrowAnyException();
   }
 }

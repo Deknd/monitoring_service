@@ -27,7 +27,8 @@ public class AuditAspect {
 
   /**
    * Метод для формирования аудита и отправки его в сервис
-   * @param joinPoint точка начала работы аудита
+   *
+   * @param joinPoint                точка начала работы аудита
    * @param auditRecordingAnnotation информация из аннотации
    * @return возвращает выполнения метода дальше
    * @throws Throwable ошибки возникшие при работе

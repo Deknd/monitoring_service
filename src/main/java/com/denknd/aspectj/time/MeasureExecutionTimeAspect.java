@@ -22,6 +22,7 @@ public class MeasureExecutionTimeAspect {
 
   /**
    * Метод который считает время выполнения выделеного метода
+   *
    * @param proceedingJoinPoint точка входа
    * @return возвращает процесс выполнения
    * @throws Throwable ошибки, которые могут возникнуть при выполнении

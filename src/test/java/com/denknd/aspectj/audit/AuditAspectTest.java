@@ -11,7 +11,6 @@ import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
-import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.times;
@@ -25,6 +24,7 @@ class AuditAspectTest {
   private AuditService auditService;
   private AuditAspect auditAspect;
   private AutoCloseable autoCloseable;
+
   @BeforeEach
   void setUp() {
     this.autoCloseable = MockitoAnnotations.openMocks(this);
