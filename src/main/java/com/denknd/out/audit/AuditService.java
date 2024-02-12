@@ -11,9 +11,7 @@ public interface AuditService {
   /**
    * Записывает действие пользователя в журнал аудита.
    *
-   * @param consoleCommandMap   карта команд консоли
-   * @param commandAndParam     команда и параметры
-   * @param activeUser          активный пользователь
+   * @param audit   аудит с действиями
    */
-//  void addAction(Map<String, ConsoleCommand> consoleCommandMap, String commandAndParam, UserSecurity activeUser);
+  void addAction(Audit audit);
 }

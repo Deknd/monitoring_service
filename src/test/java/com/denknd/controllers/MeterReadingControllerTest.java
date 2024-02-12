@@ -94,7 +94,7 @@ class MeterReadingControllerTest {
   @DisplayName("Проверяет, что метод вызывает все сервисы и отправляет показания на обработку")
   void addMeterReadingValue() throws MeterReadingConflictError {
     var meterReadingRequestDto = MeterReadingRequestDto.builder()
-            .codeType(1L)
+            .typeMeterId(1L)
             .addressId(1L)
             .build();
     var userId = 1L;
@@ -114,7 +114,7 @@ class MeterReadingControllerTest {
   @DisplayName("Проверяет, что когда у пользователя нет адресов, выкидывает ошибку")
   void addMeterReadingValue_notOwnerAddress() throws MeterReadingConflictError {
     var meterReadingRequestDto = MeterReadingRequestDto.builder()
-            .codeType(1L)
+            .typeMeterId(1L)
             .addressId(5L)
             .build();
     var userId = 1L;

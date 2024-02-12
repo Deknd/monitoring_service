@@ -8,6 +8,7 @@
   import com.sun.net.httpserver.Headers;
   import jakarta.servlet.http.HttpServletRequest;
   import lombok.extern.log4j.Log4j2;
+  import lombok.extern.slf4j.Slf4j;
   import org.apache.commons.lang3.StringUtils;
 
   import java.nio.charset.Charset;
@@ -17,7 +18,7 @@
   /**
    * Реализация интерфейса для преобразования аутентификационных данных из HTTP запроса с использованием базовой аутентификации.
    */
-  @Log4j2
+  @Slf4j
   public class BasicAuthenticationConverter implements AuthenticationConverter {
     /**
      * Заголовок для AUTHORIZATION

@@ -12,6 +12,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.Setter;
 import lombok.extern.log4j.Log4j2;
+import lombok.extern.slf4j.Slf4j;
 
 import java.io.IOException;
 
@@ -19,7 +20,7 @@ import java.io.IOException;
  * Фильтр для получения токена доступа
  */
 @Setter
-@Log4j2
+@Slf4j
 public class BasicAuthenticationFilter extends AbstractFilter {
   /**
    * Паттерн по которому срабатывает фильтр
@@ -73,8 +74,8 @@ public class BasicAuthenticationFilter extends AbstractFilter {
    * @param httpRequest  объект HttpServletRequest, содержащий запрос клиента
    * @param httpResponse объект HttpServletResponse, содержащий ответ фильтра для клиента
    * @param chain        объект FilterChain для вызова следующего фильтра или ресурса
-   * @throws IOException
-   * @throws ServletException
+   * @throws IOException ошибка при работе с потоком данных
+   * @throws ServletException ошибка сервлета
    */
   @Override
   protected void doFilter(HttpServletRequest httpRequest, HttpServletResponse httpResponse, FilterChain chain) throws IOException, ServletException {

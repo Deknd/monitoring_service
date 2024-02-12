@@ -1,5 +1,6 @@
 package com.denknd.controllers;
 
+import com.denknd.aspectj.audit.AuditRecording;
 import com.denknd.dto.TypeMeterDto;
 import com.denknd.exception.TypeMeterAdditionException;
 import com.denknd.mappers.TypeMeterMapper;
@@ -29,6 +30,7 @@ public class TypeMeterController {
    * @return возвращает добавленный тип показаний
    * @throws TypeMeterAdditionException при не соблюдения ограничений базы данных
    */
+  @AuditRecording("Добавляет новый тип показаний")
   public TypeMeterDto addNewType(TypeMeterDto typeMeterDto) throws TypeMeterAdditionException {
     var typeMeter = this.typeMeterMapper.mapTypeMeterDtoToTypeMeter(typeMeterDto);
     var result = this.typeMeterService.addNewTypeMeter(typeMeter);
@@ -40,6 +42,7 @@ public class TypeMeterController {
    *
    * @return доступные типы показаний
    */
+  @AuditRecording("Отправляет информацию о доступных типах показаний")
   public Set<TypeMeterDto> getTypeMeterCodes() {
     var typeMeter = this.typeMeterService.getTypeMeter();
     return Set.copyOf(this.typeMeterMapper.typeMetersToTypeMetersDto(typeMeter));

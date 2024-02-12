@@ -6,6 +6,7 @@ import com.nimbusds.jose.JWEDecrypter;
 import com.nimbusds.jwt.EncryptedJWT;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
+import lombok.extern.slf4j.Slf4j;
 
 import java.text.ParseException;
 import java.util.UUID;
@@ -15,7 +16,7 @@ import java.util.function.Function;
  * Класс для десериализации из строки в токен
  */
 @RequiredArgsConstructor
-@Log4j2
+@Slf4j
 public class DefaultDeserializerToken implements Function<String, Token> {
     /**
      * Декриптор для расшифровки токена

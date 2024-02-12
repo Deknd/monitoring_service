@@ -13,6 +13,7 @@ import com.denknd.util.functions.DateParserFromRawParameters;
 import com.denknd.util.functions.LongIdParserFromRawParameters;
 import com.denknd.util.functions.TypeMeterParametersParserFromRawParameters;
 import com.denknd.util.impl.Validators;
+import com.denknd.aspectj.time.MeasureExecutionTime;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.servlet.ServletConfig;
 import jakarta.servlet.ServletException;
@@ -20,6 +21,7 @@ import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.extern.log4j.Log4j2;
+import lombok.extern.slf4j.Slf4j;
 
 import java.io.IOException;
 import java.time.YearMonth;
@@ -30,7 +32,8 @@ import java.util.stream.Collectors;
 /**
  * Сервлет для получения и добавления информации по показаниям
  */
-@Log4j2
+@Slf4j
+
 @WebServlet(name = "MeterReadingsServlet", urlPatterns = {"/meter-readings/*"})
 public class MeterReadingsServlet extends AbstractServlet {
   /**
@@ -102,7 +105,7 @@ public class MeterReadingsServlet extends AbstractServlet {
   /**
    * Инициализация сервлета
    * @param config объект <code>ServletConfig</code>, содержащий конфигурационную информацию для этого сервлета
-   * @throws ServletException
+   * @throws ServletException ошибка сервлета
    */
   @Override
   public void init(ServletConfig config) throws ServletException {
@@ -124,11 +127,10 @@ public class MeterReadingsServlet extends AbstractServlet {
    * Обработка HTTP POST запросов, таких как добавления новых показаний.
    * @param req  объект {@link HttpServletRequest}, содержащий запрос клиента к сервлету
    * @param resp объект {@link HttpServletResponse}, содержащий ответ сервлета клиенту
-   * @throws ServletException
-   * @throws IOException
+   * @throws IOException ошибка при работе с потоком данных
    */
   @Override
-  protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+  protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws IOException {
     var requestURI = req.getRequestURI();
     resp.setCharacterEncoding("UTF-8");
     if (requestURI.equals(sendMeterReading)) {
@@ -153,6 +155,7 @@ public class MeterReadingsServlet extends AbstractServlet {
    * @param userSecurity авторизированный пользоавтель
    * @throws IOException ошибка при обрыве соединения
    */
+  @MeasureExecutionTime
   private void sendMeterReadings(HttpServletRequest req, HttpServletResponse resp, UserSecurity userSecurity) throws IOException {
     try (var reader = req.getReader()) {
       var requestBody = reader.lines().collect(Collectors.joining(System.lineSeparator()));
@@ -180,11 +183,10 @@ public class MeterReadingsServlet extends AbstractServlet {
    * Обработка HTTP GET запросов получения историии показаний или актуальных показаний
    * @param req  объект {@link HttpServletRequest}, содержащий запрос клиента к сервлету
    * @param resp объект {@link HttpServletResponse}, содержащий ответ сервлета клиенту
-   * @throws ServletException
-   * @throws IOException
+   * @throws IOException ошибка при работе с потоком данных
    */
   @Override
-  protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+  protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws IOException {
     var requestURI = req.getRequestURI();
     resp.setCharacterEncoding("UTF-8");
     var userSecurity = this.securityService.getUserSecurity();
@@ -206,6 +208,7 @@ public class MeterReadingsServlet extends AbstractServlet {
    * @param userSecurity авторизированный пользователь
    * @throws IOException ошибка соединения
    */
+  @MeasureExecutionTime
   private void getMeterValues(HttpServletRequest req, HttpServletResponse resp, UserSecurity userSecurity) throws IOException {
     var acceptedParameters = this.typeMeterParametersParserFromRawParameters.apply(req.getParameter(this.paramTypeId));
     var dateFilter = this.dateParserFromRawParameter.apply(req.getParameter(this.paramDate));
@@ -248,6 +251,7 @@ public class MeterReadingsServlet extends AbstractServlet {
    * @param userSecurity авторизированнный пользователь
    * @throws IOException ошибка соединения
    */
+  @MeasureExecutionTime
   private void getHistory(HttpServletRequest req, HttpServletResponse resp, UserSecurity userSecurity) throws IOException {
     var acceptedParameters = this.typeMeterParametersParserFromRawParameters.apply(req.getParameter(this.paramTypeId));
     var addressId = this.longIdParserFromRawParameters.apply(req.getParameter(this.paramAddressId));
@@ -296,7 +300,7 @@ public class MeterReadingsServlet extends AbstractServlet {
 
   /**
    * Урл для отправки показаний
-   * @return
+   * @return урл для отправки показаний
    */
   public String getSendMeterReading() {
     return sendMeterReading;
@@ -304,7 +308,7 @@ public class MeterReadingsServlet extends AbstractServlet {
 
   /**
    * Урл для получения истории показаний
-   * @return
+   * @return урл для получения истории
    */
   public String getHistoryMeterReading() {
     return historyMeterReading;
@@ -312,7 +316,7 @@ public class MeterReadingsServlet extends AbstractServlet {
 
   /**
    * Урл для получения актуальных показаний
-   * @return
+   * @return урл для получения показаний
    */
   public String getGetMeterReadings() {
     return getMeterReadings;

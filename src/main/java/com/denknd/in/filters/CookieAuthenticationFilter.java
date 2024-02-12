@@ -11,6 +11,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.Setter;
 import lombok.extern.log4j.Log4j2;
+import lombok.extern.slf4j.Slf4j;
 
 import java.io.IOException;
 import java.util.Arrays;
@@ -23,7 +24,7 @@ import java.util.stream.Collectors;
  * Фильтр для авторизации запроса с помощью Cookie
  */
 @Setter
-@Log4j2
+@Slf4j
 public class CookieAuthenticationFilter extends AbstractFilter {
   /**
    * Сервис для работы с безопасностью
@@ -51,7 +52,8 @@ public class CookieAuthenticationFilter extends AbstractFilter {
   }
 
   /**
-   * @return
+   * Мапер для маппинга объектов в json обратно
+   * @return объект для маппинга объектов в json обратно
    */
   @Override
   protected ObjectMapper getObjectMapper() {
@@ -70,8 +72,8 @@ public class CookieAuthenticationFilter extends AbstractFilter {
    * @param req   объект HttpServletRequest, который содержит запрос, отправленный клиентом
    * @param res   объект HttpServletResponse, который содержит ответ, отправляемый фильтром клиенту
    * @param chain объект FilterChain для вызова следующего фильтра или ресурса
-   * @throws IOException
-   * @throws ServletException
+   * @throws IOException ошибка при обработке потока
+   * @throws ServletException ошибка сервлета
    */
   @Override
   protected void doFilter(HttpServletRequest req, HttpServletResponse res, FilterChain chain) throws IOException, ServletException {
