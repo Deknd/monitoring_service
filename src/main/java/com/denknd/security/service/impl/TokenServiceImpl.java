@@ -6,6 +6,7 @@ import com.denknd.security.repository.TokenRepository;
 import com.denknd.security.service.TokenService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
+import lombok.extern.slf4j.Slf4j;
 
 import java.sql.SQLException;
 import java.time.OffsetDateTime;
@@ -15,7 +16,7 @@ import java.time.ZoneId;
  * Сервис для управления заблокированными токенами
  */
 @RequiredArgsConstructor
-@Log4j2
+@Slf4j
 public class TokenServiceImpl implements TokenService {
   /**
    * Репозиторий для заблокированных токенов

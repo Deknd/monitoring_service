@@ -1,14 +1,14 @@
 package com.denknd.controllers;
 
+import com.denknd.aspectj.audit.AuditRecording;
 import com.denknd.dto.UserCreateDto;
 import com.denknd.dto.UserDto;
 import com.denknd.exception.InvalidUserDataException;
 import com.denknd.exception.UserAlreadyExistsException;
 import com.denknd.mappers.UserMapper;
 import com.denknd.services.UserService;
-import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.log4j.Log4j2;
+import lombok.extern.slf4j.Slf4j;
 
 import java.security.NoSuchAlgorithmException;
 
@@ -16,7 +16,7 @@ import java.security.NoSuchAlgorithmException;
  * Контроллер для работы с пользователями
  */
 @RequiredArgsConstructor
-@Log4j2
+@Slf4j
 public class UserController {
   /**
    * Сервис для управления пользователями
@@ -37,6 +37,7 @@ public class UserController {
    * @throws NoSuchAlgorithmException если не получилось использовать алгоритм шифрования
    * @throws InvalidUserDataException если произошла ошибка при сохранении в БД
    */
+  @AuditRecording("Регистрирует нового пользователя")
   public UserDto createUser(UserCreateDto userCreateDto) throws UserAlreadyExistsException, NoSuchAlgorithmException, InvalidUserDataException {
     var user = this.userMapper.mapUserCreateDtoToUser(userCreateDto);
     var result = this.userService.registrationUser(user);
@@ -49,6 +50,7 @@ public class UserController {
    * @param userId идентификатор пользователя
    * @return пользователь с данным идентификатор
    */
+  @AuditRecording("Получает информацию о пользователе")
   public UserDto getUser(Long userId) {
     if (!this.userService.existUser(userId)) {
       return null;

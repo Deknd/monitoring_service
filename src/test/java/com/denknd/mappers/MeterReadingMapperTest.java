@@ -36,7 +36,7 @@ class MeterReadingMapperTest {
   void mapMeterReadingRequestDtoToMeterReading() {
     var meterReadingRequestDto = MeterReadingRequestDto.builder()
             .addressId(1L)
-            .codeType(2L)
+            .typeMeterId(2L)
             .meterValue(12314.124)
             .build();
     var address = mock(Address.class);

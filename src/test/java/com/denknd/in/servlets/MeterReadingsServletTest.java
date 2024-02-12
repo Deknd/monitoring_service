@@ -6,6 +6,7 @@ import com.denknd.entity.Roles;
 import com.denknd.exception.MeterReadingConflictError;
 import com.denknd.security.entity.UserSecurity;
 import com.denknd.security.service.SecurityService;
+import com.denknd.util.impl.Validators;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.servlet.ServletConfig;
 import jakarta.servlet.ServletContext;
@@ -55,6 +56,8 @@ class MeterReadingsServletTest {
   private ServletContext servletContext;
   @Mock
   private ServletConfig servletConfig;
+  @Mock
+  private Validators validators;
   private MeterReadingsServlet meterReadingsServlet;
   @BeforeEach
   void setUp() throws ServletException {
@@ -62,6 +65,7 @@ class MeterReadingsServletTest {
     when(this.manualConfig.getObjectMapper()).thenReturn(this.objectMapper);
     when(this.manualConfig.getMeterReadingController()).thenReturn(this.meterReadingController);
     when(this.manualConfig.getSecurityService()).thenReturn(this.securityService);
+    when(this.manualConfig.getValidator()).thenReturn(this.validators);
     when(this.servletContext.getAttribute("context")).thenReturn(this.manualConfig);
     when(this.servletConfig.getServletContext()).thenReturn(this.servletContext);
     this.meterReadingsServlet = new MeterReadingsServlet();

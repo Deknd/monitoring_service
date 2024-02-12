@@ -1,10 +1,10 @@
 package com.denknd.controllers;
 
+import com.denknd.aspectj.audit.AuditRecording;
 import com.denknd.dto.CounterInfoDto;
 import com.denknd.dto.MeterDto;
 import com.denknd.mappers.MeterCountMapper;
 import com.denknd.services.MeterCountService;
-import com.denknd.services.TypeMeterService;
 import lombok.RequiredArgsConstructor;
 
 import java.sql.SQLException;
@@ -30,6 +30,7 @@ public class CounterInfoController {
    * @return возвращает информацию о счетчике, в случае успешного обновления
    * @throws SQLException ошибка при возникновении
    */
+  @AuditRecording("Добавляет дополнительную информацию о счетчиках")
   public MeterDto addInfoForMeter(CounterInfoDto counterInfoDto) throws SQLException {
     var meter = this.meterCountMapper.mapCounterInfoDtoToMeter(counterInfoDto);
     var result = this.meterCountService.addInfoForMeterCount(meter);

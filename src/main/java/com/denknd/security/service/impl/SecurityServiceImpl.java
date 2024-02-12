@@ -13,6 +13,7 @@ import com.nimbusds.jose.JWEEncrypter;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.extern.log4j.Log4j2;
+import lombok.extern.slf4j.Slf4j;
 
 import java.sql.SQLException;
 import java.time.Duration;
@@ -23,7 +24,7 @@ import java.util.function.Function;
 /**
  * Сервис для работы с авторизацией пользователя.
  */
-@Log4j2
+@Slf4j
 public class SecurityServiceImpl implements SecurityService {
   /**
    * Сервис по управлению заблокированными токенами

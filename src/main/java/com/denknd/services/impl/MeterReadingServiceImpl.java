@@ -10,6 +10,7 @@ import com.denknd.services.MeterReadingService;
 import com.denknd.services.TypeMeterService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
+import lombok.extern.slf4j.Slf4j;
 
 import java.sql.SQLException;
 import java.time.OffsetDateTime;
@@ -23,7 +24,7 @@ import java.util.Set;
  * Сервис для работы с показаниями.
  */
 @RequiredArgsConstructor
-@Log4j2
+@Slf4j
 public class MeterReadingServiceImpl implements MeterReadingService {
   /**
    * Репозиторий для работы с показаниями.
@@ -62,7 +63,7 @@ public class MeterReadingServiceImpl implements MeterReadingService {
     var timeSendMeter = OffsetDateTime.now();
     meterReading.setSubmissionMonth(submissionMonth);
     meterReading.setTimeSendMeter(timeSendMeter);
-    if(actualMeter == null || actualMeter != null && actualMeter.getMeter() == null){
+    if(actualMeter == null || actualMeter.getMeter() == null){
       var meterCount = Meter.builder()
               .typeMeterId(meterReading.getTypeMeter().getTypeMeterId())
               .addressId(meterReading.getAddress().getAddressId())
@@ -70,7 +71,7 @@ public class MeterReadingServiceImpl implements MeterReadingService {
       try {
         this.meterCountService.saveMeterCount(meterCount);
       } catch (SQLException e) {
-        System.out.println("Ошибка сохранения информации о счетчике");
+        log.info("Ошибка сохранения информации о счетчике");
       }
     }
     try {
@@ -176,7 +177,7 @@ public class MeterReadingServiceImpl implements MeterReadingService {
    */
   @Override
   public List<MeterReading> getHistoryMeterByAddress(Set<Long> addressIds, Set<Long> typeCode, YearMonth startDate, YearMonth endDate) {
-    List<MeterReading> meterReadingsAllAddress = new ArrayList<MeterReading>();
+    List<MeterReading> meterReadingsAllAddress = new ArrayList<>();
     var typeMeterList = this.typeMeterService.getTypeMeter();
     for (Long addressId : addressIds) {
       var meterReadingByAddressId

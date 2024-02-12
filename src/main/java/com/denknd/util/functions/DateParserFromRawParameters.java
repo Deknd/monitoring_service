@@ -2,6 +2,7 @@ package com.denknd.util.functions;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
+import lombok.extern.slf4j.Slf4j;
 
 import java.time.YearMonth;
 import java.time.format.DateTimeFormatter;
@@ -12,7 +13,7 @@ import java.util.function.Function;
  * Класс для парсинга года и месяца из параметров.
  */
 @RequiredArgsConstructor
-@Log4j2
+@Slf4j
 public class DateParserFromRawParameters implements Function<String, YearMonth> {
 
   /**

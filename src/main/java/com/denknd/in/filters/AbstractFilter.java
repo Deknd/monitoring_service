@@ -10,6 +10,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
+import lombok.extern.slf4j.Slf4j;
 
 import java.io.IOException;
 
@@ -17,27 +18,14 @@ import java.io.IOException;
  * Абстрактный класс фильтра, предоставляющий базовую реализацию для других фильтров.
  * Обеспечивает установку ответа на исключение в формате JSON при возникновении ошибок.
  */
-@Log4j2
+@Slf4j
 @RequiredArgsConstructor
 public abstract class AbstractFilter  extends HttpFilter {
   /**
    * Для маппинга в джесон и обратно
    */
   protected abstract ObjectMapper getObjectMapper();
-  /**
-   * Метод фильтрации запросов.
-   * Переопределяет метод doFilter из HttpFilter.
-   * Данный метод вызывает цепочку следующих фильтров или ресурсов.
-   * @param req   объект HttpServletRequest, содержащий запрос клиента
-   * @param res   объект HttpServletResponse, содержащий ответ фильтра для клиента
-   * @param chain объект FilterChain для вызова следующего фильтра или ресурса
-   * @throws IOException
-   * @throws ServletException
-   */
-  @Override
-  protected void doFilter(HttpServletRequest req, HttpServletResponse res, FilterChain chain) throws IOException, ServletException {
-    super.doFilter(req, res, chain);
-  }
+
   /**
    * Устанавливает ответ на исключение в формате JSON.
    * Принимает объект HttpServletResponse, сообщение об ошибке и код статуса.

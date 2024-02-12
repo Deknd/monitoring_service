@@ -1,5 +1,7 @@
 package com.denknd.config;
 
+import com.denknd.aspectj.audit.AuditAspect;
+import com.denknd.aspectj.audit.AuditAspectConfig;
 import com.denknd.controllers.AddressController;
 import com.denknd.controllers.CounterInfoController;
 import com.denknd.controllers.MeterReadingController;
@@ -59,6 +61,8 @@ import com.nimbusds.jose.jwk.OctetSequenceKey;
 import jakarta.validation.Validation;
 import lombok.Getter;
 import lombok.extern.log4j.Log4j2;
+import lombok.extern.slf4j.Slf4j;
+import org.aspectj.lang.annotation.Aspect;
 
 import java.io.FileNotFoundException;
 import java.text.ParseException;
@@ -68,7 +72,7 @@ import java.util.Scanner;
  * Собирает весь контекст приложения.
  */
 @Getter
-@Log4j2
+@Slf4j
 public class ManualConfig {
   /**
    * Сервис для работы с пользователями
@@ -190,9 +194,10 @@ public class ManualConfig {
       var directDecrypter = new DirectDecrypter(OctetSequenceKey.parse(yamlParser.jwtConfig().secretKey()));
       var directEncrypter = new DirectEncrypter(OctetSequenceKey.parse(yamlParser.jwtConfig().secretKey()));
 
-
       this.initializerMapper();
       this.initializerService(passwordEncoder, dataBaseConnection, directEncrypter, yamlParser.jwtConfig());
+      AuditAspectConfig.init(this.auditService, this.securityService);
+
       this.initializerController();
       this.initializerFilter(passwordEncoder, directDecrypter);
     } catch (FileNotFoundException e) {

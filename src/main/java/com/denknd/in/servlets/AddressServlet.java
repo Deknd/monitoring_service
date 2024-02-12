@@ -16,6 +16,7 @@ import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.extern.log4j.Log4j2;
+import lombok.extern.slf4j.Slf4j;
 
 import java.io.IOException;
 import java.util.function.Function;
@@ -25,7 +26,7 @@ import java.util.stream.Collectors;
  * Сервлет для приема запросов на обработку данных связаных с адресом
  */
 @WebServlet(name = "AddressServlet", urlPatterns = {"/address"})
-@Log4j2
+@Slf4j
 public class AddressServlet extends AbstractServlet {
   /**
    * Маппер объектов в json и на оборот
@@ -63,7 +64,7 @@ public class AddressServlet extends AbstractServlet {
   /**
    * Инициализация сервлета
    * @param config объект <code>ServletConfig</code>, содержащий конфигурационную информацию для этого сервлета
-   * @throws ServletException
+   * @throws ServletException ошибка сервлета
    */
   @Override
   public void init(ServletConfig config) throws ServletException {
@@ -80,11 +81,11 @@ public class AddressServlet extends AbstractServlet {
    * Обработка HTTP POST запросов, таких как добавления нового адреса.
    * @param req  объект {@link HttpServletRequest}, содержащий запрос клиента к сервлету
    * @param resp объект {@link HttpServletResponse}, содержащий ответ сервлета клиенту
-   * @throws ServletException
-   * @throws IOException
+   * @throws ServletException ошибка сервлета
+   * @throws IOException ошибка при работе с потоком даных
    */
   @Override
-  protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+  protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws IOException {
     var requestURI = req.getRequestURI();
     resp.setCharacterEncoding("UTF-8");
     if (requestURI.equals(this.addAddress)) {
@@ -121,11 +122,10 @@ public class AddressServlet extends AbstractServlet {
    * Обработка HTTP GET запросов получения информации о адресах пользователя
    * @param req  объект {@link HttpServletRequest}, содержащий запрос клиента к сервлету
    * @param resp объект {@link HttpServletResponse}, содержащий ответ сервлета клиенту
-   * @throws ServletException
-   * @throws IOException
+   * @throws IOException ошибка при работе с потоком данных
    */
   @Override
-  protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+  protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws IOException {
     var requestURI = req.getRequestURI();
     resp.setCharacterEncoding("UTF-8");
     if (requestURI.equals(this.getAddress)) {
@@ -205,7 +205,7 @@ public class AddressServlet extends AbstractServlet {
 
   /**
    * Параметр для запроса адреса по айди пользователя доступный для админа
-   * @return
+   * @return возвращает название параметра для получения информации об айди
    */
   public String getParamUserId() {
     return paramUserId;

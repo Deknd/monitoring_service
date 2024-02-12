@@ -1,5 +1,6 @@
 package com.denknd.controllers;
 
+import com.denknd.aspectj.audit.AuditRecording;
 import com.denknd.dto.AddressDto;
 import com.denknd.exception.AddressDatabaseException;
 import com.denknd.mappers.AddressMapper;
@@ -34,6 +35,7 @@ public class AddressController {
    * @param userId     идентификатор пользователя, к которому нужно добавить адрес
    * @return возвращает добавленный адрес
    */
+  @AuditRecording("Добавляет новый адрес")
   public AddressDto addAddress(AddressDto addressDto, Long userId) throws AddressDatabaseException {
     var address = this.addressMapper.mapAddressDtoToAddress(addressDto);
     var user = this.userService.getUserById(userId);
@@ -48,6 +50,7 @@ public class AddressController {
    * @param userId идентификатор пользователя
    * @return адреса доступные пользователю
    */
+  @AuditRecording("Получения списка адресов")
   public List<AddressDto> getAddress(Long userId) {
     var addresses = this.addressService.getAddresses(userId);
     return this.addressMapper.mapAddressesToAddressesDto(addresses);

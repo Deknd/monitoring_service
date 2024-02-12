@@ -1,5 +1,6 @@
 package com.denknd.controllers;
 
+import com.denknd.aspectj.audit.AuditRecording;
 import com.denknd.dto.MeterReadingRequestDto;
 import com.denknd.dto.MeterReadingResponseDto;
 import com.denknd.entity.Address;
@@ -9,7 +10,7 @@ import com.denknd.services.AddressService;
 import com.denknd.services.MeterReadingService;
 import com.denknd.services.TypeMeterService;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.log4j.Log4j2;
+import lombok.extern.slf4j.Slf4j;
 
 import java.time.YearMonth;
 import java.util.List;
@@ -20,7 +21,7 @@ import java.util.stream.Collectors;
  * Контроллер для работы с показаниями данных.
  */
 @RequiredArgsConstructor
-@Log4j2
+@Slf4j
 public class MeterReadingController {
   /**
    * Сервис для управления показаниями.
@@ -54,6 +55,7 @@ public class MeterReadingController {
    * @param endDate    дата по которой нужны показания
    * @return список с показаниями, по всем параметрам
    */
+  @AuditRecording("Получения истории о показаниях")
   public List<MeterReadingResponseDto> getHistoryMeterReading(
           Long addressId,
           Long userId,
@@ -77,6 +79,7 @@ public class MeterReadingController {
    * @return возвращает полученные показания
    * @throws MeterReadingConflictError ошибки при сохранении, если показания уже внесены, если показания меньше предыдущих
    */
+  @AuditRecording("Добавляет новые показания")
   public MeterReadingResponseDto addMeterReadingValue(
           MeterReadingRequestDto meterReadingRequestDto,
           Long userId
@@ -116,6 +119,7 @@ public class MeterReadingController {
    * @param date      дата в которую нужны показания(может быть null)
    * @return возвращает данные пользователю, по указанным параметрам
    */
+  @AuditRecording("Получаем актуальные показания")
   public List<MeterReadingResponseDto> getMeterReadings(
           Long addressId,
           Long userId,

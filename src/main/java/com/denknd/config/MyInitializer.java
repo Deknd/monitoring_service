@@ -7,6 +7,7 @@ import jakarta.servlet.ServletContext;
 import jakarta.servlet.ServletException;
 import lombok.Setter;
 import lombok.extern.log4j.Log4j2;
+import lombok.extern.slf4j.Slf4j;
 
 import java.io.FileNotFoundException;
 import java.text.ParseException;
@@ -15,7 +16,7 @@ import java.util.Set;
 /**
  * Инициализирует контекст приложения
  */
-@Log4j2
+@Slf4j
 @Setter
 public class MyInitializer implements ServletContainerInitializer {
   /**
@@ -30,7 +31,6 @@ public class MyInitializer implements ServletContainerInitializer {
    * Метод вызывается контейнером сервлетов при запуске веб-приложения для инициализации.
    * @param c   Множество классов приложения, которые расширяют, реализуют или были аннотированы типами классов, указанными в аннотации
    * @param ctx Контекст сервлета веб-приложения, которое запускается
-   * @throws ServletException
    */
   @Override
   public void onStartup(Set<Class<?>> c, ServletContext ctx){
