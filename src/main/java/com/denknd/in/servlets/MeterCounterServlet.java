@@ -43,7 +43,7 @@ public class MeterCounterServlet extends AbstractServlet {
   /**
    * Урл для обращения к данному сервлету
    */
-  private  String meterCounterPatch = "/counter-info";
+  private final String meterCounterPatch = "/counter-info";
 
   /**
    * Инициализация сервлета
@@ -78,7 +78,6 @@ public class MeterCounterServlet extends AbstractServlet {
           var requestBody = reader.lines().collect(Collectors.joining(System.lineSeparator()));
           var counterInfoDto = this.objectMapper.readValue(requestBody, CounterInfoDto.class);
           this.validator.validate(counterInfoDto);
-
           var result = this.counterInfoController.addInfoForMeter(counterInfoDto);
           this.responseCreate(resp, result, HttpServletResponse.SC_OK);
           return;

@@ -3,8 +3,6 @@ package com.denknd.controllers;
 import com.denknd.dto.MeterReadingRequestDto;
 import com.denknd.dto.MeterReadingResponseDto;
 import com.denknd.entity.Address;
-import com.denknd.entity.MeterReading;
-import com.denknd.entity.TypeMeter;
 import com.denknd.exception.MeterReadingConflictError;
 import com.denknd.mappers.MeterReadingMapper;
 import com.denknd.services.AddressService;
@@ -93,7 +91,7 @@ public class MeterReadingController {
     var typeMeter = this.typeMeterService.getTypeMeter()
             .stream()
             .filter(type ->
-                    type.getTypeMeterId().equals(meterReadingRequestDto.codeType()))
+                    type.getTypeMeterId().equals(meterReadingRequestDto.typeMeterId()))
             .findFirst()
             .orElse(null);
     if (typeMeter == null){

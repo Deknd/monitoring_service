@@ -21,7 +21,14 @@ ext {
     liquibaseVersion = '4.25.1'
     postgresqlVersion = '42.7.1'
     testcontainersPostgresqlVersion = '1.19.4'
-    jakartaVersion = '6.1.0-M1'
+    jakartaServletVersion = '6.1.0-M1'
+    jakartaValidationVersion = '3.1.0-M1'
+    log4jVersion = '2.22.1'
+    hibernateValidatorVersion = '8.0.1.Final'
+    nimbusdsVersion = '9.38-rc3'
+    jacksonVersion = '2.16.1'
+    aspectjVersion = '1.9.21'
+
 
 }
 gretty {
@@ -33,30 +40,28 @@ dependencies {
     implementation "org.yaml:snakeyaml:${snakeyamlVersion}"
     implementation "org.liquibase:liquibase-core:${liquibaseVersion}"
     implementation "org.postgresql:postgresql:${postgresqlVersion}"
-    implementation "jakarta.servlet:jakarta.servlet-api:${jakartaVersion}"
-    implementation 'jakarta.validation:jakarta.validation-api:3.1.0-M1'
-    implementation 'org.apache.logging.log4j:log4j-core:2.22.1'
-    implementation 'com.nimbusds:nimbus-jose-jwt:9.38-rc3'
-    implementation 'com.fasterxml.jackson.datatype:jackson-datatype-jsr310:2.16.1'
 
-    implementation 'com.fasterxml.jackson.core:jackson-databind:2.16.1'
-    implementation 'org.hibernate.validator:hibernate-validator:8.0.1.Final'
+    implementation "jakarta.servlet:jakarta.servlet-api:${jakartaServletVersion}"
+    implementation "jakarta.validation:jakarta.validation-api:${jakartaValidationVersion}"
+    implementation "org.hibernate.validator:hibernate-validator:${hibernateValidatorVersion}"
 
+    implementation "org.apache.logging.log4j:log4j-core:${log4jVersion}"
+    implementation "com.nimbusds:nimbus-jose-jwt:${nimbusdsVersion}"
+    implementation "com.fasterxml.jackson.datatype:jackson-datatype-jsr310:${jacksonVersion}"
+    implementation "com.fasterxml.jackson.core:jackson-databind:${jacksonVersion}"
 
     compileOnly "org.projectlombok:lombok:${lombokVersion}"
     annotationProcessor "org.projectlombok:lombok:${lombokVersion}"
     annotationProcessor "org.projectlombok:lombok-mapstruct-binding:${lombokMapstructVersion}"
     annotationProcessor "org.mapstruct:mapstruct-processor:${mapstructVersion}"
-    runtimeOnly 'org.aspectj:aspectjrt:1.9.21'
-    runtimeOnly 'org.aspectj:aspectjweaver:1.9.21'
-
+    runtimeOnly "org.aspectj:aspectjrt:${aspectjVersion}"
+    runtimeOnly "org.aspectj:aspectjweaver:${aspectjVersion}"
 
     testImplementation "org.junit.jupiter:junit-jupiter-api:${junitVersion}"
     testRuntimeOnly "org.junit.jupiter:junit-jupiter-engine:${junitVersion}"
     testImplementation "org.assertj:assertj-core:${assertjVersion}"
     testImplementation "org.mockito:mockito-core:${mockitoVersion}"
     testImplementation "org.testcontainers:postgresql:${testcontainersPostgresqlVersion}"
-
 }
 
 test {

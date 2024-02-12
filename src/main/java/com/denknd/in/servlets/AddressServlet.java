@@ -24,7 +24,7 @@ import java.util.stream.Collectors;
 /**
  * Сервлет для приема запросов на обработку данных связаных с адресом
  */
-@WebServlet(name = "AddressServlet", urlPatterns = {"/address/*"})
+@WebServlet(name = "AddressServlet", urlPatterns = {"/address"})
 @Log4j2
 public class AddressServlet extends AbstractServlet {
   /**
@@ -50,11 +50,11 @@ public class AddressServlet extends AbstractServlet {
   /**
    * Адрес для приема запросов на добавления нового адреса
    */
-  private String addAddress = "/address/add";
+  private String addAddress = "/address";
   /**
    * Адрес для получения информации о существующих адресах
    */
-  private String getAddress = "/address/get";
+  private String getAddress = "/address";
   /**
    * Дополнительный параметр, для получения информации о пользователи по айди.
    */

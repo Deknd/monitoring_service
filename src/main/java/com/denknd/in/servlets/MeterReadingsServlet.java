@@ -4,6 +4,7 @@ import com.denknd.config.ManualConfig;
 import com.denknd.controllers.MeterReadingController;
 import com.denknd.dto.MeterReadingRequestDto;
 import com.denknd.entity.Roles;
+import com.denknd.exception.ConstraintViolationException;
 import com.denknd.exception.ErrorResponse;
 import com.denknd.exception.MeterReadingConflictError;
 import com.denknd.security.entity.UserSecurity;
@@ -11,6 +12,7 @@ import com.denknd.security.service.SecurityService;
 import com.denknd.util.functions.DateParserFromRawParameters;
 import com.denknd.util.functions.LongIdParserFromRawParameters;
 import com.denknd.util.functions.TypeMeterParametersParserFromRawParameters;
+import com.denknd.util.impl.Validators;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.servlet.ServletConfig;
 import jakarta.servlet.ServletException;
@@ -40,6 +42,10 @@ public class MeterReadingsServlet extends AbstractServlet {
    */
   private MeterReadingController meterReadingController;
   /**
+   * Валидатор входных данных
+   */
+  private Validators validator;
+  /**
    * Сервис для работы с безопасностью.
    */
   private SecurityService securityService;
@@ -58,15 +64,15 @@ public class MeterReadingsServlet extends AbstractServlet {
   /**
    * Урл для отправки показаний
    */
-  private String sendMeterReading = "/meter-readings/send";
+  private final String sendMeterReading = "/meter-readings/send";
   /**
    * Урл для получения истории показаний
    */
-  private String historyMeterReading = "/meter-readings/history";
+  private final String historyMeterReading = "/meter-readings/history";
   /**
    * Урл для получения актуальный показаний или показаний по определенной дате
    */
-  private String getMeterReadings = "/meter-readings/get-meter-readings";
+  private final String getMeterReadings = "/meter-readings/get-meter-readings";
   /**
    * Параметр для передачи информации, о типах показаний
    */
@@ -106,6 +112,7 @@ public class MeterReadingsServlet extends AbstractServlet {
     this.objectMapper = context.getObjectMapper();
     this.meterReadingController = context.getMeterReadingController();
     this.securityService = context.getSecurityService();
+    this.validator = context.getValidator();
     if (this.typeMeterParametersParserFromRawParameters == null) {
       this.typeMeterParametersParserFromRawParameters
               = new TypeMeterParametersParserFromRawParameters(
@@ -152,6 +159,7 @@ public class MeterReadingsServlet extends AbstractServlet {
       var meterReadingRequestDto
               = this.objectMapper.readValue(requestBody, MeterReadingRequestDto.class);
       try {
+        this.validator.validate(meterReadingRequestDto);
         var meterReadingResponseDto
                 = this.meterReadingController.addMeterReadingValue(meterReadingRequestDto, userSecurity.userId());
         this.responseCreate(resp, meterReadingResponseDto, HttpServletResponse.SC_CREATED);
@@ -162,6 +170,8 @@ public class MeterReadingsServlet extends AbstractServlet {
                 new ErrorResponse("Ошибка сохранения показаний. " + e.getMessage()),
                 HttpServletResponse.SC_CONFLICT
         );
+      } catch (ConstraintViolationException e) {
+        this.responseCreate(resp, new ErrorResponse(e.getMessage()),HttpServletResponse.SC_BAD_REQUEST);
       }
     }
   }
