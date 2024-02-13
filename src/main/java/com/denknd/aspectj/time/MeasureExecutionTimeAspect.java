@@ -1,6 +1,5 @@
 package com.denknd.aspectj.time;
 
-import lombok.extern.log4j.Log4j2;
 import lombok.extern.slf4j.Slf4j;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
@@ -29,11 +28,14 @@ public class MeasureExecutionTimeAspect {
    */
   @Around("annotatedByMeasureExecutionTime()")
   public Object logging(ProceedingJoinPoint proceedingJoinPoint) throws Throwable {
-    var startTime = System.currentTimeMillis();
-    var result = proceedingJoinPoint.proceed();
-    var endTime = System.currentTimeMillis();
-    var executionTime = endTime - startTime;
-    log.info("Метод: " + proceedingJoinPoint.getSignature().toShortString() + " Время работы метода: " + executionTime + " milliseconds");
-    return result;
+    if (proceedingJoinPoint.getKind().equals("method-execution")) {
+      var startTime = System.currentTimeMillis();
+      var result = proceedingJoinPoint.proceed();
+      var endTime = System.currentTimeMillis();
+      var executionTime = endTime - startTime;
+      log.info("Метод: " + proceedingJoinPoint.getSignature().toShortString() + " Время работы метода: " + executionTime + " milliseconds");
+      return result;
+    }
+    return proceedingJoinPoint.proceed();
   }
 }

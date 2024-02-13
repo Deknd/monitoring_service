@@ -10,7 +10,6 @@ import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.Setter;
-import lombok.extern.log4j.Log4j2;
 import lombok.extern.slf4j.Slf4j;
 
 import java.io.IOException;
@@ -44,7 +43,11 @@ public class CookieAuthenticationFilter extends AbstractFilter {
   private final Map<String, Set<String>> ignoredRequests = new HashMap<>();
   private final ObjectMapper objectMapper;
 
-  public CookieAuthenticationFilter(ObjectMapper objectMapper, SecurityService securityService, AuthenticationConverter authenticationConverter, UserAuthenticator userAuthenticator) {
+  public CookieAuthenticationFilter(
+          ObjectMapper objectMapper,
+          SecurityService securityService,
+          AuthenticationConverter authenticationConverter,
+          UserAuthenticator userAuthenticator) {
     this.securityService = securityService;
     this.authenticationConverter = authenticationConverter;
     this.userAuthenticator = userAuthenticator;
@@ -53,6 +56,7 @@ public class CookieAuthenticationFilter extends AbstractFilter {
 
   /**
    * Мапер для маппинга объектов в json обратно
+   *
    * @return объект для маппинга объектов в json обратно
    */
   @Override
@@ -72,7 +76,7 @@ public class CookieAuthenticationFilter extends AbstractFilter {
    * @param req   объект HttpServletRequest, который содержит запрос, отправленный клиентом
    * @param res   объект HttpServletResponse, который содержит ответ, отправляемый фильтром клиенту
    * @param chain объект FilterChain для вызова следующего фильтра или ресурса
-   * @throws IOException ошибка при обработке потока
+   * @throws IOException      ошибка при обработке потока
    * @throws ServletException ошибка сервлета
    */
   @Override

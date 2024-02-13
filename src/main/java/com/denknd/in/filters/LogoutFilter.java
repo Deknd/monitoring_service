@@ -1,7 +1,6 @@
 package com.denknd.in.filters;
 
 import com.denknd.security.service.SecurityService;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpFilter;
@@ -11,7 +10,6 @@ import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 
 import java.io.IOException;
-import java.sql.SQLException;
 
 /**
  * Фильтр служит для блокировки токена доступа
@@ -31,7 +29,6 @@ public class LogoutFilter extends HttpFilter {
    * Сервис для работы с безопасностью
    */
   private final SecurityService securityService;
-
 
 
   /**
@@ -55,9 +52,9 @@ public class LogoutFilter extends HttpFilter {
     var requestURI = req.getRequestURI();
     var method = req.getMethod();
     if (requestURI.equalsIgnoreCase(this.URL_PATTERNS) && method.equals(this.HTTP_METHOD)) {
-        this.securityService.logout(res);
-        res.setStatus(HttpServletResponse.SC_NO_CONTENT);
-        return;
+      this.securityService.logout(res);
+      res.setStatus(HttpServletResponse.SC_NO_CONTENT);
+      return;
     }
     super.doFilter(req, res, chain);
   }

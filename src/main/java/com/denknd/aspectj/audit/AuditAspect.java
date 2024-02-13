@@ -35,13 +35,16 @@ public class AuditAspect {
    */
   @Around("@annotation(auditRecordingAnnotation)")
   public Object audit(ProceedingJoinPoint joinPoint, AuditRecording auditRecordingAnnotation) throws Throwable {
-    var auditValue = auditRecordingAnnotation.value();
-    var now = OffsetDateTime.now();
-    var userSecurity = this.securityService.getUserSecurity();
-    var signature = joinPoint.getSignature().getName();
-    var operation = "Метод: " + signature + " действие: " + auditValue;
-    var audit = Audit.builder().operationTime(now).operation(operation).user(userSecurity).build();
-    this.auditService.addAction(audit);
+    if (joinPoint.getKind().equals("method-execution")) {
+      var auditValue = auditRecordingAnnotation.value();
+      var now = OffsetDateTime.now();
+      var userSecurity = this.securityService.getUserSecurity();
+      var signature = joinPoint.getSignature().getName();
+      var operation = "Метод: " + signature + " действие: " + auditValue;
+      var audit = Audit.builder().operationTime(now).operation(operation).user(userSecurity).build();
+      this.auditService.addAction(audit);
+      return joinPoint.proceed();
+    }
     return joinPoint.proceed();
   }
 }
