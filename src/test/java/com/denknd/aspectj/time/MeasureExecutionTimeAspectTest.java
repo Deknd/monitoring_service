@@ -24,6 +24,7 @@ class MeasureExecutionTimeAspectTest {
   void logging() throws Throwable {
     var joinPoint = mock(ProceedingJoinPoint.class);
     when(joinPoint.getSignature()).thenReturn(mock(Signature.class));
+    when(joinPoint.getKind()).thenReturn("method-execution");
 
     assertThatCode(() -> this.measureExecutionTimeAspect.logging(joinPoint)).doesNotThrowAnyException();
   }

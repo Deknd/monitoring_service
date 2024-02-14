@@ -43,6 +43,7 @@ class AuditAspectTest {
     var joinPoint = mock(ProceedingJoinPoint.class);
     var auditRecording = mock(AuditRecording.class);
     when(joinPoint.getSignature()).thenReturn(mock(Signature.class));
+    when(joinPoint.getKind()).thenReturn("method-execution");
 
     this.auditAspect.audit(joinPoint, auditRecording);
 
