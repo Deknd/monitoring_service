@@ -13,7 +13,7 @@ public class LongIdParserFromRawParameters implements Function<String, Long> {
   /**
    * Извлекает числовое значение из параметров.
    *
-   * @param param     параметр из запроса
+   * @param param параметр из запроса
    * @return возвращает Long или null, если введено не числовое значение
    */
   @Override

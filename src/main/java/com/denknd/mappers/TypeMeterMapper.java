@@ -20,6 +20,7 @@ public interface TypeMeterMapper {
 
   /**
    * Преобразование TypeMeterDto в TypeMeter
+   *
    * @param typeMeterDto тип показаний от пользователя
    * @return тип показаний для сервиса
    */
@@ -27,6 +28,7 @@ public interface TypeMeterMapper {
 
   /**
    * Преобразование TypeMeter в TypeMeterDto
+   *
    * @param typeMeter показания от сервиса
    * @return показания для пользователя
    */
@@ -34,6 +36,7 @@ public interface TypeMeterMapper {
 
   /**
    * Преобразование списка TypeMeter в список TypeMeterDto
+   *
    * @param typeMeterList показания от сервиса
    * @return показания для пользователя
    */
@@ -46,7 +49,7 @@ public interface TypeMeterMapper {
    * @return заполненный объект
    * @throws SQLException не верные данные из Бд
    */
- default TypeMeter mapResultSetToTypeMeter(ResultSet resultSet) throws SQLException {
+  default TypeMeter mapResultSetToTypeMeter(ResultSet resultSet) throws SQLException {
     return TypeMeter.builder()
             .typeMeterId(resultSet.getLong("type_meter_id"))
             .typeCode(resultSet.getString("type_code"))

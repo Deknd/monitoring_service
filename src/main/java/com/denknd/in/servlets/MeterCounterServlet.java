@@ -13,7 +13,6 @@ import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import lombok.extern.log4j.Log4j2;
 import lombok.extern.slf4j.Slf4j;
 
 import java.io.IOException;
@@ -48,6 +47,7 @@ public class MeterCounterServlet extends AbstractServlet {
 
   /**
    * Инициализация сервлета
+   *
    * @param config объект <code>ServletConfig</code>, содержащий конфигурационную информацию для этого сервлета
    * @throws ServletException ошибка при инициализации сервлета
    */
@@ -64,6 +64,7 @@ public class MeterCounterServlet extends AbstractServlet {
 
   /**
    * Обработка HTTP POST запросов, таких как добавления информации по счетчику.
+   *
    * @param req  объект {@link HttpServletRequest}, содержащий запрос клиента к сервлету
    * @param resp объект {@link HttpServletResponse}, содержащий ответ сервлета клиенту
    * @throws IOException ошибка при обрыве соединения
@@ -93,6 +94,7 @@ public class MeterCounterServlet extends AbstractServlet {
 
   /**
    * Возвращает объект для маппинга json в объекты и на оборот
+   *
    * @return объект для маппинга json в объекты и на оборот
    */
   @Override
@@ -102,6 +104,7 @@ public class MeterCounterServlet extends AbstractServlet {
 
   /**
    * Получения урла по которому доступна данный сервлет
+   *
    * @return строка с урлом доступа к сервлету
    */
   public String getMeterCounterPatch() {

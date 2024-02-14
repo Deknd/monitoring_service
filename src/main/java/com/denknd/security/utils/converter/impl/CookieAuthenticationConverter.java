@@ -35,7 +35,7 @@ public class CookieAuthenticationConverter implements AuthenticationConverter {
     return Stream.of(httpRequest.getCookies())
             .filter(cookie ->
                     cookie != null
-                    && cookie.getName()!=null
+                            && cookie.getName() != null
                             && cookie.getName().equals("__Host-auth-token"))
             .findFirst()
             .map(cookie -> {

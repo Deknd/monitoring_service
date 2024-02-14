@@ -6,10 +6,10 @@ import lombok.Builder;
 /**
  * Пользователь в системе безопасности.
  *
- * @param firstName     Имя пользователя.
- * @param userId   Идентификатор пользователя.
- * @param role     Роли пользователя.
- * @param password Пароль пользователя.
+ * @param firstName Имя пользователя.
+ * @param userId    Идентификатор пользователя.
+ * @param role      Роли пользователя.
+ * @param password  Пароль пользователя.
  */
 @Builder
 public record UserSecurity(String firstName, Long userId, Roles role, String password, Token token) {

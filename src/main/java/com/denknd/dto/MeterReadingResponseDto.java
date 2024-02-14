@@ -7,14 +7,15 @@ import java.time.YearMonth;
 
 /**
  * Объект показаний счетчика, передаваемый пользователю
- * @param meterId идентификатор показаний
- * @param addressId идентификатор адреса
+ *
+ * @param meterId         идентификатор показаний
+ * @param addressId       идентификатор адреса
  * @param typeDescription описание показаний
- * @param meterValue показания счетчика
- * @param metric единица измерения счетчика
- * @param code тип(код) показаний
+ * @param meterValue      показания счетчика
+ * @param metric          единица измерения счетчика
+ * @param code            тип(код) показаний
  * @param submissionMonth месяц подачи показаний
- * @param timeSendMeter дата подачи показаний
+ * @param timeSendMeter   дата подачи показаний
  */
 @Builder
 public record MeterReadingResponseDto(

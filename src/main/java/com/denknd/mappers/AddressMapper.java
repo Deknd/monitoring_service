@@ -44,6 +44,7 @@ public interface AddressMapper {
 
   /**
    * Собирает новый объект Address.
+   *
    * @param resultSet данные полученные из БД
    * @return Заполненный объект Address
    * @throws SQLException ошибка получения данных

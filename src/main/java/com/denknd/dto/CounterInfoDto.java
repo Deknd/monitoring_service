@@ -8,7 +8,7 @@ import lombok.Builder;
  * Класс для передачи информации о счетчике.
  *
  * @param addressId    идентификатор адреса
- * @param typeMeterId   идентификатор типа показаний, который он представляет
+ * @param typeMeterId  идентификатор типа показаний, который он представляет
  * @param serialNumber серийный номер счетчика.
  * @param meterModel   модель счетчика.
  */

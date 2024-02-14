@@ -3,13 +3,9 @@ package com.denknd.in.filters;
 import com.denknd.exception.ErrorResponse;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import jakarta.servlet.FilterChain;
-import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpFilter;
-import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.log4j.Log4j2;
 import lombok.extern.slf4j.Slf4j;
 
 import java.io.IOException;
@@ -20,7 +16,7 @@ import java.io.IOException;
  */
 @Slf4j
 @RequiredArgsConstructor
-public abstract class AbstractFilter  extends HttpFilter {
+public abstract class AbstractFilter extends HttpFilter {
   /**
    * Для маппинга в джесон и обратно
    */
@@ -31,9 +27,10 @@ public abstract class AbstractFilter  extends HttpFilter {
    * Принимает объект HttpServletResponse, сообщение об ошибке и код статуса.
    * Преобразует сообщение об ошибке в формат JSON с помощью объекта ObjectMapper,
    * устанавливает соответствующие заголовки ответа и записывает JSON-ответ в поток вывода.
+   *
    * @param httpResponse объект HttpServletResponse для установки ответа
    * @param errorMessage сообщение об ошибке
-   * @param status код статуса ответа
+   * @param status       код статуса ответа
    * @throws JsonProcessingException при ошибке преобразования в JSON
    */
   protected void setExceptionResponse(HttpServletResponse httpResponse, String errorMessage, int status) throws JsonProcessingException {

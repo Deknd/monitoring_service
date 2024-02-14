@@ -5,9 +5,9 @@ import com.denknd.controllers.AddressController;
 import com.denknd.dto.AddressDto;
 import com.denknd.entity.Roles;
 import com.denknd.exception.ErrorResponse;
-import com.denknd.util.functions.LongIdParserFromRawParameters;
 import com.denknd.security.entity.UserSecurity;
 import com.denknd.security.service.SecurityService;
+import com.denknd.util.functions.LongIdParserFromRawParameters;
 import com.denknd.util.impl.Validators;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.servlet.ServletConfig;
@@ -15,7 +15,6 @@ import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import lombok.extern.log4j.Log4j2;
 import lombok.extern.slf4j.Slf4j;
 
 import java.io.IOException;
@@ -63,6 +62,7 @@ public class AddressServlet extends AbstractServlet {
 
   /**
    * Инициализация сервлета
+   *
    * @param config объект <code>ServletConfig</code>, содержащий конфигурационную информацию для этого сервлета
    * @throws ServletException ошибка сервлета
    */
@@ -79,10 +79,11 @@ public class AddressServlet extends AbstractServlet {
 
   /**
    * Обработка HTTP POST запросов, таких как добавления нового адреса.
+   *
    * @param req  объект {@link HttpServletRequest}, содержащий запрос клиента к сервлету
    * @param resp объект {@link HttpServletResponse}, содержащий ответ сервлета клиенту
    * @throws ServletException ошибка сервлета
-   * @throws IOException ошибка при работе с потоком даных
+   * @throws IOException      ошибка при работе с потоком даных
    */
   @Override
   protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws IOException {
@@ -100,8 +101,9 @@ public class AddressServlet extends AbstractServlet {
 
   /**
    * Добавления адреса пользователю
-   * @param req  объект {@link HttpServletRequest}, содержащий запрос клиента к сервлету
-   * @param resp объект {@link HttpServletResponse}, содержащий ответ сервлета клиенту
+   *
+   * @param req          объект {@link HttpServletRequest}, содержащий запрос клиента к сервлету
+   * @param resp         объект {@link HttpServletResponse}, содержащий ответ сервлета клиенту
    * @param userSecurity пользователь из системы безопасности
    * @throws IOException ошибка при обработке потока данных
    */
@@ -120,6 +122,7 @@ public class AddressServlet extends AbstractServlet {
 
   /**
    * Обработка HTTP GET запросов получения информации о адресах пользователя
+   *
    * @param req  объект {@link HttpServletRequest}, содержащий запрос клиента к сервлету
    * @param resp объект {@link HttpServletResponse}, содержащий ответ сервлета клиенту
    * @throws IOException ошибка при работе с потоком данных
@@ -156,6 +159,7 @@ public class AddressServlet extends AbstractServlet {
 
   /**
    * Получение объекта ObjectMapper
+   *
    * @return объект ObjectMapper
    */
   @Override
@@ -165,6 +169,7 @@ public class AddressServlet extends AbstractServlet {
 
   /**
    * Измеения функции получения из параметоров айди
+   *
    * @param longIdParserFromRawParameters функция для получения из параметров идентификатора
    */
   public void setLongIdParserFromRawParameters(Function<String, Long> longIdParserFromRawParameters) {
@@ -173,6 +178,7 @@ public class AddressServlet extends AbstractServlet {
 
   /**
    * Выдает адрес для пост запроса
+   *
    * @return адрес для пост запроса
    */
   public String getAddAddress() {
@@ -181,6 +187,7 @@ public class AddressServlet extends AbstractServlet {
 
   /**
    * Настройка адреса для пост запроса
+   *
    * @param addAddress адрес для пост запроса
    */
   public void setAddAddress(String addAddress) {
@@ -189,6 +196,7 @@ public class AddressServlet extends AbstractServlet {
 
   /**
    * выдает адрес для гет запроса о информации об адресах
+   *
    * @return адрес
    */
   public String getGetAddress() {
@@ -197,6 +205,7 @@ public class AddressServlet extends AbstractServlet {
 
   /**
    * Настрока адреса для гет запроса на получения информации об адресах
+   *
    * @param getAddress адрес
    */
   public void setGetAddress(String getAddress) {
@@ -205,6 +214,7 @@ public class AddressServlet extends AbstractServlet {
 
   /**
    * Параметр для запроса адреса по айди пользователя доступный для админа
+   *
    * @return возвращает название параметра для получения информации об айди
    */
   public String getParamUserId() {

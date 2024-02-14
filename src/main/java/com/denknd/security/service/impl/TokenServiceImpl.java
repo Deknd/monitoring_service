@@ -5,7 +5,6 @@ import com.denknd.security.entity.TokenBlock;
 import com.denknd.security.repository.TokenRepository;
 import com.denknd.security.service.TokenService;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.log4j.Log4j2;
 import lombok.extern.slf4j.Slf4j;
 
 import java.sql.SQLException;
@@ -22,6 +21,7 @@ public class TokenServiceImpl implements TokenService {
    * Репозиторий для заблокированных токенов
    */
   private final TokenRepository tokenRepository;
+
   /**
    * @param id UUID токена доступа, выданный при создании
    * @return true, если токен заблокирован, иначе false
@@ -38,6 +38,7 @@ public class TokenServiceImpl implements TokenService {
 
   /**
    * Блокирует токен доступа
+   *
    * @param token токен доступа, который нужно заблокировать
    * @return заблокированный токен
    */

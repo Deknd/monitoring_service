@@ -4,9 +4,10 @@ import lombok.Builder;
 
 /**
  * Объект для передачи информации о пользователе
- * @param userId идентификатор пользователя
- * @param email электронная почта
- * @param lastName фамилия
+ *
+ * @param userId    идентификатор пользователя
+ * @param email     электронная почта
+ * @param lastName  фамилия
  * @param firstName имя
  */
 @Builder

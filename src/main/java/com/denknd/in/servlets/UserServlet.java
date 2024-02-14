@@ -64,6 +64,7 @@ public class UserServlet extends AbstractServlet {
 
   /**
    * Инициализация сервлета
+   *
    * @param config объект <code>ServletConfig</code>, содержащий конфигурационную информацию для этого сервлета
    * @throws ServletException
    */
@@ -80,6 +81,7 @@ public class UserServlet extends AbstractServlet {
 
   /**
    * Обработка HTTP POST запросов, для работы с пользователем
+   *
    * @param req  объект {@link HttpServletRequest}, содержащий запрос клиента к сервлету
    * @param resp объект {@link HttpServletResponse}, содержащий ответ сервлета клиенту
    * @throws ServletException
@@ -102,7 +104,8 @@ public class UserServlet extends AbstractServlet {
 
   /**
    * Метод для регистрации пользователя в системе
-   * @param req входящий запрос от пользователя
+   *
+   * @param req  входящий запрос от пользователя
    * @param resp ответ собранный для пользователя
    * @throws IOException ошибка при обработки потока информации
    */
@@ -122,6 +125,7 @@ public class UserServlet extends AbstractServlet {
 
   /**
    * Обработка HTTP GET запросов получения информации о пользователе по id или email
+   *
    * @param req  объект {@link HttpServletRequest}, содержащий запрос клиента к сервлету
    * @param resp объект {@link HttpServletResponse}, содержащий ответ сервлета клиенту
    * @throws ServletException
@@ -165,6 +169,7 @@ public class UserServlet extends AbstractServlet {
 
   /**
    * Объект для маппинга объектов в json и обратно
+   *
    * @return Объект для маппинга объектов в json и обратно
    */
   @Override
@@ -174,13 +179,16 @@ public class UserServlet extends AbstractServlet {
 
   /**
    * Урл для регистрации пользователя
+   *
    * @return урл в виде строки
    */
   public String getSignup() {
     return this.signup;
   }
+
   /**
    * Урл для получения информации о пользователе
+   *
    * @return урл в виде строки
    */
   public String getGetUser() {
@@ -189,6 +197,7 @@ public class UserServlet extends AbstractServlet {
 
   /**
    * функция для парсинга числа из параметра
+   *
    * @param longIdParserFromRawParameters функция которая принимает строку, выводит число
    */
   public void setLongIdParserFromRawParameters(Function<String, Long> longIdParserFromRawParameters) {

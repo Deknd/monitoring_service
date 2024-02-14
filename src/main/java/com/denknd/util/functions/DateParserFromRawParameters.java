@@ -1,7 +1,6 @@
 package com.denknd.util.functions;
 
 import lombok.RequiredArgsConstructor;
-import lombok.extern.log4j.Log4j2;
 import lombok.extern.slf4j.Slf4j;
 
 import java.time.YearMonth;

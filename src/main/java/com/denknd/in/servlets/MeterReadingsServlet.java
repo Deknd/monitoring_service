@@ -1,5 +1,6 @@
 package com.denknd.in.servlets;
 
+import com.denknd.aspectj.time.MeasureExecutionTime;
 import com.denknd.config.ManualConfig;
 import com.denknd.controllers.MeterReadingController;
 import com.denknd.dto.MeterReadingRequestDto;
@@ -13,14 +14,12 @@ import com.denknd.util.functions.DateParserFromRawParameters;
 import com.denknd.util.functions.LongIdParserFromRawParameters;
 import com.denknd.util.functions.TypeMeterParametersParserFromRawParameters;
 import com.denknd.util.impl.Validators;
-import com.denknd.aspectj.time.MeasureExecutionTime;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.servlet.ServletConfig;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import lombok.extern.log4j.Log4j2;
 import lombok.extern.slf4j.Slf4j;
 
 import java.io.IOException;
@@ -104,6 +103,7 @@ public class MeterReadingsServlet extends AbstractServlet {
 
   /**
    * Инициализация сервлета
+   *
    * @param config объект <code>ServletConfig</code>, содержащий конфигурационную информацию для этого сервлета
    * @throws ServletException ошибка сервлета
    */
@@ -125,6 +125,7 @@ public class MeterReadingsServlet extends AbstractServlet {
 
   /**
    * Обработка HTTP POST запросов, таких как добавления новых показаний.
+   *
    * @param req  объект {@link HttpServletRequest}, содержащий запрос клиента к сервлету
    * @param resp объект {@link HttpServletResponse}, содержащий ответ сервлета клиенту
    * @throws IOException ошибка при работе с потоком данных
@@ -150,8 +151,9 @@ public class MeterReadingsServlet extends AbstractServlet {
 
   /**
    * Метод для добавления показаний счетчика.
-   * @param req входящий запрос от пользователя
-   * @param resp ответ пользователю
+   *
+   * @param req          входящий запрос от пользователя
+   * @param resp         ответ пользователю
    * @param userSecurity авторизированный пользоавтель
    * @throws IOException ошибка при обрыве соединения
    */
@@ -174,13 +176,14 @@ public class MeterReadingsServlet extends AbstractServlet {
                 HttpServletResponse.SC_CONFLICT
         );
       } catch (ConstraintViolationException e) {
-        this.responseCreate(resp, new ErrorResponse(e.getMessage()),HttpServletResponse.SC_BAD_REQUEST);
+        this.responseCreate(resp, new ErrorResponse(e.getMessage()), HttpServletResponse.SC_BAD_REQUEST);
       }
     }
   }
 
   /**
    * Обработка HTTP GET запросов получения историии показаний или актуальных показаний
+   *
    * @param req  объект {@link HttpServletRequest}, содержащий запрос клиента к сервлету
    * @param resp объект {@link HttpServletResponse}, содержащий ответ сервлета клиенту
    * @throws IOException ошибка при работе с потоком данных
@@ -203,8 +206,9 @@ public class MeterReadingsServlet extends AbstractServlet {
 
   /**
    * Получения актуальных показаний
-   * @param req входящий запрос пользователя
-   * @param resp ответ пользователю
+   *
+   * @param req          входящий запрос пользователя
+   * @param resp         ответ пользователю
    * @param userSecurity авторизированный пользователь
    * @throws IOException ошибка соединения
    */
@@ -246,8 +250,9 @@ public class MeterReadingsServlet extends AbstractServlet {
 
   /**
    * Метод для обработки запроса по выдачи истории показаний
-   * @param req входящий запрос пользователя
-   * @param resp ответ для пользователя
+   *
+   * @param req          входящий запрос пользователя
+   * @param resp         ответ для пользователя
    * @param userSecurity авторизированнный пользователь
    * @throws IOException ошибка соединения
    */
@@ -291,7 +296,8 @@ public class MeterReadingsServlet extends AbstractServlet {
 
   /**
    * Возвращает обхект для маппинга в json и обратно
-   * @return  обхект для маппинга в json и обратно
+   *
+   * @return обхект для маппинга в json и обратно
    */
   @Override
   protected ObjectMapper getObjectMapper() {
@@ -300,6 +306,7 @@ public class MeterReadingsServlet extends AbstractServlet {
 
   /**
    * Урл для отправки показаний
+   *
    * @return урл для отправки показаний
    */
   public String getSendMeterReading() {
@@ -308,6 +315,7 @@ public class MeterReadingsServlet extends AbstractServlet {
 
   /**
    * Урл для получения истории показаний
+   *
    * @return урл для получения истории
    */
   public String getHistoryMeterReading() {
@@ -316,6 +324,7 @@ public class MeterReadingsServlet extends AbstractServlet {
 
   /**
    * Урл для получения актуальных показаний
+   *
    * @return урл для получения показаний
    */
   public String getGetMeterReadings() {
@@ -324,6 +333,7 @@ public class MeterReadingsServlet extends AbstractServlet {
 
   /**
    * Настройка для получения функции по парсингу параметров
+   *
    * @param typeMeterParametersParserFromRawParameters функция для парсинга параметров из строки
    */
   public void setTypeMeterParametersParserFromRawParameters(Function<String, Set<Long>> typeMeterParametersParserFromRawParameters) {
@@ -332,6 +342,7 @@ public class MeterReadingsServlet extends AbstractServlet {
 
   /**
    * Настрока для функции по получению из параметров числа
+   *
    * @param longIdParserFromRawParameters функция для получения из параметров числа
    */
   public void setLongIdParserFromRawParameters(Function<String, Long> longIdParserFromRawParameters) {
@@ -340,6 +351,7 @@ public class MeterReadingsServlet extends AbstractServlet {
 
   /**
    * Добавления функции для получения из параметров даты
+   *
    * @param dateParserFromRawParameter функция для получения из параметров даты
    */
   public void setDateParserFromRawParameter(Function<String, YearMonth> dateParserFromRawParameter) {

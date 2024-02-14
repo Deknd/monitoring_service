@@ -14,22 +14,23 @@ import java.util.function.Function;
  */
 @RequiredArgsConstructor
 public class DefaultCreateToken implements Function<UserSecurity, Token> {
-    /**
-     * Время жизни токена
-     */
-    private final Duration expiration;
+  /**
+   * Время жизни токена
+   */
+  private final Duration expiration;
 
-    /**
-     * Создает токен доступа из UserSecurity
-     * @param authentication пользователь из системы безопасности
-     * @return токен доступа
-     */
-    @Override
-    public Token apply(UserSecurity authentication) {
-        var now = Instant.now();
-        return new Token(UUID.randomUUID(), authentication.userId(),
-                authentication.firstName(),
-                authentication.role().name(),
-                now, now.plus(expiration));
-    }
+  /**
+   * Создает токен доступа из UserSecurity
+   *
+   * @param authentication пользователь из системы безопасности
+   * @return токен доступа
+   */
+  @Override
+  public Token apply(UserSecurity authentication) {
+    var now = Instant.now();
+    return new Token(UUID.randomUUID(), authentication.userId(),
+            authentication.firstName(),
+            authentication.role().name(),
+            now, now.plus(expiration));
+  }
 }

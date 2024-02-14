@@ -1,13 +1,11 @@
 package com.denknd.repository.impl;
 
 import com.denknd.entity.Address;
-import com.denknd.entity.User;
 import com.denknd.mappers.AddressMapper;
 import com.denknd.repository.AddressRepository;
 import com.denknd.util.DataBaseConnection;
 import lombok.RequiredArgsConstructor;
 
-import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
@@ -74,6 +72,7 @@ public class PostgresAddressRepository implements AddressRepository {
       }
     }
   }
+
   /**
    * Находит все адреса по идентификатору пользователя.
    *
@@ -102,6 +101,7 @@ public class PostgresAddressRepository implements AddressRepository {
       return Collections.emptyList();
     }
   }
+
   /**
    * Находит адрес по его идентификатору.
    *
@@ -126,7 +126,7 @@ public class PostgresAddressRepository implements AddressRepository {
         }
       }
     } catch (SQLException e) {
-      return  Optional.empty();
+      return Optional.empty();
     }
   }
 

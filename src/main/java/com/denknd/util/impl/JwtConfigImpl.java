@@ -1,7 +1,6 @@
 package com.denknd.util.impl;
 
 import com.denknd.util.JwtConfig;
-import lombok.Getter;
 import lombok.Setter;
 
 /**
@@ -17,8 +16,10 @@ public class JwtConfigImpl implements JwtConfig {
    * Время жизни токена в часах
    */
   private Long expiration;
+
   /**
    * Возвращает секретный ключ.
+   *
    * @return секретный ключ
    */
   @Override
@@ -28,6 +29,7 @@ public class JwtConfigImpl implements JwtConfig {
 
   /**
    * Время жизни токена в часах
+   *
    * @return Число отвечающая за время жизни токена
    */
   @Override

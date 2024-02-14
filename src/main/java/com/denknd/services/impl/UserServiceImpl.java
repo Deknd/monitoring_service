@@ -43,7 +43,7 @@ public class UserServiceImpl implements UserService {
     try {
       return this.userRepository.save(user);
     } catch (SQLException e) {
-        throw new InvalidUserDataException("Данные переданные пользователям не валидные: "+e.getMessage());
+      throw new InvalidUserDataException("Данные переданные пользователям не валидные: " + e.getMessage());
     }
   }
 

@@ -45,6 +45,7 @@ public class MeterTypesServlet extends AbstractServlet {
 
   /**
    * Инициализация сервлета
+   *
    * @param config объект <code>ServletConfig</code>, содержащий конфигурационную информацию для этого сервлета
    * @throws ServletException
    */
@@ -61,6 +62,7 @@ public class MeterTypesServlet extends AbstractServlet {
 
   /**
    * Обработка HTTP POST запросов, таких как добавления новых типов показаний
+   *
    * @param req  объект {@link HttpServletRequest}, содержащий запрос клиента к сервлету
    * @param resp объект {@link HttpServletResponse}, содержащий ответ сервлета клиенту
    * @throws ServletException
@@ -96,6 +98,7 @@ public class MeterTypesServlet extends AbstractServlet {
 
   /**
    * Обработка HTTP GET запросов получения информации о доступных типах показаний
+   *
    * @param req  объект {@link HttpServletRequest}, содержащий запрос клиента к сервлету
    * @param resp объект {@link HttpServletResponse}, содержащий ответ сервлета клиенту
    * @throws ServletException
@@ -121,14 +124,17 @@ public class MeterTypesServlet extends AbstractServlet {
 
   /**
    * Объект для маппинга объектов в json и обратно
+   *
    * @return Объект для маппинга объектов в json и обратно
    */
   @Override
   protected ObjectMapper getObjectMapper() {
     return this.objectMapper;
   }
+
   /**
    * Урл для работы с данном сервлетом
+   *
    * @return урл для работы с данном сервлетом
    */
   public String getMeterTypesPatch() {

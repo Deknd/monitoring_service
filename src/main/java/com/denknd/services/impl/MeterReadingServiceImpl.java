@@ -9,7 +9,6 @@ import com.denknd.services.MeterCountService;
 import com.denknd.services.MeterReadingService;
 import com.denknd.services.TypeMeterService;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.log4j.Log4j2;
 import lombok.extern.slf4j.Slf4j;
 
 import java.sql.SQLException;
@@ -63,7 +62,7 @@ public class MeterReadingServiceImpl implements MeterReadingService {
     var timeSendMeter = OffsetDateTime.now();
     meterReading.setSubmissionMonth(submissionMonth);
     meterReading.setTimeSendMeter(timeSendMeter);
-    if(actualMeter == null || actualMeter.getMeter() == null){
+    if (actualMeter == null || actualMeter.getMeter() == null) {
       var meterCount = Meter.builder()
               .typeMeterId(meterReading.getTypeMeter().getTypeMeterId())
               .addressId(meterReading.getAddress().getAddressId())
@@ -91,7 +90,7 @@ public class MeterReadingServiceImpl implements MeterReadingService {
    */
   @Override
   public List<MeterReading> getActualMeterByAddress(Set<Long> addressIds, Set<TypeMeter> typeCode, YearMonth date) {
-   List<MeterReading> result;
+    List<MeterReading> result;
     var actualType = Set.copyOf(this.typeMeterService.getTypeMeter());
 
     if (date == null) {

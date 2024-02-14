@@ -20,6 +20,7 @@ public class DataBaseConnectionImpl implements DataBaseConnection {
 
   /**
    * Создает соединение с базой данных
+   *
    * @return Соединение с базой данных
    * @throws SQLException при ошибки соединения с базой данных
    */

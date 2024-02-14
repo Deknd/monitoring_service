@@ -3,7 +3,6 @@ package com.denknd.mappers;
 import com.denknd.dto.MeterReadingRequestDto;
 import com.denknd.dto.MeterReadingResponseDto;
 import com.denknd.entity.Address;
-import com.denknd.entity.Meter;
 import com.denknd.entity.MeterReading;
 import com.denknd.entity.TypeMeter;
 import org.mapstruct.Mapper;
@@ -57,6 +56,7 @@ public interface MeterReadingMapper {
 
   /**
    * Преобразует {@link ResultSet} из базы данных в {@link MeterReading}
+   *
    * @param resultSet сет полученный от JBDC из базы данных
    * @return {@link MeterReading} созданный по данным из базы данных
    * @throws SQLException выбрасывается, если нет таких столбцов в БД
@@ -70,5 +70,5 @@ public interface MeterReadingMapper {
             .submissionMonth(YearMonth.parse(resultSet.getString("submission_month"), DateTimeFormatter.ofPattern("yyyy-MM")))
             .timeSendMeter(OffsetDateTime.ofInstant(resultSet.getTimestamp("time_send_meter").toInstant(), ZoneId.systemDefault()))
             .build();
-}
+  }
 }

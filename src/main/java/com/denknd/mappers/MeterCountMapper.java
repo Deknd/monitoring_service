@@ -16,6 +16,7 @@ public interface MeterCountMapper {
 
   /**
    * Маппер для маппинга {@link CounterInfoDto} в {@link Meter}
+   *
    * @param counterInfoDto информация о пользователе, полученная от пользователя
    * @return возвращает полный объект счетчика
    */
@@ -23,6 +24,7 @@ public interface MeterCountMapper {
 
   /**
    * Маппер для маппинга {@link Meter} в {@link MeterDto}
+   *
    * @param meter объект с информацией о счетчике
    * @return возвращает данные о счетчике для пользователя
    */

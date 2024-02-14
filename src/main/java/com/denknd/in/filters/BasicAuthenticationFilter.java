@@ -11,7 +11,6 @@ import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.Setter;
-import lombok.extern.log4j.Log4j2;
 import lombok.extern.slf4j.Slf4j;
 
 import java.io.IOException;
@@ -74,7 +73,7 @@ public class BasicAuthenticationFilter extends AbstractFilter {
    * @param httpRequest  объект HttpServletRequest, содержащий запрос клиента
    * @param httpResponse объект HttpServletResponse, содержащий ответ фильтра для клиента
    * @param chain        объект FilterChain для вызова следующего фильтра или ресурса
-   * @throws IOException ошибка при работе с потоком данных
+   * @throws IOException      ошибка при работе с потоком данных
    * @throws ServletException ошибка сервлета
    */
   @Override

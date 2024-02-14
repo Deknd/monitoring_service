@@ -8,7 +8,7 @@ import lombok.RequiredArgsConstructor;
  */
 @RequiredArgsConstructor
 @Getter
-public class AddressDatabaseException extends Exception{
+public class AddressDatabaseException extends Exception {
   /**
    * Сообщение об ошибке.
    */

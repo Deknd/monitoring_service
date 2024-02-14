@@ -34,8 +34,8 @@ public class UserController {
    * @param userCreateDto пользователь полученный от пользователя
    * @return возвращает созданного пользователя
    * @throws UserAlreadyExistsException если данный пользователь уже создан
-   * @throws NoSuchAlgorithmException если не получилось использовать алгоритм шифрования
-   * @throws InvalidUserDataException если произошла ошибка при сохранении в БД
+   * @throws NoSuchAlgorithmException   если не получилось использовать алгоритм шифрования
+   * @throws InvalidUserDataException   если произошла ошибка при сохранении в БД
    */
   @AuditRecording("Регистрирует нового пользователя")
   public UserDto createUser(UserCreateDto userCreateDto) throws UserAlreadyExistsException, NoSuchAlgorithmException, InvalidUserDataException {

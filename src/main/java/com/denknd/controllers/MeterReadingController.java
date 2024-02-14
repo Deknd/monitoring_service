@@ -97,8 +97,8 @@ public class MeterReadingController {
                     type.getTypeMeterId().equals(meterReadingRequestDto.typeMeterId()))
             .findFirst()
             .orElse(null);
-    if (typeMeter == null){
-      throw  new MeterReadingConflictError("Не известный тип показаний");
+    if (typeMeter == null) {
+      throw new MeterReadingConflictError("Не известный тип показаний");
     }
     var address = this.addressService.getAddressByAddressId(meterReadingRequestDto.addressId());
     var meterReading = this.meterReadingMapper

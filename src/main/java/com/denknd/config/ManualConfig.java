@@ -1,6 +1,5 @@
 package com.denknd.config;
 
-import com.denknd.aspectj.audit.AuditAspect;
 import com.denknd.aspectj.audit.AuditAspectConfig;
 import com.denknd.controllers.AddressController;
 import com.denknd.controllers.CounterInfoController;
@@ -58,15 +57,11 @@ import com.nimbusds.jose.KeyLengthException;
 import com.nimbusds.jose.crypto.DirectDecrypter;
 import com.nimbusds.jose.crypto.DirectEncrypter;
 import com.nimbusds.jose.jwk.OctetSequenceKey;
-import jakarta.validation.Validation;
 import lombok.Getter;
-import lombok.extern.log4j.Log4j2;
 import lombok.extern.slf4j.Slf4j;
-import org.aspectj.lang.annotation.Aspect;
 
 import java.io.FileNotFoundException;
 import java.text.ParseException;
-import java.util.Scanner;
 
 /**
  * Собирает весь контекст приложения.

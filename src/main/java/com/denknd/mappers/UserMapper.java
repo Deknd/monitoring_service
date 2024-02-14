@@ -21,6 +21,7 @@ public interface UserMapper {
 
   /**
    * Преобразование UserCreateDto в User
+   *
    * @param userCreateDto юзер от пользователя
    * @return юзер для сервиса
    */
@@ -28,6 +29,7 @@ public interface UserMapper {
 
   /**
    * Преобразование User в UserDto
+   *
    * @param user юзер от сервиса
    * @return юзер для пользователя
    */
@@ -35,6 +37,7 @@ public interface UserMapper {
 
   /**
    * Преобразует User в UserSecurity
+   *
    * @param user юзер от сервиса
    * @return юзер для секьюрити
    */
@@ -42,6 +45,7 @@ public interface UserMapper {
 
   /**
    * преобразует данные из БД в объект пользователя
+   *
    * @param resultSet данные из БД
    * @return объект пользователя
    * @throws SQLException ошибка при извлечении данных

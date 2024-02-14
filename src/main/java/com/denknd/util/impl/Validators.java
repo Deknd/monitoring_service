@@ -28,6 +28,7 @@ public class Validators {
 
   /**
    * Возвращает валидатор созданный фабрикой
+   *
    * @return валидатор для валидации входных данных
    */
   private Validator getValidator() {
@@ -43,8 +44,9 @@ public class Validators {
 
   /**
    * Функция для валидации объектов, которые помечены ограничительными аннотациями от джакарты
+   *
    * @param object объект для валидации
-   * @param <T> тип объекта для валидации
+   * @param <T>    тип объекта для валидации
    * @throws ConstraintViolationException ошибка, при не прохождении валидации
    */
   public <T> void validate(T object) throws ConstraintViolationException {

@@ -24,6 +24,7 @@ public interface AddressService {
    * @return Копия сохраненного адреса с идентификатором.
    */
   Address addAddressByUser(Address address) throws AddressDatabaseException;
+
   /**
    * Получение адреса по его идентификатору.
    *

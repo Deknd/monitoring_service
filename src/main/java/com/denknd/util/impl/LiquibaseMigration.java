@@ -8,14 +8,12 @@ import liquibase.command.CommandScope;
 import liquibase.command.core.UpdateCommandStep;
 import liquibase.command.core.helpers.DatabaseChangelogCommandStep;
 import liquibase.command.core.helpers.DbUrlConnectionArgumentsCommandStep;
-import liquibase.database.Database;
 import liquibase.database.DatabaseFactory;
 import liquibase.database.jvm.JdbcConnection;
 import liquibase.exception.CommandExecutionException;
 import liquibase.exception.DatabaseException;
 import lombok.RequiredArgsConstructor;
 
-import java.sql.Connection;
 import java.sql.SQLException;
 
 /**

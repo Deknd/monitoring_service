@@ -6,16 +6,16 @@
          https://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.5.xsd"
         logicalFilePath="db/changelog.xml">
 
-    <include file="03_02_2024__01_create_table_user.xml" relativeToChangelogFile="true" />
-    <include file="03_02_2024__02_create_table_address.xml" relativeToChangelogFile="true" />
-    <include file="03_02_2024__03_create_table_type_meters.xml" relativeToChangelogFile="true" />
-    <include file="03_02_2024__04_create_table_meter_readings.xml" relativeToChangelogFile="true" />
-    <include file="03_02_2024__05_create_table_meters.xml" relativeToChangelogFile="true" />
-    <include file="03_02_2024__06_create_table_audits.xml" relativeToChangelogFile="true" />
-    <include file="03_02_2024__07_add_data_type_meters.xml" relativeToChangelogFile="true" />
-    <include file="03_02_2024__08_add_data_test_users.xml" relativeToChangelogFile="true" />
-    <include file="03_02_2024__09_add_data_test_address.xml" relativeToChangelogFile="true" />
-    <include file="03_02_2024__10_add_data_test_meter_readings.xml" relativeToChangelogFile="true" />
-    <include file="09_02_2024__11_create_table_token_block.xml" relativeToChangelogFile="true" />
+    <include file="03_02_2024__01_create_table_user.xml" relativeToChangelogFile="true"/>
+    <include file="03_02_2024__02_create_table_address.xml" relativeToChangelogFile="true"/>
+    <include file="03_02_2024__03_create_table_type_meters.xml" relativeToChangelogFile="true"/>
+    <include file="03_02_2024__04_create_table_meter_readings.xml" relativeToChangelogFile="true"/>
+    <include file="03_02_2024__05_create_table_meters.xml" relativeToChangelogFile="true"/>
+    <include file="03_02_2024__06_create_table_audits.xml" relativeToChangelogFile="true"/>
+    <include file="03_02_2024__07_add_data_type_meters.xml" relativeToChangelogFile="true"/>
+    <include file="03_02_2024__08_add_data_test_users.xml" relativeToChangelogFile="true"/>
+    <include file="03_02_2024__09_add_data_test_address.xml" relativeToChangelogFile="true"/>
+    <include file="03_02_2024__10_add_data_test_meter_readings.xml" relativeToChangelogFile="true"/>
+    <include file="09_02_2024__11_create_table_token_block.xml" relativeToChangelogFile="true"/>
 
 </databaseChangeLog>

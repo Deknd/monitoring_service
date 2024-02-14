@@ -33,6 +33,6 @@ public record AddressDto(
         String house,
         @Size(min = 0, max = 5)
         String apartment,
-        @Digits(integer=6, fraction=0, message="Число должно состоять из 6 цифр")
+        @Digits(integer = 6, fraction = 0, message = "Число должно состоять из 6 цифр")
         Long postalCode) {
 }

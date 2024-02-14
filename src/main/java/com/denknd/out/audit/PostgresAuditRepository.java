@@ -59,7 +59,7 @@ public class PostgresAuditRepository implements AuditRepository {
         }
       }
     } finally {
-      if(connection != null){
+      if (connection != null) {
         connection.close();
       }
     }

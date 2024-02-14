@@ -10,6 +10,7 @@ import java.sql.SQLException;
 public interface MeterCountService {
   /**
    * Метод для сохранения счетчика в БД
+   *
    * @param meter заполненный объект счетчика
    * @return возвращает сохраненный объект с идентификатором
    * @throws SQLException ошибка при сохранении в БД
@@ -18,6 +19,7 @@ public interface MeterCountService {
 
   /**
    * Добавляет информацию к существующим счетчикам
+   *
    * @param meter заполненный объект счетчика, с дополнительной информацией
    * @return возвращает заполненный объект
    * @throws SQLException ошибка сохранения в БД

@@ -4,9 +4,7 @@ import com.denknd.util.DataBaseConnection;
 import com.nimbusds.jose.KeyLengthException;
 import jakarta.servlet.ServletContainerInitializer;
 import jakarta.servlet.ServletContext;
-import jakarta.servlet.ServletException;
 import lombok.Setter;
-import lombok.extern.log4j.Log4j2;
 import lombok.extern.slf4j.Slf4j;
 
 import java.io.FileNotFoundException;
@@ -27,13 +25,15 @@ public class MyInitializer implements ServletContainerInitializer {
    * Дополнительный конект к БД, применяется для тестов
    */
   private DataBaseConnection dataBaseConnection = null;
+
   /**
    * Метод вызывается контейнером сервлетов при запуске веб-приложения для инициализации.
+   *
    * @param c   Множество классов приложения, которые расширяют, реализуют или были аннотированы типами классов, указанными в аннотации
    * @param ctx Контекст сервлета веб-приложения, которое запускается
    */
   @Override
-  public void onStartup(Set<Class<?>> c, ServletContext ctx){
+  public void onStartup(Set<Class<?>> c, ServletContext ctx) {
     try {
       var manualConfig = new ManualConfig(yamlPath, dataBaseConnection);
       ctx.setAttribute("context", manualConfig);
@@ -53,7 +53,8 @@ public class MyInitializer implements ServletContainerInitializer {
 
   /**
    * Инициализирует фильтр для блокировки токена доступа
-   * @param ctx контекст приложения
+   *
+   * @param ctx          контекст приложения
    * @param manualConfig конфигурация контекста
    */
   private void addLogoutFilter(ServletContext ctx, ManualConfig manualConfig) {
@@ -67,13 +68,14 @@ public class MyInitializer implements ServletContainerInitializer {
 
   /**
    * Инициализирует фильтр для аутентификации по куки, основной фильтр безопасности
-   * @param ctx контекст приложения
+   *
+   * @param ctx          контекст приложения
    * @param manualConfig конфигурация контекста
    */
   private void addCookieAuthenticationFilter(ServletContext ctx, ManualConfig manualConfig) {
     var authenticationFilter = manualConfig.getCookieAuthenticationFilter();
     authenticationFilter.addIgnoredRequest(manualConfig.getBasicAuthenticationFilter().getURL_PATTERNS(), "POST");
-    authenticationFilter.addIgnoredRequest("/users/signup","POST");
+    authenticationFilter.addIgnoredRequest("/users/signup", "POST");
     var cookieAuthenticationFilter
             = ctx.addFilter(
             "CookieAuthenticationFilter",
@@ -82,9 +84,11 @@ public class MyInitializer implements ServletContainerInitializer {
             null, false, "/*"
     );
   }
+
   /**
    * Инициализирует фильтр для аутентификации по электронной почте и паролю, служит для получения токена доступа
-   * @param ctx контекст приложения
+   *
+   * @param ctx          контекст приложения
    * @param manualConfig конфигурация контекста
    */
   private void addBasicAuthenticationFilter(ServletContext ctx, ManualConfig manualConfig) {

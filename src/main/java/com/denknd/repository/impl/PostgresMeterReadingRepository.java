@@ -5,7 +5,6 @@ import com.denknd.mappers.MeterReadingMapper;
 import com.denknd.repository.MeterReadingRepository;
 import com.denknd.util.DataBaseConnection;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.log4j.Log4j2;
 import lombok.extern.slf4j.Slf4j;
 
 import java.sql.SQLException;

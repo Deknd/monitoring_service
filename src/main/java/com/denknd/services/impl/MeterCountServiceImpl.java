@@ -20,6 +20,7 @@ public class MeterCountServiceImpl implements MeterCountService {
 
   /**
    * Сохраняет информацию о счетчике
+   *
    * @param meter информация о счетчике
    * @return сохраненый объект с информацией о счетчике с идентификатором
    * @throws SQLException ошибка при сохранении информации
@@ -32,6 +33,7 @@ public class MeterCountServiceImpl implements MeterCountService {
 
   /**
    * Добавляет дополнительную информацию о счетчике
+   *
    * @param meter объект с дополнительной информацией
    * @return возвращает обновленный объект
    * @throws SQLException ошибка при сохранении информации в бд

@@ -8,6 +8,7 @@ import com.denknd.security.utils.authenticator.UserAuthenticator;
 import com.denknd.services.UserService;
 import com.denknd.util.PasswordEncoder;
 import lombok.RequiredArgsConstructor;
+
 /**
  * Реализация интерфейса аутентификации пользователей.
  */

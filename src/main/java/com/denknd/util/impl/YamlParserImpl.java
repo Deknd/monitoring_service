@@ -33,6 +33,7 @@ public class YamlParserImpl implements YamlParser {
 
   /**
    * Метод для парсинга данных из конфигураций приложения
+   *
    * @throws FileNotFoundException выкидывается, когда файл не обноружен
    */
   private void parseYaml() throws FileNotFoundException {
@@ -55,6 +56,7 @@ public class YamlParserImpl implements YamlParser {
 
   /**
    * Конфигурация ликвибаз
+   *
    * @return Конфигурация ликвибаз
    * @throws FileNotFoundException когда нет доступа к файлу с конфигурациями
    */
@@ -65,8 +67,10 @@ public class YamlParserImpl implements YamlParser {
     }
     return this.liquibaseConfig;
   }
+
   /**
    * Конфигурация базы данных
+   *
    * @return Конфигурация базы данных
    * @throws FileNotFoundException когда нет доступа к файлу с конфигурациями
    */
@@ -80,6 +84,7 @@ public class YamlParserImpl implements YamlParser {
 
   /**
    * Конфигурация для Jwt токенов
+   *
    * @return конфиг для токенов
    */
   @Override
@@ -92,6 +97,7 @@ public class YamlParserImpl implements YamlParser {
 
   /**
    * Настройка пути к файлу с конфигурациями
+   *
    * @param pathToApplicationYml путь к файлу с конфигурациями
    */
   @Override

@@ -6,8 +6,9 @@ import java.time.OffsetDateTime;
 
 /**
  * Токен для блокировки токена доступа
- * @param tokenBlockId идентификатор токена блокировки
- * @param tokenId идентификатор токена, который нужно заблокировать
+ *
+ * @param tokenBlockId   идентификатор токена блокировки
+ * @param tokenId        идентификатор токена, который нужно заблокировать
  * @param expirationTime время действия заблокированного токена
  */
 @Builder

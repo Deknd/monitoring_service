@@ -6,9 +6,10 @@ import lombok.Builder;
 
 /**
  * Объект для получения показаний от пользователя
- * @param addressId идентификатор адреса
+ *
+ * @param addressId   идентификатор адреса
  * @param typeMeterId идентификатор типа показаний
- * @param meterValue данные со счетчика
+ * @param meterValue  данные со счетчика
  */
 @Builder
 public record MeterReadingRequestDto(

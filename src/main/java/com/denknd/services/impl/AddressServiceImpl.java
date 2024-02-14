@@ -45,7 +45,7 @@ public class AddressServiceImpl implements AddressService {
     try {
       return this.addressRepository.addAddress(address);
     } catch (SQLException e) {
-      throw new AddressDatabaseException("Данные переданные для сохранения адреса не валидны: "+e.getMessage());
+      throw new AddressDatabaseException("Данные переданные для сохранения адреса не валидны: " + e.getMessage());
     }
   }
 
