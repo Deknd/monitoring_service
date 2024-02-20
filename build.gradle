@@ -1,8 +1,6 @@
-import sun.net.httpserver.ServerConfig
 
 plugins {
     id 'war'
-//    id "org.gretty"
 }
 apply from: 'https://raw.github.com/gretty-gradle-plugin/gretty/master/pluginScripts/gretty.plugin'
 
@@ -30,6 +28,8 @@ ext {
     nimbusdsVersion = '9.38-rc3'
     jacksonVersion = '2.16.1'
     springframeworkVersion = '6.1.4'
+    springDocVersion = '2.3.0'
+    jakartaVersion = '6.1.0-M1'
 }
 gretty {
     jacocoEnabled false
@@ -46,11 +46,8 @@ dependencies {
     implementation "org.springframework:spring-aspects:${springframeworkVersion}"
     implementation "org.springframework:spring-webmvc:${springframeworkVersion}"
     implementation "org.hibernate.validator:hibernate-validator:${hibernateValidatorVersion}"
-    implementation 'org.springdoc:springdoc-openapi-starter-webmvc-ui:2.3.0'
-    implementation 'com.fasterxml.jackson.module:jackson-module-parameter-names:2.16.1'
-    testImplementation 'jakarta.servlet:jakarta.servlet-api:6.1.0-M1'
+    implementation "org.springdoc:springdoc-openapi-starter-webmvc-ui:${springDocVersion}"
 
-    testImplementation 'org.springdoc:springdoc-openapi-starter-webmvc-api:2.3.0'
 
 
 
@@ -64,6 +61,8 @@ dependencies {
     implementation "com.nimbusds:nimbus-jose-jwt:${nimbusdsVersion}"
     implementation "com.fasterxml.jackson.datatype:jackson-datatype-jsr310:${jacksonVersion}"
     implementation "com.fasterxml.jackson.core:jackson-databind:${jacksonVersion}"
+    implementation "com.fasterxml.jackson.module:jackson-module-parameter-names:${jacksonVersion}"
+
 
     compileOnly "org.projectlombok:lombok:${lombokVersion}"
     annotationProcessor "org.projectlombok:lombok:${lombokVersion}"
@@ -76,6 +75,8 @@ dependencies {
     testImplementation "org.assertj:assertj-core:${assertjVersion}"
     testImplementation "org.mockito:mockito-core:${mockitoVersion}"
     testImplementation "org.testcontainers:postgresql:${testcontainersPostgresqlVersion}"
+    testImplementation "jakarta.servlet:jakarta.servlet-api:${jakartaVersion}"
+    testImplementation "org.springdoc:springdoc-openapi-starter-webmvc-api:${springDocVersion}"
 }
 
 test {
