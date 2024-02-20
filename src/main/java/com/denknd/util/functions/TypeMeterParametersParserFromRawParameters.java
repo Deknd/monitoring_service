@@ -1,42 +1,41 @@
 package com.denknd.util.functions;
 
-import com.denknd.controllers.TypeMeterController;
-import com.denknd.dto.TypeMeterDto;
+import com.denknd.entity.TypeMeter;
+import com.denknd.services.TypeMeterService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.core.convert.converter.Converter;
+import org.springframework.stereotype.Component;
 
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.Set;
-import java.util.function.Function;
 import java.util.stream.Collectors;
 
 /**
  * Класс для парсинга доступных типов параметров из входных данных запроса.
  */
+@Component
 @RequiredArgsConstructor
-public class TypeMeterParametersParserFromRawParameters implements Function<String, Set<Long>> {
+public class TypeMeterParametersParserFromRawParameters implements Converter<String, Set<Long>> {//implements Function<String, Set<Long>> {
 
   /**
    * Контроллер для работы с типами параметров.
    */
-  private final TypeMeterController typeMeterController;
+  private final TypeMeterService typeMeterService;
 
   /**
-   * Извлекает доступные типы параметров из входных данных консоли.
+   * Извлекает доступные типы параметров из входных данных запроса.
    *
-   * @param param параметры из запроса
-   * @return множество доступных идентификаторов типов параметров
+   * @param source Входные данные запроса.
+   * @return Множество идентификаторов доступных типов параметров.
    */
   @Override
-  public Set<Long> apply(String param) {
-    if (param == null) {
-      return Collections.emptySet();
-    }
+  public Set<Long> convert(String source) {
     try {
-      var availableOptions = this.typeMeterController.getTypeMeterCodes().stream()
-              .map(TypeMeterDto::typeMeterId)
+      var availableOptions = this.typeMeterService.getTypeMeter().stream()
+              .map(TypeMeter::getTypeMeterId)
               .collect(Collectors.toSet());
-      return Arrays.stream(param.split(","))
+      return Arrays.stream(source.split(","))
               .map(Long::parseLong)
               .filter(availableOptions::contains)
               .collect(Collectors.toSet());

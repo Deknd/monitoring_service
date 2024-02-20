@@ -3,14 +3,16 @@ package com.denknd.out.audit;
 import com.denknd.repository.AuditRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.stereotype.Service;
 
 import java.sql.SQLException;
 
 /**
- * Сервис для обработки аудита.
+ * Реализация интерфейса {@link AuditService}, предназначенная для обработки аудита.
  */
 @RequiredArgsConstructor
 @Slf4j
+@Service
 public class AuditServiceImpl implements AuditService {
   /**
    * Репозиторий аудита.
@@ -18,16 +20,16 @@ public class AuditServiceImpl implements AuditService {
   private final AuditRepository auditRepository;
 
   /**
-   * Сохраняет аудит в репозиторий.
+   * Сохраняет запись аудита в репозиторий.
    *
-   * @param audit действия пользователя
+   * @param audit объект аудита, содержащий информацию о совершенном действии пользователя
    */
   @Override
   public void addAction(Audit audit) {
     try {
       this.auditRepository.save(audit);
     } catch (SQLException e) {
-      log.error("Ошибка сохраения аудита");
+      log.error("Ошибка сохранения аудита", e);
     }
   }
 }

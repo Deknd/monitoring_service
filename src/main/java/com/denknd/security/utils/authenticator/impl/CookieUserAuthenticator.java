@@ -7,12 +7,14 @@ import com.denknd.security.entity.UserSecurity;
 import com.denknd.security.service.TokenService;
 import com.denknd.security.utils.authenticator.UserAuthenticator;
 import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Component;
 
 import java.time.Instant;
 
 /**
  * Реализация интерфейса аутентификации пользователей с использованием токена из Cookie.
  */
+@Component
 @RequiredArgsConstructor
 public class CookieUserAuthenticator implements UserAuthenticator {
   /**

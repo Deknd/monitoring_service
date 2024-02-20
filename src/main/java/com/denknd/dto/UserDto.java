@@ -1,5 +1,6 @@
 package com.denknd.dto;
 
+import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Builder;
 
 /**
@@ -12,8 +13,15 @@ import lombok.Builder;
  */
 @Builder
 public record UserDto(
+        @Schema(description = "Идентификатор пользователя")
         Long userId,
+
+        @Schema(description = "Электронная почта")
         String email,
+
+        @Schema(description = "Фамилия")
         String lastName,
+
+        @Schema(description = "Имя")
         String firstName) {
 }

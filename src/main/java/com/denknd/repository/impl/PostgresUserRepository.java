@@ -5,6 +5,7 @@ import com.denknd.mappers.UserMapper;
 import com.denknd.repository.UserRepository;
 import com.denknd.util.DataBaseConnection;
 import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Repository;
 
 import java.sql.SQLException;
 import java.sql.Statement;
@@ -13,6 +14,7 @@ import java.util.Optional;
 /**
  * Реализация интерфейса для хранения объектов пользователя в БД.
  */
+@Repository
 @RequiredArgsConstructor
 public class PostgresUserRepository implements UserRepository {
   /**

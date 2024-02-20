@@ -14,16 +14,16 @@ import static org.mockito.Mockito.when;
 public class PostgresContainer {
   private final String username = "test_container";
   private final String password = "password_test";
-  private final String db = "test_db";
   private final PostgreSQLContainer<?> postgreSQLContainer;
   private String url = null;
 
 
   public PostgresContainer() {
+    String db = "test_db";
     this.postgreSQLContainer = new PostgreSQLContainer<>("postgres:16.0")
             .withUsername(this.username)
             .withPassword(this.password)
-            .withDatabaseName(this.db);
+            .withDatabaseName(db);
   }
 
   public void start() {

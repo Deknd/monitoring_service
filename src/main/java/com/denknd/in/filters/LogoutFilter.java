@@ -8,25 +8,28 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Component;
 
 import java.io.IOException;
 
 /**
- * Фильтр служит для блокировки токена доступа
+ * Фильтр для блокировки токена доступа.
+ * Этот фильтр предназначен для обработки запросов на выход из системы (логаут).
  */
 @Getter
 @RequiredArgsConstructor
+@Component
 public class LogoutFilter extends HttpFilter {
   /**
-   * Паттерн для вызова данного фильтра
+   * Паттерн URI для вызова данного фильтра.
    */
-  private String URL_PATTERNS = "/auth/logout";
+  private final String URL_PATTERNS = "/auth/logout";
   /**
-   * Метод для вызова данного фильтра
+   * Метод HTTP для вызова данного фильтра.
    */
-  private String HTTP_METHOD = "POST";
+  private final String HTTP_METHOD = "POST";
   /**
-   * Сервис для работы с безопасностью
+   * Сервис для работы с безопасностью.
    */
   private final SecurityService securityService;
 
@@ -44,11 +47,12 @@ public class LogoutFilter extends HttpFilter {
    * @param req   объект HttpServletRequest, содержащий запрос клиента
    * @param res   объект HttpServletResponse, содержащий ответ фильтра для клиента
    * @param chain объект FilterChain для вызова следующего фильтра или ресурса
-   * @throws IOException
-   * @throws ServletException
+   * @throws IOException      ошибка ввода-вывода
+   * @throws ServletException ошибка сервлета
    */
   @Override
-  protected void doFilter(HttpServletRequest req, HttpServletResponse res, FilterChain chain) throws IOException, ServletException {
+  protected void doFilter(HttpServletRequest req, HttpServletResponse res, FilterChain chain)
+          throws IOException, ServletException {
     var requestURI = req.getRequestURI();
     var method = req.getMethod();
     if (requestURI.equalsIgnoreCase(this.URL_PATTERNS) && method.equals(this.HTTP_METHOD)) {

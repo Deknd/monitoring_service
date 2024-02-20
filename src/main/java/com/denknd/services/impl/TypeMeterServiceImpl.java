@@ -1,17 +1,22 @@
 package com.denknd.services.impl;
 
+import com.denknd.entity.Roles;
 import com.denknd.entity.TypeMeter;
 import com.denknd.exception.TypeMeterAdditionException;
 import com.denknd.repository.TypeMeterRepository;
+import com.denknd.security.service.SecurityService;
 import com.denknd.services.TypeMeterService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Service;
 
+import java.nio.file.AccessDeniedException;
 import java.sql.SQLException;
 import java.util.List;
 
 /**
  * Реализация сервиса для работы с типами показаний.
  */
+@Service
 @RequiredArgsConstructor
 public class TypeMeterServiceImpl implements TypeMeterService {
   /**
@@ -30,6 +35,11 @@ public class TypeMeterServiceImpl implements TypeMeterService {
   }
 
   /**
+   * Сервис для работы с безопасностью.
+   */
+  private final SecurityService securityService;
+
+  /**
    * Добавляет новые типы показаний.
    *
    * @param newType Полностью заполненный объект без идентификатора.
@@ -37,8 +47,13 @@ public class TypeMeterServiceImpl implements TypeMeterService {
    * @throws TypeMeterAdditionException при не соблюдения ограничений базы данных
    */
   @Override
-  public TypeMeter addNewTypeMeter(TypeMeter newType) throws TypeMeterAdditionException {
-
+  public TypeMeter addNewTypeMeter(TypeMeter newType) throws TypeMeterAdditionException, AccessDeniedException {
+    var userSecurity = this.securityService.getUserSecurity();
+    if (userSecurity!= null && !userSecurity.role().equals(Roles.ADMIN)) {
+      throw new AccessDeniedException(
+              "Доступ запрещен, можно добавлять типы показаний пользователю с ролью ADMIN. Ваша роль: "
+                      + userSecurity.role().name());
+    }
     try {
       return this.typeMeterRepository.save(newType);
     } catch (SQLException e) {

@@ -1,104 +1,82 @@
 package com.denknd.config;
 
-import com.denknd.util.DataBaseConnection;
-import com.nimbusds.jose.KeyLengthException;
-import jakarta.servlet.ServletContainerInitializer;
+import com.denknd.in.filters.AuthenticationFilter;
+import com.denknd.in.filters.BasicAuthenticationFilter;
+import com.denknd.in.filters.LogoutFilter;
+import com.denknd.util.impl.LiquibaseMigration;
+import jakarta.servlet.FilterRegistration;
 import jakarta.servlet.ServletContext;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
-
-import java.io.FileNotFoundException;
-import java.text.ParseException;
-import java.util.Set;
+import org.springframework.http.HttpMethod;
+import org.springframework.web.WebApplicationInitializer;
+import org.springframework.web.context.ContextLoaderListener;
+import org.springframework.web.context.support.AnnotationConfigWebApplicationContext;
+import org.springframework.web.servlet.DispatcherServlet;
 
 /**
  * Инициализирует контекст приложения
  */
 @Slf4j
 @Setter
-public class MyInitializer implements ServletContainerInitializer {
-  /**
-   * путь для изменения стандартного пути загрузки конфигурации, применяется для тестов
-   */
-  private String yamlPath = null;
-  /**
-   * Дополнительный конект к БД, применяется для тестов
-   */
-  private DataBaseConnection dataBaseConnection = null;
+public class MyInitializer implements WebApplicationInitializer {
+
 
   /**
-   * Метод вызывается контейнером сервлетов при запуске веб-приложения для инициализации.
+   * Метод для инициализации приложения
    *
-   * @param c   Множество классов приложения, которые расширяют, реализуют или были аннотированы типами классов, указанными в аннотации
-   * @param ctx Контекст сервлета веб-приложения, которое запускается
+   * @param servletContext ошибка при инициализации сервлета
    */
   @Override
-  public void onStartup(Set<Class<?>> c, ServletContext ctx) {
-    try {
-      var manualConfig = new ManualConfig(yamlPath, dataBaseConnection);
-      ctx.setAttribute("context", manualConfig);
-      addBasicAuthenticationFilter(ctx, manualConfig);
-      addCookieAuthenticationFilter(ctx, manualConfig);
-      addLogoutFilter(ctx, manualConfig);
+  public void onStartup(ServletContext servletContext) {
+    servletContext.setRequestCharacterEncoding("UTF-8");
+    servletContext.setResponseCharacterEncoding("UTF-8");
+    var rootContext = new AnnotationConfigWebApplicationContext();
+    rootContext.register(AppConfig.class, AspectConfig.class);
+    servletContext.addListener(new ContextLoaderListener(rootContext));
 
-      log.info("Инициализация приложения прошла успешна");
-
-    } catch (FileNotFoundException | ParseException | KeyLengthException e) {
-      log.error("Ошибка инициализации контекста приложения. Приложения не может быть запущено.");
-      throw new RuntimeException(e);
-    }
-
+    rootContext.refresh();
+    var liquibaseMigration = rootContext.getBean(LiquibaseMigration.class);
+    liquibaseMigration.migration();
+    var dispatcherContext = new AnnotationConfigWebApplicationContext();
+    dispatcherContext.register(WebConfig.class, SwaggerConfig.class);
+    var dispatcher = servletContext.addServlet("dispatcher", new DispatcherServlet(dispatcherContext));
+    dispatcher.setLoadOnStartup(1);
+    dispatcher.addMapping("/");
+    addFilters(rootContext, servletContext);
 
   }
 
   /**
-   * Инициализирует фильтр для блокировки токена доступа
+   * Добавление и настройка контекста фильтров
    *
-   * @param ctx          контекст приложения
-   * @param manualConfig конфигурация контекста
+   * @param rootContext    основной контекст приложения
+   * @param servletContext контекст сервлетов
    */
-  private void addLogoutFilter(ServletContext ctx, ManualConfig manualConfig) {
-    var logout = manualConfig.getLogoutFilter();
-    var logoutFilter = ctx.addFilter(
-            "LogoutFilter",
-            logout
-    );
-    logoutFilter.addMappingForUrlPatterns(null, false, logout.getURL_PATTERNS());
-  }
+  private void addFilters(AnnotationConfigWebApplicationContext rootContext, ServletContext servletContext) {
+    var logoutFilter = rootContext.getBean(LogoutFilter.class);
+    var logoutFilterRegistration
+            = servletContext.addFilter("logoutFilter", logoutFilter);
+    logoutFilterRegistration.addMappingForUrlPatterns(null, false, logoutFilter.getURL_PATTERNS());
 
-  /**
-   * Инициализирует фильтр для аутентификации по куки, основной фильтр безопасности
-   *
-   * @param ctx          контекст приложения
-   * @param manualConfig конфигурация контекста
-   */
-  private void addCookieAuthenticationFilter(ServletContext ctx, ManualConfig manualConfig) {
-    var authenticationFilter = manualConfig.getCookieAuthenticationFilter();
-    authenticationFilter.addIgnoredRequest(manualConfig.getBasicAuthenticationFilter().getURL_PATTERNS(), "POST");
-    authenticationFilter.addIgnoredRequest("/users/signup", "POST");
+    var basicAuthenticationFilter = rootContext.getBean(BasicAuthenticationFilter.class);
+    var basicAuthenticationFilterRegistration
+            = servletContext.addFilter("basicAuthenticationFilter", basicAuthenticationFilter);
+    basicAuthenticationFilterRegistration.addMappingForUrlPatterns(null, false, basicAuthenticationFilter.getURL_PATTERNS());
+
     var cookieAuthenticationFilter
-            = ctx.addFilter(
-            "CookieAuthenticationFilter",
-            authenticationFilter);
-    cookieAuthenticationFilter.addMappingForUrlPatterns(
-            null, false, "/*"
-    );
+            = rootContext.getBean(AuthenticationFilter.class);
+    cookieAuthenticationFilter.addIgnoredRequest("/auth/login", HttpMethod.POST.name());
+    cookieAuthenticationFilter.addIgnoredRequest("/users", HttpMethod.POST.name());
+    cookieAuthenticationFilter.addIgnoredRequest("/swagger/.*", HttpMethod.GET.name());
+    cookieAuthenticationFilter.addIgnoredRequest("/swagger-ui/.*", HttpMethod.GET.name());
+    cookieAuthenticationFilter.addIgnoredRequest("/v3/api-docs", HttpMethod.GET.name());
+    cookieAuthenticationFilter.addIgnoredRequest(basicAuthenticationFilter.getURL_PATTERNS(), HttpMethod.POST.name());
+    var cookieAuthenticationFilterRegistration
+            = servletContext.addFilter("cookieAuthenticationFilter", cookieAuthenticationFilter);
+    cookieAuthenticationFilterRegistration.addMappingForUrlPatterns(null, true, "/*");
   }
 
-  /**
-   * Инициализирует фильтр для аутентификации по электронной почте и паролю, служит для получения токена доступа
-   *
-   * @param ctx          контекст приложения
-   * @param manualConfig конфигурация контекста
-   */
-  private void addBasicAuthenticationFilter(ServletContext ctx, ManualConfig manualConfig) {
-    var manualConfigBasicAuthenticationFilter = manualConfig.getBasicAuthenticationFilter();
-    var basicAuthenticationFilter
-            = ctx.addFilter(
-            "BasicAuthenticationFilter",
-            manualConfigBasicAuthenticationFilter);
-    basicAuthenticationFilter.addMappingForUrlPatterns(
-            null, true, manualConfigBasicAuthenticationFilter.getURL_PATTERNS());
 
-  }
 }
+

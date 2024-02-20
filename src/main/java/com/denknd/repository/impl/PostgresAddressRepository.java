@@ -5,6 +5,7 @@ import com.denknd.mappers.AddressMapper;
 import com.denknd.repository.AddressRepository;
 import com.denknd.util.DataBaseConnection;
 import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Repository;
 
 import java.sql.SQLException;
 import java.sql.Statement;
@@ -16,6 +17,7 @@ import java.util.Optional;
 /**
  * Реализация интерфейса для хранения адресов в БД.
  */
+@Repository
 @RequiredArgsConstructor
 public class PostgresAddressRepository implements AddressRepository {
   /**

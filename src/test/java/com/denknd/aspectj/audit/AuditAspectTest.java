@@ -28,8 +28,8 @@ class AuditAspectTest {
   @BeforeEach
   void setUp() {
     this.autoCloseable = MockitoAnnotations.openMocks(this);
-    AuditAspectConfig.init(this.auditService, this.securityService);
-    this.auditAspect = new AuditAspect();
+//    AuditAspectConfig.init(this.auditService, this.securityService);
+    this.auditAspect = new AuditAspect(this.securityService, this.auditService);
   }
 
   @AfterEach
@@ -43,6 +43,7 @@ class AuditAspectTest {
     var joinPoint = mock(ProceedingJoinPoint.class);
     var auditRecording = mock(AuditRecording.class);
     when(joinPoint.getSignature()).thenReturn(mock(Signature.class));
+    when(joinPoint.getKind()).thenReturn("method-execution");
 
     this.auditAspect.audit(joinPoint, auditRecording);
 

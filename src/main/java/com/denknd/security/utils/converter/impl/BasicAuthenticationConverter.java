@@ -7,6 +7,7 @@ import com.denknd.security.utils.converter.AuthenticationConverter;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.stereotype.Component;
 
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
@@ -15,6 +16,7 @@ import java.util.Base64;
 /**
  * Реализация интерфейса для преобразования аутентификационных данных из HTTP запроса с использованием базовой аутентификации.
  */
+@Component
 @Slf4j
 public class BasicAuthenticationConverter implements AuthenticationConverter {
   /**

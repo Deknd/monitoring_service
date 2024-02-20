@@ -2,27 +2,31 @@ package com.denknd.services;
 
 import com.denknd.entity.Meter;
 
+import java.nio.file.AccessDeniedException;
 import java.sql.SQLException;
 
+
 /**
- * Интерфейс сервиса, по управлению информацией о счетчике
+ * Интерфейс сервиса для управления информацией о счетчике.
  */
 public interface MeterCountService {
   /**
-   * Метод для сохранения счетчика в БД
+   * Метод для сохранения счетчика в базе данных.
    *
-   * @param meter заполненный объект счетчика
-   * @return возвращает сохраненный объект с идентификатором
-   * @throws SQLException ошибка при сохранении в БД
+   * @param meter Заполненный объект счетчика.
+   * @return Сохраненный объект счетчика с присвоенным идентификатором.
+   * @throws SQLException Ошибка при сохранении в базе данных.
    */
   Meter saveMeterCount(Meter meter) throws SQLException;
 
   /**
-   * Добавляет информацию к существующим счетчикам
+   * Добавляет информацию к существующим счетчикам.
    *
-   * @param meter заполненный объект счетчика, с дополнительной информацией
-   * @return возвращает заполненный объект
-   * @throws SQLException ошибка сохранения в БД
+   * @param meter Заполненный объект счетчика с дополнительной информацией.
+   * @return Заполненный объект счетчика.
+   * @throws SQLException          Ошибка сохранения в базе данных.
+   * @throws AccessDeniedException Исключение, выбрасываемое в случае отсутствия доступа для добавления информации о счетчике.
    */
-  Meter addInfoForMeterCount(Meter meter) throws SQLException;
+  Meter addInfoForMeterCount(Meter meter) throws SQLException, AccessDeniedException;
+
 }

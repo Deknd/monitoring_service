@@ -8,10 +8,12 @@ import com.denknd.security.utils.authenticator.UserAuthenticator;
 import com.denknd.services.UserService;
 import com.denknd.util.PasswordEncoder;
 import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Component;
 
 /**
  * Реализация интерфейса аутентификации пользователей.
  */
+@Component
 @RequiredArgsConstructor
 public class BasicUserAuthenticator implements UserAuthenticator {
   /**

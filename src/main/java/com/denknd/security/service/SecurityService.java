@@ -3,6 +3,7 @@ package com.denknd.security.service;
 import com.denknd.security.entity.UserSecurity;
 import jakarta.servlet.http.HttpServletResponse;
 
+
 /**
  * Интерфейс для работы с авторизацией и аутентификацией пользователя.
  */
@@ -25,6 +26,10 @@ public interface SecurityService {
    */
   boolean isAuthentication();
 
+  /**
+   * Метод для добавления пользователя в контекст.
+   * @param userSecurity пользователь полученный после успешной аутентификации.
+   */
   void addPrincipal(UserSecurity userSecurity);
 
   /**

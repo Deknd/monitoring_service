@@ -5,6 +5,7 @@ import com.denknd.mappers.TypeMeterMapper;
 import com.denknd.repository.TypeMeterRepository;
 import com.denknd.util.DataBaseConnection;
 import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Repository;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -15,6 +16,7 @@ import java.util.List;
 /**
  * Реализация интерфейса для хранения типов показаний в базу данных.
  */
+@Repository
 @RequiredArgsConstructor
 public class PostgresTypeMeterRepository implements TypeMeterRepository {
   /**
