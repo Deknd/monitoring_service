@@ -9,6 +9,7 @@ import java.sql.SQLException;
 public interface DataBaseConnection {
   /**
    * Возвращает соединение с базой данных
+   *
    * @return соединение с базой данных
    * @throws SQLException ошибка соединения
    */

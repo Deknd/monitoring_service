@@ -7,10 +7,11 @@ import java.util.UUID;
 
 /**
  * Токен доступа к авторизации
- * @param id идентификатор токена
- * @param userId идентификатор пользователя
+ *
+ * @param id        идентификатор токена
+ * @param userId    идентификатор пользователя
  * @param firstName имя пользователя
- * @param role роль пользователя
+ * @param role      роль пользователя
  * @param createdAt дата создания
  * @param expiresAt дата прекращения действия токена
  */

@@ -3,10 +3,13 @@ package com.denknd.aspectj.audit;
 import com.denknd.out.audit.Audit;
 import com.denknd.out.audit.AuditService;
 import com.denknd.security.service.SecurityService;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
 import java.time.OffsetDateTime;
 
@@ -15,15 +18,17 @@ import java.time.OffsetDateTime;
  */
 @Aspect
 @Slf4j
+@RequiredArgsConstructor
+@Component
 public class AuditAspect {
   /**
    * Сервис для работы с безоасностью
    */
-  private final SecurityService securityService = AuditAspectConfig.securityService;
+  private final SecurityService securityService;
   /**
    * Сервис для сохранения аудитов
    */
-  private final AuditService auditService = AuditAspectConfig.auditService;
+  private final AuditService auditService;
 
   /**
    * Метод для формирования аудита и отправки его в сервис
@@ -35,7 +40,6 @@ public class AuditAspect {
    */
   @Around("@annotation(auditRecordingAnnotation)")
   public Object audit(ProceedingJoinPoint joinPoint, AuditRecording auditRecordingAnnotation) throws Throwable {
-    if (joinPoint.getKind().equals("method-execution")) {
       var auditValue = auditRecordingAnnotation.value();
       var now = OffsetDateTime.now();
       var userSecurity = this.securityService.getUserSecurity();
@@ -44,7 +48,5 @@ public class AuditAspect {
       var audit = Audit.builder().operationTime(now).operation(operation).user(userSecurity).build();
       this.auditService.addAction(audit);
       return joinPoint.proceed();
-    }
-    return joinPoint.proceed();
   }
 }

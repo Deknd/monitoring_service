@@ -7,7 +7,6 @@ import lombok.NoArgsConstructor;
 
 import java.time.OffsetDateTime;
 import java.time.YearMonth;
-import java.time.format.DateTimeFormatter;
 
 /**
  * Класс для хранения показаний.

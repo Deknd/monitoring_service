@@ -8,7 +8,7 @@ import lombok.RequiredArgsConstructor;
  */
 @RequiredArgsConstructor
 @Getter
-public class ConstraintViolationException extends Exception{
+public class ConstraintViolationException extends Exception {
   /**
    * Сообщение об ошибке.
    */

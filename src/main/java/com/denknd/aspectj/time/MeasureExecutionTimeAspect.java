@@ -5,19 +5,16 @@ import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.annotation.Pointcut;
+import org.springframework.stereotype.Component;
 
 /**
  * Класс для аспекта, которы считает время выполнения данного метода
  */
 @Aspect
 @Slf4j
+@Component
 public class MeasureExecutionTimeAspect {
-  /**
-   * Точка входа для выполнения аспекта
-   */
-  @Pointcut("@annotation(com.denknd.aspectj.time.MeasureExecutionTime)")
-  public void annotatedByMeasureExecutionTime() {
-  }
+
 
   /**
    * Метод который считает время выполнения выделеного метода
@@ -26,16 +23,13 @@ public class MeasureExecutionTimeAspect {
    * @return возвращает процесс выполнения
    * @throws Throwable ошибки, которые могут возникнуть при выполнении
    */
-  @Around("annotatedByMeasureExecutionTime()")
+  @Around("@annotation(com.denknd.aspectj.time.MeasureExecutionTime)")
   public Object logging(ProceedingJoinPoint proceedingJoinPoint) throws Throwable {
-    if (proceedingJoinPoint.getKind().equals("method-execution")) {
       var startTime = System.currentTimeMillis();
       var result = proceedingJoinPoint.proceed();
       var endTime = System.currentTimeMillis();
       var executionTime = endTime - startTime;
       log.info("Метод: " + proceedingJoinPoint.getSignature().toShortString() + " Время работы метода: " + executionTime + " milliseconds");
       return result;
-    }
-    return proceedingJoinPoint.proceed();
   }
 }

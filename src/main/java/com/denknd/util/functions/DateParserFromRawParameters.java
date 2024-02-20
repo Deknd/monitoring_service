@@ -1,36 +1,36 @@
 package com.denknd.util.functions;
 
 import lombok.RequiredArgsConstructor;
-import lombok.extern.log4j.Log4j2;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.core.convert.converter.Converter;
+import org.springframework.stereotype.Component;
 
 import java.time.YearMonth;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
-import java.util.function.Function;
 
 /**
  * Класс для парсинга года и месяца из параметров.
  */
+@Component
 @RequiredArgsConstructor
 @Slf4j
-public class DateParserFromRawParameters implements Function<String, YearMonth> {
+public class DateParserFromRawParameters implements Converter<String, YearMonth> {
 
   /**
-   * Извлекает год и месяц из массива параметров запроса.
+   * Извлекает год и месяц из строки параметров запроса.
    *
-   * @param param параметр из запроса
-   * @return объект YearMonth или null, если данные введены не по шаблону: yyyy-MM
+   * @param source Строка параметра из запроса.
+   * @return Объект YearMonth или null, если данные введены не по шаблону: yyyy-MM.
    */
   @Override
-  public YearMonth apply(String param) {
-    if (param == null) {
-      return null;
-    }
+  public YearMonth convert(String source) {
     try {
-      return YearMonth.parse(param, DateTimeFormatter.ofPattern("yyyy-MM"));
+      return YearMonth.parse(source, DateTimeFormatter.ofPattern("yyyy-MM"));
     } catch (DateTimeParseException e) {
       return null;
     }
   }
+
+
 }

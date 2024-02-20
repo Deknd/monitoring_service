@@ -37,8 +37,10 @@
         <comment>Таблица для адресов</comment>
     </changeSet>
     <changeSet id="003__create_addresses_сonstraint" author="den">
-        <addForeignKeyConstraint baseTableSchemaName="${defaultSchema}" baseTableName="addresses" baseColumnNames="user_id" constraintName="fk_addresses_users"
-                                 referencedTableSchemaName="${defaultSchema}" referencedTableName="users" referencedColumnNames="user_id" onDelete="CASCADE"/>
+        <addForeignKeyConstraint baseTableSchemaName="${defaultSchema}" baseTableName="addresses"
+                                 baseColumnNames="user_id" constraintName="fk_addresses_users"
+                                 referencedTableSchemaName="${defaultSchema}" referencedTableName="users"
+                                 referencedColumnNames="user_id" onDelete="CASCADE"/>
         <comment>Связь с таблицей пользователей</comment>
 
     </changeSet>

@@ -4,6 +4,7 @@ import com.denknd.dto.AddressDto;
 import com.denknd.entity.Address;
 import com.denknd.entity.User;
 import org.mapstruct.Mapper;
+import org.mapstruct.MappingConstants;
 import org.mapstruct.NullValuePropertyMappingStrategy;
 import org.mapstruct.factory.Mappers;
 
@@ -12,14 +13,15 @@ import java.sql.SQLException;
 import java.util.List;
 
 /**
- * Маппер для объекта Address
+ * Маппер для объекта Address.
+ * Этот интерфейс предоставляет методы для преобразования объектов Address в AddressDto и обратно.
  */
-@Mapper(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
+@Mapper(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE, componentModel = MappingConstants.ComponentModel.SPRING)
 public interface AddressMapper {
   AddressMapper INSTANCE = Mappers.getMapper(AddressMapper.class);
 
   /**
-   * Преобразование AddressDto в Address
+   * Преобразование AddressDto в Address.
    *
    * @param addressDto адрес от пользователя
    * @return адрес для сервиса
@@ -27,7 +29,7 @@ public interface AddressMapper {
   Address mapAddressDtoToAddress(AddressDto addressDto);
 
   /**
-   * Преобразование Address в AddressDto
+   * Преобразование Address в AddressDto.
    *
    * @param address адрес от сервиса
    * @return адрес для пользователя
@@ -35,7 +37,7 @@ public interface AddressMapper {
   AddressDto mapAddressToAddressDto(Address address);
 
   /**
-   * Преобразование списка Address в список AddressDto
+   * Преобразование списка Address в список AddressDto.
    *
    * @param addresses адреса от сервиса
    * @return адреса для пользователя
@@ -43,7 +45,8 @@ public interface AddressMapper {
   List<AddressDto> mapAddressesToAddressesDto(List<Address> addresses);
 
   /**
-   * Собирает новый объект Address.
+   * Собирает новый объект Address на основе данных из ResultSet.
+   *
    * @param resultSet данные полученные из БД
    * @return Заполненный объект Address
    * @throws SQLException ошибка получения данных

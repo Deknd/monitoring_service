@@ -1,17 +1,14 @@
 package com.denknd.out.audit;
 
-import com.denknd.security.entity.UserSecurity;
-
-import java.util.Map;
-
 /**
- * Интерфейс для работы с аудитом
+ * Интерфейс для работы с аудитом.
+ * Этот интерфейс предоставляет методы для записи действий пользователей в журнал аудита.
  */
 public interface AuditService {
   /**
    * Записывает действие пользователя в журнал аудита.
    *
-   * @param audit   аудит с действиями
+   * @param audit объект аудита с информацией о совершенном действии
    */
   void addAction(Audit audit);
 }

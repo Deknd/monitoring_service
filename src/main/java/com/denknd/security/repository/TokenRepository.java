@@ -3,6 +3,7 @@ package com.denknd.security.repository;
 import com.denknd.security.entity.TokenBlock;
 
 import java.sql.SQLException;
+
 /**
  * Интерфейс репозитория для работы с токенами в базе данных.
  */
@@ -15,6 +16,7 @@ public interface TokenRepository {
    * @throws SQLException если возникает ошибка при выполнении SQL-запроса.
    */
   TokenBlock save(TokenBlock tokenBlock) throws SQLException;
+
   /**
    * Проверяет существование токена по его идентификатору.
    *
@@ -22,5 +24,5 @@ public interface TokenRepository {
    * @return true, если токен существует, в противном случае - false.
    * @throws SQLException если возникает ошибка при выполнении SQL-запроса.
    */
-  boolean existsByTokenId(String tokenId) throws SQLException ;
+  boolean existsByTokenId(String tokenId) throws SQLException;
 }

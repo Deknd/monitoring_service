@@ -8,36 +8,41 @@ import liquibase.command.CommandScope;
 import liquibase.command.core.UpdateCommandStep;
 import liquibase.command.core.helpers.DatabaseChangelogCommandStep;
 import liquibase.command.core.helpers.DbUrlConnectionArgumentsCommandStep;
-import liquibase.database.Database;
 import liquibase.database.DatabaseFactory;
 import liquibase.database.jvm.JdbcConnection;
 import liquibase.exception.CommandExecutionException;
 import liquibase.exception.DatabaseException;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.stereotype.Component;
 
-import java.sql.Connection;
+import java.io.IOException;
+import java.io.OutputStream;
 import java.sql.SQLException;
 
 /**
- * Реализация Класса отвечающего за запуск скриптов миграций
+ * Реализация интерфейса для запуска скриптов миграции базы данных с использованием Liquibase.
  */
 @RequiredArgsConstructor
+@Component
+@Slf4j
 public class LiquibaseMigration implements MigrationBd {
+
   /**
-   * Соединение с базой данных
+   * Соединение с базой данных.
    */
   private final DataBaseConnection dataBaseConnection;
+
   /**
-   * Конфигурация ликвибаз
+   * Конфигурация Liquibase.
    */
   private final LiquibaseConfig liquibaseConfig;
 
   /**
-   * Запуск скриптов миграции
+   * Запускает скрипты миграции базы данных.
    */
   @Override
   public void migration() {
-
     try (
             var connection = dataBaseConnection.createConnection();
             var database = DatabaseFactory.getInstance().findCorrectDatabaseImplementation(new JdbcConnection(connection))
@@ -51,14 +56,28 @@ public class LiquibaseMigration implements MigrationBd {
               .addArgumentValue(DbUrlConnectionArgumentsCommandStep.DEFAULT_SCHEMA_NAME_ARG, liquibaseConfig.defaultSchema())
               .addArgumentValue(UpdateCommandStep.CHANGELOG_FILE_ARG, liquibaseConfig.changelog())
               .addArgumentValue(DbUrlConnectionArgumentsCommandStep.DATABASE_ARG, database)
+              .setOutput(new LoggerOutputStream())
               .execute();
-
     } catch (SQLException | DatabaseException | CommandExecutionException e) {
-      e.printStackTrace();
-      System.out.println("Ошибка миграций БД. Работа приложения остановлена. База данных находится не в валидном состоянии.");
-      throw new RuntimeException();
+      log.error("Ошибка при выполнении миграций базы данных. Работа приложения приостановлена. База данных находится в невалидном состоянии.", e);
+      throw new RuntimeException("Ошибка при выполнении миграций базы данных.", e);
     }
   }
 
+  /**
+   * Пользовательский вывод логов в консоль с использованием SLF4J.
+   */
+  private static class LoggerOutputStream extends OutputStream {
+    private final StringBuilder buffer = new StringBuilder();
 
+    @Override
+    public void write(int b) {
+      if (b == '\n') {
+        log.info(buffer.toString());
+        buffer.setLength(0);
+      } else {
+        buffer.append((char) b);
+      }
+    }
+  }
 }

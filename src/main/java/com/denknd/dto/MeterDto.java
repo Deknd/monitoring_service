@@ -1,5 +1,7 @@
 package com.denknd.dto;
 
+import io.swagger.v3.oas.annotations.media.Schema;
+
 import java.time.OffsetDateTime;
 
 /**
@@ -14,11 +16,24 @@ import java.time.OffsetDateTime;
  * @param lastCheckDate    дата последней проверки
  */
 public record MeterDto(
+        @Schema(description = "Идентификатор счетчика")
         Long meterCountId,
+
+        @Schema(description = "Идентификатор адреса, по которому находится счетчик")
         Long addressId,
+
+        @Schema(description = "Идентификатор типа показаний, которые счетчик считает")
         Long typeMeterId,
+
+        @Schema(description = "Серийный номер счетчика")
         String serialNumber,
+
+        @Schema(description = "Модель счетчика")
         String meterModel,
+
+        @Schema(description = "Дата первой подаче показаний")
         OffsetDateTime registrationDate,
-        OffsetDateTime lastCheckDate) {
+
+        @Schema(description = "Дата последней проверки")
+        OffsetDateTime lastCheckDate)  {
 }

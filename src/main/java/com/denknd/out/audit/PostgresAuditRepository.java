@@ -3,6 +3,7 @@ package com.denknd.out.audit;
 import com.denknd.repository.AuditRepository;
 import com.denknd.util.DataBaseConnection;
 import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Repository;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -10,20 +11,22 @@ import java.sql.Statement;
 import java.sql.Types;
 
 /**
- * Реализация интерфейса для хранения объектов аудита в БД.
+ * Реализация интерфейса {@link AuditRepository}, предназначенная для хранения объектов аудита в базе данных Postgres.
  */
 @RequiredArgsConstructor
+@Repository
 public class PostgresAuditRepository implements AuditRepository {
   /**
-   * Выдает соединение с базой данных
+   * Соединение с базой данных.
    */
   private final DataBaseConnection dataBaseConnection;
 
   /**
-   * Сохраняет объект аудита в память.
+   * Сохраняет объект аудита в базу данных Postgres.
    *
-   * @param audit заполненный объект, айди не должно быть
-   * @return возвращает копию объекта, сохраненного в памяти, с присвоенным айди
+   * @param audit объект аудита для сохранения
+   * @return сохраненный объект аудита с присвоенным идентификатором
+   * @throws SQLException выбрасывается в случае ошибки SQL
    */
   @Override
   public Audit save(Audit audit) throws SQLException {
@@ -59,7 +62,7 @@ public class PostgresAuditRepository implements AuditRepository {
         }
       }
     } finally {
-      if(connection != null){
+      if (connection != null) {
         connection.close();
       }
     }

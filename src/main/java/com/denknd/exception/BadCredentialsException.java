@@ -8,7 +8,7 @@ import lombok.RequiredArgsConstructor;
  */
 @RequiredArgsConstructor
 @Getter
-public class BadCredentialsException  extends Exception{
+public class BadCredentialsException extends Exception {
   /**
    * Сообщение об ошибке.
    */

@@ -28,8 +28,8 @@ class AuditAspectTest {
   @BeforeEach
   void setUp() {
     this.autoCloseable = MockitoAnnotations.openMocks(this);
-    AuditAspectConfig.init(this.auditService, this.securityService);
-    this.auditAspect = new AuditAspect();
+//    AuditAspectConfig.init(this.auditService, this.securityService);
+    this.auditAspect = new AuditAspect(this.securityService, this.auditService);
   }
 
   @AfterEach

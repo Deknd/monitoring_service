@@ -1,9 +1,11 @@
 package com.denknd.services;
 
+import com.denknd.entity.Parameters;
 import com.denknd.entity.User;
 import com.denknd.exception.InvalidUserDataException;
 import com.denknd.exception.UserAlreadyExistsException;
 
+import java.nio.file.AccessDeniedException;
 import java.security.NoSuchAlgorithmException;
 
 /**
@@ -15,12 +17,12 @@ public interface UserService {
    *
    * @param create Полностью созданный объект пользователя, без айди.
    * @return Полностью созданный объект пользователя с айди.
-   * @throws UserAlreadyExistsException Если пользователь с указанным email уже существует.
-   * @throws NoSuchAlgorithmException
-   * @throws InvalidUserDataException
+   * @throws UserAlreadyExistsException Исключение, выбрасываемое при попытке регистрации пользователя с уже существующим email.
+   * @throws NoSuchAlgorithmException   Исключение, выбрасываемое при невозможности создания хэша пароля.
+   * @throws InvalidUserDataException   Исключение, выбрасываемое при неверных данных пользователя.
+   * @throws AccessDeniedException      Исключение, выбрасываемое при отсутствии доступа для регистрации нового пользователя.
    */
-
-  User registrationUser(User create) throws UserAlreadyExistsException, NoSuchAlgorithmException, InvalidUserDataException;
+  User registrationUser(User create) throws UserAlreadyExistsException, NoSuchAlgorithmException, InvalidUserDataException, AccessDeniedException;
 
   /**
    * Проверяет существование пользователя по его айди.
@@ -33,10 +35,10 @@ public interface UserService {
   /**
    * Возвращает пользователя по айди.
    *
-   * @param userId Айди пользователя, которого нужно вернуть.
+   * @param parameters Параметры для получения пользователя.
    * @return Объект пользователя, если существует, в противном случае null.
    */
-  User getUserById(Long userId);
+  User getUser(Parameters parameters);
 
   /**
    * Возвращает пользователя по email.
