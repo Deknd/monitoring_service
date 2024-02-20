@@ -30,6 +30,7 @@ import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -76,7 +77,7 @@ class CounterInfoControllerTest {
             .build();
     var json = this.objectMapper.writeValueAsString(counterInfoDto);
 
-    var mvcResult = this.mockMvc.perform(post("/counter-info")
+    var mvcResult = this.mockMvc.perform(put("/counter-info")
                     .contentType(MediaType.APPLICATION_JSON)
                     .content(json))
             .andExpect(status().isOk())
@@ -100,7 +101,7 @@ class CounterInfoControllerTest {
     var json = this.objectMapper.writeValueAsString(counterInfoDto);
     when(this.meterCountService.addInfoForMeterCount(any())).thenThrow(new SQLException("error"));
 
-    var mvcResult = this.mockMvc.perform(post("/counter-info")
+    var mvcResult = this.mockMvc.perform(put("/counter-info")
                     .contentType(MediaType.APPLICATION_JSON)
                     .content(json))
             .andExpect(status().isBadRequest())
@@ -123,7 +124,7 @@ class CounterInfoControllerTest {
     var json = this.objectMapper.writeValueAsString(counterInfoDto);
     when(this.meterCountService.addInfoForMeterCount(any())).thenThrow(new AccessDeniedException("error"));
 
-    var mvcResult = this.mockMvc.perform(post("/counter-info")
+    var mvcResult = this.mockMvc.perform(put("/counter-info")
                     .contentType(MediaType.APPLICATION_JSON)
                     .content(json))
             .andExpect(status().isForbidden())
