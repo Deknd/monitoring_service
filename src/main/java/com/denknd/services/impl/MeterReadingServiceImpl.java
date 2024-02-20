@@ -1,12 +1,16 @@
 package com.denknd.services.impl;
 
+import com.denknd.entity.Meter;
 import com.denknd.entity.MeterReading;
 import com.denknd.entity.TypeMeter;
 import com.denknd.exception.MeterReadingConflictError;
 import com.denknd.repository.MeterReadingRepository;
+import com.denknd.services.MeterCountService;
 import com.denknd.services.MeterReadingService;
 import com.denknd.services.TypeMeterService;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.log4j.Log4j2;
+import lombok.extern.slf4j.Slf4j;
 
 import java.sql.SQLException;
 import java.time.OffsetDateTime;
@@ -20,6 +24,7 @@ import java.util.Set;
  * Сервис для работы с показаниями.
  */
 @RequiredArgsConstructor
+@Slf4j
 public class MeterReadingServiceImpl implements MeterReadingService {
   /**
    * Репозиторий для работы с показаниями.
@@ -29,6 +34,10 @@ public class MeterReadingServiceImpl implements MeterReadingService {
    * Сервис для работы с типами показаний.
    */
   private final TypeMeterService typeMeterService;
+  /**
+   * Сервис для работы с счетчиками
+   */
+  private final MeterCountService meterCountService;
 
 
   /**
@@ -54,7 +63,17 @@ public class MeterReadingServiceImpl implements MeterReadingService {
     var timeSendMeter = OffsetDateTime.now();
     meterReading.setSubmissionMonth(submissionMonth);
     meterReading.setTimeSendMeter(timeSendMeter);
-    meterReading.setMeter(actualMeter != null ? actualMeter.getMeter() : null);
+    if(actualMeter == null || actualMeter.getMeter() == null){
+      var meterCount = Meter.builder()
+              .typeMeterId(meterReading.getTypeMeter().getTypeMeterId())
+              .addressId(meterReading.getAddress().getAddressId())
+              .build();
+      try {
+        this.meterCountService.saveMeterCount(meterCount);
+      } catch (SQLException e) {
+        log.info("Ошибка сохранения информации о счетчике");
+      }
+    }
     try {
       return this.meterReadingRepository.save(meterReading);
     } catch (SQLException e) {
@@ -72,56 +91,48 @@ public class MeterReadingServiceImpl implements MeterReadingService {
    */
   @Override
   public List<MeterReading> getActualMeterByAddress(Set<Long> addressIds, Set<TypeMeter> typeCode, YearMonth date) {
-    var typeMeterList = this.typeMeterService.getTypeMeter();
+   List<MeterReading> result;
+    var actualType = Set.copyOf(this.typeMeterService.getTypeMeter());
 
     if (date == null) {
       if (typeCode == null || typeCode.isEmpty()) {
-        var actualType = Set.copyOf(this.typeMeterService.getTypeMeter());
-        return addressIds.stream()
+        result = addressIds.stream()
                 .flatMap(
                         addressId ->
                                 this.getMeterReadings(addressId, actualType)
                                         .stream())
                 .toList();
       } else {
-        return addressIds.stream()
+        result = addressIds.stream()
                 .flatMap(addressId -> this.getMeterReadings(addressId, typeCode)
                         .stream())
-                .map(meterReading -> {
-                  var typeMeter = typeMeterList.stream().filter(type -> type.getTypeMeterId().equals(meterReading.getTypeMeter().getTypeMeterId())).findFirst().get();
-                  meterReading.setTypeMeter(typeMeter);
-                  return meterReading;
-                })
                 .toList();
       }
     } else {
       if (typeCode == null || typeCode.isEmpty()) {
-        var actualType = Set.copyOf(this.typeMeterService.getTypeMeter());
 
-        return addressIds.stream()
+        result = addressIds.stream()
                 .flatMap(addressId ->
                         this.getMeterReadingsWithDate(addressId, actualType, date)
                                 .stream())
-                .map(meterReading -> {
-                  var typeMeter = typeMeterList.stream().filter(type -> type.getTypeMeterId().equals(meterReading.getTypeMeter().getTypeMeterId())).findFirst().get();
-                  meterReading.setTypeMeter(typeMeter);
-                  return meterReading;
-                })
                 .toList();
       } else {
-        return addressIds.stream()
+        result = addressIds.stream()
                 .flatMap(addressId ->
                         this.getMeterReadingsWithDate(addressId, typeCode, date)
                                 .stream())
-                .map(meterReading -> {
-                  var typeMeter = typeMeterList.stream().filter(type -> type.getTypeMeterId().equals(meterReading.getTypeMeter().getTypeMeterId())).findFirst().get();
-                  meterReading.setTypeMeter(typeMeter);
-                  return meterReading;
-                })
                 .toList();
       }
     }
-
+    return result.stream()
+            .peek(meterReading -> {
+              var typeMeter
+                      = actualType.stream()
+                      .filter(type -> type.getTypeMeterId().equals(meterReading.getTypeMeter().getTypeMeterId()))
+                      .findFirst()
+                      .get();
+              meterReading.setTypeMeter(typeMeter);
+            }).toList();
   }
 
   /**
@@ -133,17 +144,10 @@ public class MeterReadingServiceImpl implements MeterReadingService {
    * @return Список показаний, соответствующих указанным параметрам.
    */
   private List<MeterReading> getMeterReadingsWithDate(Long addressId, Set<TypeMeter> typeCode, YearMonth date) {
-    var typeMeterList = this.typeMeterService.getTypeMeter();
-
     return typeCode.stream()
             .map(type -> this.meterReadingRepository.findMeterReadingForDate(addressId, type.getTypeMeterId(), date))
             .map(optional -> optional.orElse(null))
             .filter(Objects::nonNull)
-            .map(meterReading -> {
-              var typeMeter = typeMeterList.stream().filter(type -> type.getTypeMeterId().equals(meterReading.getTypeMeter().getTypeMeterId())).findFirst().get();
-              meterReading.setTypeMeter(typeMeter);
-              return meterReading;
-            })
             .toList();
   }
 
@@ -155,17 +159,10 @@ public class MeterReadingServiceImpl implements MeterReadingService {
    * @return Список актуальных показаний, соответствующих указанным параметрам.
    */
   private List<MeterReading> getMeterReadings(Long addressId, Set<TypeMeter> typeCode) {
-    var typeMeterList = this.typeMeterService.getTypeMeter();
-
     return typeCode.stream()
             .map(type -> this.meterReadingRepository.findActualMeterReading(addressId, type.getTypeMeterId()))
             .map(optional -> optional.orElse(null))
             .filter(Objects::nonNull)
-            .map(meterReading -> {
-              var typeMeter = typeMeterList.stream().filter(type -> type.getTypeMeterId().equals(meterReading.getTypeMeter().getTypeMeterId())).findFirst().get();
-              meterReading.setTypeMeter(typeMeter);
-              return meterReading;
-            })
             .toList();
   }
 
@@ -179,24 +176,27 @@ public class MeterReadingServiceImpl implements MeterReadingService {
    * @return Список показаний по указанным фильтрам.
    */
   @Override
-  public List<MeterReading> getHistoryMeterByAddress(Set<Long> addressIds, Set<String> typeCode, YearMonth startDate, YearMonth endDate) {
-    List<MeterReading> meterReadingsAllAddress = new ArrayList<MeterReading>();
+  public List<MeterReading> getHistoryMeterByAddress(Set<Long> addressIds, Set<Long> typeCode, YearMonth startDate, YearMonth endDate) {
+    List<MeterReading> meterReadingsAllAddress = new ArrayList<>();
     var typeMeterList = this.typeMeterService.getTypeMeter();
     for (Long addressId : addressIds) {
       var meterReadingByAddressId
               = this.meterReadingRepository.findMeterReadingByAddressId(addressId)
               .stream()
-              .map(meterReading -> {
-                var typeMeter = typeMeterList.stream().filter(type -> type.getTypeMeterId().equals(meterReading.getTypeMeter().getTypeMeterId())).findFirst().get();
+              .peek(meterReading -> {
+                var typeMeter
+                        = typeMeterList.stream()
+                        .filter(type -> type.getTypeMeterId().equals(meterReading.getTypeMeter().getTypeMeterId()))
+                        .findFirst()
+                        .get();
                 meterReading.setTypeMeter(typeMeter);
-                return meterReading;
               }).toList();
       meterReadingsAllAddress.addAll(meterReadingByAddressId);
 
     }
     if (typeCode != null && !typeCode.isEmpty()) {
       meterReadingsAllAddress = meterReadingsAllAddress.stream()
-              .filter(meterReading -> typeCode.contains(meterReading.getTypeMeter().getTypeCode()))
+              .filter(meterReading -> typeCode.contains(meterReading.getTypeMeter().getTypeMeterId()))
               .toList();
     }
     if (startDate != null) {

@@ -36,17 +36,14 @@ public class TypeMeterServiceImpl implements TypeMeterService {
    * @return Полностью заполненный объект с идентификатором.
    * @throws TypeMeterAdditionException при не соблюдения ограничений базы данных
    */
-
   @Override
   public TypeMeter addNewTypeMeter(TypeMeter newType) throws TypeMeterAdditionException {
 
     try {
       return this.typeMeterRepository.save(newType);
     } catch (SQLException e) {
-      throw new TypeMeterAdditionException("Ошибка сохранения, введены не верные данные: "+e.getMessage());
+      throw new TypeMeterAdditionException("Ошибка сохранения, введены не верные данные: " + e.getMessage());
     }
-
-
   }
 
   /**

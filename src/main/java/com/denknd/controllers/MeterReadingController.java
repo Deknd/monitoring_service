@@ -1,5 +1,6 @@
 package com.denknd.controllers;
 
+import com.denknd.aspectj.audit.AuditRecording;
 import com.denknd.dto.MeterReadingRequestDto;
 import com.denknd.dto.MeterReadingResponseDto;
 import com.denknd.entity.Address;
@@ -9,6 +10,7 @@ import com.denknd.services.AddressService;
 import com.denknd.services.MeterReadingService;
 import com.denknd.services.TypeMeterService;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
 import java.time.YearMonth;
 import java.util.List;
@@ -19,6 +21,7 @@ import java.util.stream.Collectors;
  * Контроллер для работы с показаниями данных.
  */
 @RequiredArgsConstructor
+@Slf4j
 public class MeterReadingController {
   /**
    * Сервис для управления показаниями.
@@ -52,10 +55,11 @@ public class MeterReadingController {
    * @param endDate    дата по которой нужны показания
    * @return список с показаниями, по всем параметрам
    */
+  @AuditRecording("Получения истории о показаниях")
   public List<MeterReadingResponseDto> getHistoryMeterReading(
           Long addressId,
           Long userId,
-          Set<String> parameters,
+          Set<Long> parameters,
           YearMonth startDate,
           YearMonth endDate
   ) {
@@ -75,18 +79,30 @@ public class MeterReadingController {
    * @return возвращает полученные показания
    * @throws MeterReadingConflictError ошибки при сохранении, если показания уже внесены, если показания меньше предыдущих
    */
+  @AuditRecording("Добавляет новые показания")
   public MeterReadingResponseDto addMeterReadingValue(
           MeterReadingRequestDto meterReadingRequestDto,
           Long userId
   ) throws MeterReadingConflictError {
     var addressesByActiveUser = this.addressService.getAddresses(userId);
-    var addressOwner = addressesByActiveUser.stream().anyMatch(address -> address.getAddressId().equals(meterReadingRequestDto.addressId()));
+    var addressOwner = addressesByActiveUser.stream()
+            .anyMatch(address ->
+                    address.getAddressId().equals(meterReadingRequestDto.addressId()));
     if (!addressOwner) {
       throw new MeterReadingConflictError("Адрес не принадлежит вам");
     }
-    var typeMeter = this.typeMeterService.getTypeMeterByCode(meterReadingRequestDto.code());
+    var typeMeter = this.typeMeterService.getTypeMeter()
+            .stream()
+            .filter(type ->
+                    type.getTypeMeterId().equals(meterReadingRequestDto.typeMeterId()))
+            .findFirst()
+            .orElse(null);
+    if (typeMeter == null){
+      throw  new MeterReadingConflictError("Не известный тип показаний");
+    }
     var address = this.addressService.getAddressByAddressId(meterReadingRequestDto.addressId());
-    var meterReading = this.meterReadingMapper.mapMeterReadingRequestDtoToMeterReading(meterReadingRequestDto, address, typeMeter);
+    var meterReading = this.meterReadingMapper
+            .mapMeterReadingRequestDtoToMeterReading(meterReadingRequestDto, address, typeMeter);
     var resultMeterReading = this.meterReadingService.addMeterValue(meterReading);
     return this.meterReadingMapper.mapMeterReadingToMeterReadingResponseDto(resultMeterReading);
   }
@@ -103,10 +119,11 @@ public class MeterReadingController {
    * @param date      дата в которую нужны показания(может быть null)
    * @return возвращает данные пользователю, по указанным параметрам
    */
+  @AuditRecording("Получаем актуальные показания")
   public List<MeterReadingResponseDto> getMeterReadings(
           Long addressId,
           Long userId,
-          Set<String> type,
+          Set<Long> type,
           YearMonth date) {
     var addressIdSet = this.getAddressId(userId, addressId);
     if (addressIdSet == null) {
@@ -116,7 +133,7 @@ public class MeterReadingController {
             .stream()
             .filter(
                     typeMeter -> type.stream()
-                            .anyMatch(typeCode -> typeCode.equals(typeMeter.getTypeCode())))
+                            .anyMatch(typeCode -> typeCode.equals(typeMeter.getTypeMeterId())))
             .collect(Collectors.toSet());
 
 

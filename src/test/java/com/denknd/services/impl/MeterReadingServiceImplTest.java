@@ -5,6 +5,7 @@ import com.denknd.entity.MeterReading;
 import com.denknd.entity.TypeMeter;
 import com.denknd.exception.MeterReadingConflictError;
 import com.denknd.repository.MeterReadingRepository;
+import com.denknd.services.MeterCountService;
 import com.denknd.services.TypeMeterService;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -32,12 +33,14 @@ class MeterReadingServiceImplTest {
     private MeterReadingServiceImpl meterReadingService;
     @Mock
     private TypeMeterService typeMeterService;
+    @Mock
+    private MeterCountService meterCountService;
     private AutoCloseable closeable;
 
     @BeforeEach
     void setUp() {
         this.closeable = MockitoAnnotations.openMocks(this);
-        this.meterReadingService = new MeterReadingServiceImpl(this.readingRepository, this.typeMeterService);
+        this.meterReadingService = new MeterReadingServiceImpl(this.readingRepository, this.typeMeterService, this.meterCountService);
     }
     @AfterEach
     void tearDown() throws Exception {
@@ -115,11 +118,13 @@ class MeterReadingServiceImplTest {
         var type2 = TypeMeter.builder().typeMeterId(3L).typeCode(typeCode).build();
         var date = YearMonth.now().minusMonths(1);
         when(this.typeMeterService.getTypeMeter()).thenReturn(List.of(type, type2));
+        when(this.readingRepository.findMeterReadingForDate(any(), any(), any()))
+                .thenReturn(Optional.of(MeterReading.builder().typeMeter(type).build()))
+                .thenReturn(Optional.of(MeterReading.builder().typeMeter(type).build()));
 
         this.meterReadingService.getActualMeterByAddress(Set.of(1L), Set.of(type, type2), date);
 
         verify(this.readingRepository, times(2)).findMeterReadingForDate(eq(1L), anyLong(), eq(date));
-
     }
 
     @Test
@@ -193,7 +198,7 @@ class MeterReadingServiceImplTest {
         when(this.readingRepository.findMeterReadingByAddressId(any())).thenReturn(meterReadings);
         when(this.typeMeterService.getTypeMeter()).thenReturn(List.of(type1, type2, type3));
 
-        var historyMeterByAddress = this.meterReadingService.getHistoryMeterByAddress(Set.of(1L), Set.of(stringType, typeCode), YearMonth.now().minusMonths(4), YearMonth.now().minusMonths(1));
+        var historyMeterByAddress = this.meterReadingService.getHistoryMeterByAddress(Set.of(1L), Set.of(1L, 2L), YearMonth.now().minusMonths(4), YearMonth.now().minusMonths(1));
 
         assertThat(historyMeterByAddress).contains(meter1).doesNotContain(meter2, meter3, meter4);
     }

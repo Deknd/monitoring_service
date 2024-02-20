@@ -1,5 +1,8 @@
 package com.denknd.dto;
 
+import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Size;
 import lombok.Builder;
 
 /**
@@ -11,9 +14,16 @@ import lombok.Builder;
  */
 @Builder
 public record UserCreateDto(
+        @Email
         String email,
+        @NotNull
+        @Size(min = 2, max = 50)
         String password,
+        @NotNull
+        @Size(min = 2, max = 50)
         String lastName,
+        @NotNull
+        @Size(min = 2, max = 50)
         String firstName
 ) {
 }

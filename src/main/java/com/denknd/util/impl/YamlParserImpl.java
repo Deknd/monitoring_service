@@ -1,6 +1,7 @@
 package com.denknd.util.impl;
 
 import com.denknd.util.DbConfig;
+import com.denknd.util.JwtConfig;
 import com.denknd.util.LiquibaseConfig;
 import com.denknd.util.YamlParser;
 import org.yaml.snakeyaml.Yaml;
@@ -24,6 +25,10 @@ public class YamlParserImpl implements YamlParser {
    * Конфигурация базы данных
    */
   private DbConfigImpl dbConfig;
+  /**
+   * Конфиг для создания токенов
+   */
+  private JwtConfig jwtConfig;
 
 
   /**
@@ -39,6 +44,7 @@ public class YamlParserImpl implements YamlParser {
       this.liquibaseConfig = yamlConfig.getLiquibase();
       this.dbConfig = yamlConfig.getDb();
       this.dbConfig.setDefault_schema(yamlConfig.getLiquibase().defaultSchema());
+      this.jwtConfig = yamlConfig.getJwt();
 
     } catch (FileNotFoundException e) {
       e.printStackTrace();
@@ -70,6 +76,18 @@ public class YamlParserImpl implements YamlParser {
       parseYaml();
     }
     return this.dbConfig;
+  }
+
+  /**
+   * Конфигурация для Jwt токенов
+   * @return конфиг для токенов
+   */
+  @Override
+  public JwtConfig jwtConfig() throws FileNotFoundException {
+    if (this.jwtConfig == null) {
+      parseYaml();
+    }
+    return this.jwtConfig;
   }
 
   /**

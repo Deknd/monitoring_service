@@ -7,7 +7,7 @@
             <column name="address_id" value="2"/>
             <column name="type_meter_id" value="1"/>
             <column name="meter_value" value="1324.33"/>
-            <column name="submission_month" value="02-2024"/>
+            <column name="submission_month" value="2024-02"/>
             <column name="time_send_meter" value="NOW()"/>
         </insert>
         <comment>Добавления показаний для теста</comment>
@@ -17,7 +17,7 @@
             <column name="address_id" value="2"/>
             <column name="type_meter_id" value="2"/>
             <column name="meter_value" value="132.33"/>
-            <column name="submission_month" value="01-2024"/>
+            <column name="submission_month" value="2024-01"/>
             <column name="time_send_meter" value="NOW()"/>
         </insert>
         <comment>Добавления показаний для теста</comment>
@@ -27,7 +27,7 @@
             <column name="address_id" value="2"/>
             <column name="type_meter_id" value="2"/>
             <column name="meter_value" value="321.33"/>
-            <column name="submission_month" value="02-2024"/>
+            <column name="submission_month" value="2024-02"/>
             <column name="time_send_meter" value="NOW()"/>
         </insert>
         <comment>Добавления показаний для теста</comment>

@@ -51,7 +51,7 @@ public interface MeterReadingService {
    */
   List<MeterReading> getHistoryMeterByAddress(
           Set<Long> addressIds,
-          Set<String> typeCode,
+          Set<Long> typeCode,
           YearMonth startDate,
           YearMonth endDate);
 }

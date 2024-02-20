@@ -1,5 +1,6 @@
 package com.denknd.util.impl;
 
+import com.denknd.util.JwtConfig;
 import com.denknd.util.YamlParser;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -30,5 +31,8 @@ class YamlParserImplTest {
     assertThat(liquibaseConfig.changelog()).isEqualTo("src/test/resources/db/changelog/changelog-test.xml");
     assertThat(liquibaseConfig.defaultSchema()).isEqualTo("default_schema");
     assertThat(liquibaseConfig.technicalSchema()).isEqualTo("technical_schema");
+    var jwtConfig = this.yamlParser.jwtConfig();
+    assertThat(jwtConfig.expiration()).isEqualTo(2);
+    assertThat(jwtConfig.secretKey()).isEqualTo("cookie_token_key");
   }
 }
