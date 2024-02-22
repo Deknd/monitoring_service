@@ -3,12 +3,11 @@
                    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.6.xsd">
 
     <changeSet id="001__create_token_block_sequence" author="den">
-        <createSequence sequenceName="id_token_block_sequence" startValue="1" incrementBy="1"
-                        schemaName="${defaultSchema}"/>
+        <createSequence sequenceName="id_token_block_sequence" startValue="1" incrementBy="1"/>
         <comment>Последовательность для таблицы токенов</comment>
     </changeSet>
     <changeSet id="002__create_table_token_block" author="den">
-        <createTable tableName="token_block" schemaName="${defaultSchema}">
+        <createTable tableName="token_block">
             <column name="token_block_id" type="BIGINT" defaultValueSequenceNext="id_token_block_sequence">
                 <constraints primaryKey="true" nullable="false" primaryKeyName="token_block_pkey" unique="true"/>
             </column>
@@ -22,7 +21,7 @@
         <comment>Таблица для хранения заблокированных токенов</comment>
     </changeSet>
     <changeSet id="003__create_table_token_block" author="den">
-        <createProcedure schemaName="${defaultSchema}">
+        <createProcedure>
         <![CDATA[
             CREATE
             OR REPLACE FUNCTION delete_expired_tokens()
@@ -40,11 +39,9 @@
         <sql>
             CREATE TRIGGER delete_expired_tokens_trigger
                 AFTER INSERT OR
-            UPDATE ON ${defaultSchema}.token_block
+            UPDATE ON token_block
                 FOR EACH STATEMENT
                 EXECUTE PROCEDURE delete_expired_tokens();
         </sql>
     </changeSet>
-
-
 </databaseChangeLog>

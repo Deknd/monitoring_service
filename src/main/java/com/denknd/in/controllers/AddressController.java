@@ -1,7 +1,7 @@
 package com.denknd.in.controllers;
 
-import com.denknd.aspectj.audit.AuditRecording;
 import com.denknd.aspectj.time.MeasureExecutionTime;
+import com.denknd.audit.api.AuditRecording;
 import com.denknd.dto.AddressDto;
 import com.denknd.exception.AddressDatabaseException;
 import com.denknd.mappers.AddressMapper;

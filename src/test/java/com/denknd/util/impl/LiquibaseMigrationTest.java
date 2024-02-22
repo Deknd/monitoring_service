@@ -1,7 +1,6 @@
 package com.denknd.util.impl;
 
 import com.denknd.config.PostgresContainer;
-import com.denknd.util.LiquibaseConfig;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 

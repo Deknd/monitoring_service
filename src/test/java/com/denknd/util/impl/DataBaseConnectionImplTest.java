@@ -1,7 +1,6 @@
 package com.denknd.util.impl;
 
 import com.denknd.config.PostgresContainer;
-import com.denknd.util.DataBaseConnection;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;

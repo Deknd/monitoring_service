@@ -1,7 +1,6 @@
 package com.denknd.out.audit;
 
-import com.denknd.repository.AuditRepository;
-import com.denknd.security.entity.UserSecurity;
+import com.denknd.audit.audit.AuditRepository;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -11,7 +10,6 @@ import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
 import java.sql.SQLException;
-import java.util.Map;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.*;

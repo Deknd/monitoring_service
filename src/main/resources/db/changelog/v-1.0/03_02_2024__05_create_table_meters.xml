@@ -3,12 +3,11 @@
                    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.6.xsd">
 
     <changeSet id="001__create_meters_sequence" author="den">
-        <createSequence sequenceName="id_meters_seq" startValue="1" incrementBy="1"
-                        schemaName="${defaultSchema}"/>
+        <createSequence sequenceName="id_meters_seq" startValue="1" incrementBy="1"/>
         <comment>Последовательность для таблицы счетчиков</comment>
     </changeSet>
     <changeSet id="002__create_meters" author="den">
-        <createTable tableName="meters" schemaName="${defaultSchema}">
+        <createTable tableName="meters">
             <column name="meter_count_id" type="BIGINT" defaultValueSequenceNext="id_meters_seq">
                 <constraints primaryKey="true" nullable="false" primaryKeyName="meter_pkey" unique="true"/>
             </column>
@@ -36,15 +35,13 @@
     <changeSet id="003__create_meters_add_constraint" author="den">
         <comment>Добавления ограничение, чтоб у каждой записи была уникальная связка address_id и type_meter_id
         </comment>
-        <addUniqueConstraint schemaName="${defaultSchema}" tableName="meters" columnNames="address_id, type_meter_id"/>
+        <addUniqueConstraint tableName="meters" columnNames="address_id, type_meter_id"/>
     </changeSet>
     <changeSet id="004__add_foreign_key_to_meters" author="den">
         <addForeignKeyConstraint
-                baseTableSchemaName="${defaultSchema}"
                 baseTableName="meters"
                 baseColumnNames="address_id"
                 constraintName="fk_meters_address_id"
-                referencedTableSchemaName="${defaultSchema}"
                 referencedTableName="addresses"
                 referencedColumnNames="address_id"
                 onDelete="CASCADE"
@@ -53,11 +50,9 @@
     </changeSet>
     <changeSet id="005__add_foreign_key_to_meters" author="den">
         <addForeignKeyConstraint
-                baseTableSchemaName="${defaultSchema}"
                 baseTableName="meters"
                 baseColumnNames="type_meter_id"
                 constraintName="fk_meters_type_meter_id"
-                referencedTableSchemaName="${defaultSchema}"
                 referencedTableName="type_meters"
                 referencedColumnNames="type_meter_id"
                 onDelete="CASCADE"

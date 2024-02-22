@@ -3,7 +3,7 @@
                    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.6.xsd">
 
     <changeSet id="001__add_data_test_user" author="den">
-        <insert tableName="users" schemaName="${defaultSchema}">
+        <insert tableName="users">
             <column name="email" value="test@mail.com"/>
             <column name="roles" value="USER"/>
             <column name="password" value="a665a45920422f9d417e4867efdc4fb8a04a1f3fff1fa07e998e86f7f7a27ae3"/>
@@ -13,7 +13,7 @@
         <comment>Добавления пользователя,емайл: test@mail.com пароль 123</comment>
     </changeSet>
     <changeSet id="002__add_data_test_user" author="den">
-        <insert tableName="users" schemaName="${defaultSchema}">
+        <insert tableName="users">
             <column name="email" value="admin@admin.com"/>
             <column name="roles" value="ADMIN"/>
             <column name="password" value="a665a45920422f9d417e4867efdc4fb8a04a1f3fff1fa07e998e86f7f7a27ae3"/>

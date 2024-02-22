@@ -2,12 +2,9 @@ package com.denknd.repository.impl;
 
 import com.denknd.entity.Meter;
 import com.denknd.repository.TestContainer;
-import com.denknd.util.DataBaseConnection;
-import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.mockito.MockitoAnnotations;
 
 import java.sql.SQLException;
 import java.time.OffsetDateTime;
@@ -16,7 +13,6 @@ import java.time.temporal.ChronoUnit;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatCode;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
-import static org.junit.jupiter.api.Assertions.*;
 
 class PostgresMeterCountRepositoryTest  extends TestContainer {
 

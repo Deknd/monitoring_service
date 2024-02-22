@@ -1,7 +1,5 @@
 package com.denknd.util.impl;
 
-import com.denknd.util.JwtConfig;
-import com.denknd.util.YamlParser;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;

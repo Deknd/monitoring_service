@@ -1,14 +1,12 @@
 package com.denknd.in.controllers;
 
-import com.denknd.aspectj.audit.AuditRecording;
-import com.denknd.dto.AddressDto;
+import com.denknd.audit.api.AuditRecording;
 import com.denknd.dto.UserCreateDto;
 import com.denknd.dto.UserDto;
 import com.denknd.entity.Parameters;
 import com.denknd.exception.InvalidUserDataException;
 import com.denknd.exception.UserAlreadyExistsException;
 import com.denknd.mappers.UserMapper;
-import com.denknd.security.service.SecurityService;
 import com.denknd.services.UserService;
 import com.denknd.swagger.RespBadRequest;
 import com.denknd.swagger.RespConflict;
@@ -21,8 +19,6 @@ import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
-import io.swagger.v3.oas.annotations.security.SecurityRequirement;
-import io.swagger.v3.oas.annotations.security.SecurityScheme;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;

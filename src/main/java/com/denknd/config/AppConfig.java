@@ -1,9 +1,7 @@
 package com.denknd.config;
 
-import com.denknd.util.DbConfig;
-import com.denknd.util.JwtConfig;
-import com.denknd.util.LiquibaseConfig;
-import com.denknd.util.YamlParser;
+import com.denknd.audit.api.UserIdentificationService;
+import com.denknd.security.service.SecurityService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import com.nimbusds.jose.JWEDecrypter;
@@ -12,11 +10,10 @@ import com.nimbusds.jose.KeyLengthException;
 import com.nimbusds.jose.crypto.DirectDecrypter;
 import com.nimbusds.jose.crypto.DirectEncrypter;
 import com.nimbusds.jose.jwk.OctetSequenceKey;
-import lombok.extern.slf4j.Slf4j;
+import lombok.extern.log4j.Log4j2;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.EnableAspectJAutoProxy;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 import java.io.FileNotFoundException;
@@ -26,49 +23,8 @@ import java.text.ParseException;
  * Конфигурация приложения.
  */
 @Configuration
-@Slf4j
-@ComponentScan(
-        basePackages = { "com.denknd.in.filters", "com.denknd.mappers", "com.denknd.out.audit", "com.denknd.repository",
-                "com.denknd.security", "com.denknd.services", "com.denknd.util"}
-)
-@EnableAspectJAutoProxy
+@Log4j2
 public class AppConfig implements WebMvcConfigurer {
-  /**
-   * Конфигурация для jwt токенов
-   *
-   * @param yamlParser парсер для yml файла
-   * @return конфигурация для jwt токена
-   * @throws FileNotFoundException ошибка чтения файла
-   */
-  @Bean
-  public JwtConfig jwtConfig(YamlParser yamlParser) throws FileNotFoundException {
-    return yamlParser.jwtConfig();
-  }
-
-  /**
-   * Конфигурация для базы данных.
-   *
-   * @param yamlParser парсер для yml файла.
-   * @return конфигурация для базы данных.
-   * @throws FileNotFoundException ошибка чтения файла
-   */
-  @Bean
-  public DbConfig dbConfig(YamlParser yamlParser) throws FileNotFoundException {
-    return yamlParser.dbConfig();
-  }
-
-  /**
-   * Конфигурация для ликвибаз.
-   *
-   * @param yamlParser парсер для yml файла.
-   * @return Конфигурация для ликвибаз.
-   * @throws FileNotFoundException ошибка чтения файла
-   */
-  @Bean
-  public LiquibaseConfig liquibaseConfig(YamlParser yamlParser) throws FileNotFoundException {
-    return yamlParser.liquibaseConfig();
-  }
-
   /**
    * Маппер из json в объект и обратно.
    *
@@ -84,29 +40,41 @@ public class AppConfig implements WebMvcConfigurer {
   /**
    * Кодировщик токенов.
    *
-   * @param jwtConfig Конфигурация для jwt токенов.
+   * @param cookieTokenKey секретный ключ.
    * @return Кодировщик токенов.
    * @throws ParseException        ошибка парсинга секретного ключа.
    * @throws KeyLengthException    ошибка связаная с длиной ключа.
    * @throws FileNotFoundException ошибка чтения файла.
    */
   @Bean
-  public JWEEncrypter jweEncrypter(JwtConfig jwtConfig
-  ) throws ParseException, KeyLengthException{
-    return new DirectEncrypter(OctetSequenceKey.parse(jwtConfig.secretKey()));
+  public JWEEncrypter jweEncrypter(
+          @Value("${jwt.cookie-token-key}") String cookieTokenKey
+  ) throws ParseException, KeyLengthException {
+    return new DirectEncrypter(OctetSequenceKey.parse(cookieTokenKey));
   }
 
   /**
    * Декодировщик токенов.
    *
-   * @param jwtConfig Конфигурация для jwt токенов.
+   * @param cookieTokenKey секретный ключ.
    * @return Декодировщик токенов.
    * @throws Exception ошибка при декодировании токена.
    */
   @Bean
   public JWEDecrypter jweDecrypter(
-          JwtConfig jwtConfig
+          @Value("${jwt.cookie-token-key}") String cookieTokenKey
   ) throws Exception {
-    return new DirectDecrypter(OctetSequenceKey.parse(jwtConfig.secretKey()));
+    return new DirectDecrypter(OctetSequenceKey.parse(cookieTokenKey));
+  }
+
+  /**
+   * Бин для работы модуля аудита
+   *
+   * @param securityService сервис безопасности, для получения идентификатора авторизованного пользователя
+   * @return сервис для передачи данных о пользователе
+   */
+  @Bean
+  public UserIdentificationService userIdentificationService(SecurityService securityService) {
+    return () -> securityService.isAuthentication() ? securityService.getUserSecurity().userId() : null;
   }
 }

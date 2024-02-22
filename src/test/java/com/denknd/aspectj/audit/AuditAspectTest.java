@@ -1,6 +1,7 @@
 package com.denknd.aspectj.audit;
 
-import com.denknd.out.audit.AuditService;
+import com.denknd.audit.aspect.AuditAspect;
+import com.denknd.audit.services.AuditService;
 import com.denknd.security.service.SecurityService;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.Signature;

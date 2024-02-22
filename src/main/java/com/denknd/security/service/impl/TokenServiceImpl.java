@@ -5,6 +5,7 @@ import com.denknd.security.entity.TokenBlock;
 import com.denknd.security.repository.TokenRepository;
 import com.denknd.security.service.TokenService;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.log4j.Log4j2;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
@@ -17,7 +18,7 @@ import java.time.ZoneId;
  */
 @Service
 @RequiredArgsConstructor
-@Slf4j
+@Log4j2
 public class TokenServiceImpl implements TokenService {
   /**
    * Репозиторий для заблокированных токенов

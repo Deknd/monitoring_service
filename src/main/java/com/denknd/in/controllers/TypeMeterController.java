@@ -1,6 +1,6 @@
 package com.denknd.in.controllers;
 
-import com.denknd.aspectj.audit.AuditRecording;
+import com.denknd.audit.api.AuditRecording;
 import com.denknd.dto.AddressDto;
 import com.denknd.dto.TypeMeterDto;
 import com.denknd.exception.TypeMeterAdditionException;

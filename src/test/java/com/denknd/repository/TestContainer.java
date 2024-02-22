@@ -1,12 +1,8 @@
 package com.denknd.repository;
 
 import com.denknd.config.PostgresContainer;
-import com.denknd.util.impl.DataBaseConnectionImpl;
-import com.denknd.util.impl.LiquibaseConfigImpl;
-import com.denknd.util.impl.LiquibaseMigration;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.BeforeEach;
 
 import java.security.SecureRandom;
 

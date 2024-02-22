@@ -1,8 +1,5 @@
 package com.denknd.config;
 
-import com.denknd.util.DataBaseConnection;
-import com.denknd.util.DbConfig;
-import com.denknd.util.impl.DataBaseConnectionImpl;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.testcontainers.containers.PostgreSQLContainer;

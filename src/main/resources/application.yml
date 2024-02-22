@@ -1,11 +1,24 @@
-db:
-  username: "monitoringUser"
-  password: "monitoringPassword"
-  url: jdbc:postgresql://localhost:5432/monitoringDB
-liquibase:
-  technical_schema: "migration_liquibase"
-  default_schema: "monitoring_service"
-  changelog: "db/changelog/changelog-master.xml"
+spring:
+  application:
+    name: "Monitoring service"
+
+  datasource:
+    url: jdbc:postgresql://localhost:5432/monitoringDB
+    username: monitoringUser
+    password: monitoringPassword
+    driver-class-name: org.postgresql.Driver
+
+  liquibase:
+    change-log: classpath:db/changelog/changelog-master.xml
+    default-schema: monitoring_service
+    liquibase-schema: migration_liquibase
+server:
+  port: 8081
 jwt:
-  cookie_token_key: "{\"kty\":\"oct\",\"use\":\"enc\",\"k\":\"iGJzlxHw5WqHUVW2LDnsxLkWuUnxclpnhWtaDgvbmt4\"}"
-  expiration: 24
+  cookie-token-key: '{"kty":"oct","use":"enc","k":"iGJzlxHw5WqHUVW2LDnsxLkWuUnxclpnhWtaDgvbmt4"}'
+  expiration: '24'
+logging:
+  level:
+    org:
+      springframework:
+        security: TRACE

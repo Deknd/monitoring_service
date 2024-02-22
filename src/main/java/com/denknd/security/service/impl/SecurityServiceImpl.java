@@ -4,16 +4,10 @@ import com.denknd.security.entity.Token;
 import com.denknd.security.entity.UserSecurity;
 import com.denknd.security.service.SecurityService;
 import com.denknd.security.service.TokenService;
-import com.denknd.security.utils.DefaultCreateToken;
-import com.denknd.security.utils.DefaultSerializerToken;
-import com.denknd.util.JwtConfig;
-import com.nimbusds.jose.EncryptionMethod;
-import com.nimbusds.jose.JWEAlgorithm;
-import com.nimbusds.jose.JWEEncrypter;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletResponse;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.Instant;
@@ -25,6 +19,7 @@ import java.util.function.Function;
  */
 @Service
 @Slf4j
+@RequiredArgsConstructor
 public class SecurityServiceImpl implements SecurityService {
   /**
    * Сервис по управлению заблокированными токенами
@@ -42,19 +37,11 @@ public class SecurityServiceImpl implements SecurityService {
   /**
    * Создает куку из пользователя
    */
-  private Function<UserSecurity, Token> createToken;
+  private final Function<UserSecurity, Token> createToken;
   /**
    * Сереализует куку
    */
-  private Function<Token, String> serializerToken;
-
-  @Autowired
-  public SecurityServiceImpl(JWEEncrypter jweEncrypter, TokenService tokenService, JwtConfig jwtConfig) {
-    this.tokenService = tokenService;
-    this.createToken = new DefaultCreateToken(jwtConfig);
-    this.serializerToken = new DefaultSerializerToken(jweEncrypter, JWEAlgorithm.DIR, EncryptionMethod.A256GCM);
-  }
-
+  private final Function<Token, String> serializerToken;
 
   /**
    * Получение аутентифицированного пользователя.
@@ -130,21 +117,4 @@ public class SecurityServiceImpl implements SecurityService {
     }
   }
 
-  /**
-   * Настройка функции для создания токена из пользователя
-   *
-   * @param createToken токен доступа
-   */
-  public void setCreateToken(Function<UserSecurity, Token> createToken) {
-    this.createToken = createToken;
-  }
-
-  /**
-   * Настройка функции сериализации токена доступа в строку
-   *
-   * @param serializerToken строка из токена доступа
-   */
-  public void setSerializerToken(Function<Token, String> serializerToken) {
-    this.serializerToken = serializerToken;
-  }
 }

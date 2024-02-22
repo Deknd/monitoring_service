@@ -2,23 +2,29 @@ package com.denknd.security.utils;
 
 import com.denknd.security.entity.Token;
 import com.denknd.security.entity.UserSecurity;
-import com.denknd.util.JwtConfig;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.log4j.Log4j;
+import lombok.extern.log4j.Log4j2;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Component;
 
 import java.time.Duration;
 import java.time.Instant;
 import java.util.UUID;
 import java.util.function.Function;
+import java.util.logging.Level;
 
 /**
  * Класс для создания токена доступа
  */
 @RequiredArgsConstructor
+@Component
 public class DefaultCreateToken implements Function<UserSecurity, Token> {
   /**
    * Время жизни токена
    */
-  private final JwtConfig jwtConfig;
+  @Value("${jwt.expiration}")
+  private Long expiration;
 
   /**
    * Создает токен доступа из UserSecurity
@@ -29,9 +35,10 @@ public class DefaultCreateToken implements Function<UserSecurity, Token> {
   @Override
   public Token apply(UserSecurity authentication) {
     var now = Instant.now();
+
     return new Token(UUID.randomUUID(), authentication.userId(),
             authentication.firstName(),
             authentication.role().name(),
-            now, now.plus(Duration.ofHours(this.jwtConfig.expiration())));
+            now, now.plus(Duration.ofHours(expiration != null ? expiration : 10)));
   }
 }
