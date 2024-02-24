@@ -1,6 +1,5 @@
 package com.denknd.in.controllers;
 
-import com.denknd.aspectj.time.MeasureExecutionTime;
 import com.denknd.audit.api.AuditRecording;
 import com.denknd.dto.AddressDto;
 import com.denknd.exception.AddressDatabaseException;
@@ -8,6 +7,7 @@ import com.denknd.mappers.AddressMapper;
 import com.denknd.services.AddressService;
 import com.denknd.swagger.RespBadRequest;
 import com.denknd.swagger.RespForbidden;
+import com.denknd.time.api.MeasureExecutionTime;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.ArraySchema;

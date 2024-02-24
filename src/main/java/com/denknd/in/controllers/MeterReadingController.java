@@ -12,6 +12,7 @@ import com.denknd.mappers.MeterReadingMapper;
 import com.denknd.services.MeterReadingService;
 import com.denknd.swagger.RespConflict;
 import com.denknd.swagger.RespForbidden;
+import com.denknd.time.api.MeasureExecutionTime;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.ArraySchema;
@@ -88,6 +89,7 @@ public class MeterReadingController {
                                   array = @ArraySchema(schema = @Schema(implementation = MeterReadingResponseDto.class))))
           }
   )
+  @MeasureExecutionTime
   public ResponseEntity<List<MeterReadingResponseDto>> getHistoryMeterReading(
           @Parameter(description = " идентификатор адреса. Если не передан, выведется история по всем доступным пользователю адресам(roles: USER, ADMIN).")
           @RequestParam("addrId") Optional<Long> addressId,
@@ -179,6 +181,7 @@ public class MeterReadingController {
                                   array = @ArraySchema(schema = @Schema(implementation = MeterReadingResponseDto.class))))
           }
   )
+  @MeasureExecutionTime
   public ResponseEntity<List<MeterReadingResponseDto>> getMeterReadings(
           @Parameter(description = " идентификатор адреса. Если не передан, выведется история по всем доступным пользователю адресам(roles: USER, ADMIN).")
           @RequestParam("addrId") Optional<Long> addressId,

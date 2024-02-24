@@ -1,3 +1,4 @@
 rootProject.name = 'monitoring_service'
 include ':action-audit-starter'
+include ':measure-time-starter'
 

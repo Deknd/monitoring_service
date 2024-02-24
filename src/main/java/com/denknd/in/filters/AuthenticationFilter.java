@@ -108,7 +108,7 @@ public class AuthenticationFilter extends HttpFilter implements ExceptionRespons
         super.doFilter(req, res, chain);
         return;
       } catch (BadCredentialsException e) {
-        log.error("Ошибка авторизации с помощью Cookie. " + e.getMessage());
+        log.error("Ошибка авторизации. " + e.getMessage());
         setExceptionResponse(res, e.getMessage(), HttpStatus.UNAUTHORIZED);
         return;
       }
