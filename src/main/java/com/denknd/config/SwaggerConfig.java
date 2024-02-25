@@ -8,7 +8,6 @@ import io.swagger.v3.oas.models.info.License;
 import io.swagger.v3.oas.models.security.SecurityRequirement;
 import io.swagger.v3.oas.models.security.SecurityScheme;
 import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 
 /**
@@ -16,11 +15,6 @@ import org.springframework.context.annotation.Configuration;
  */
 @Configuration
 public class SwaggerConfig {
-  /**
-   * Информация о приложении и пользователе
-   *
-   * @return объект с заполненной информацией о приложении и пользователе
-   */
   @Bean
   public OpenAPI ApiInfo() {
     SecurityScheme securityScheme = new SecurityScheme().type(SecurityScheme.Type.APIKEY).name("__Host-auth-token").in(SecurityScheme.In.COOKIE).scheme("cookie");

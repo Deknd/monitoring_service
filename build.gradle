@@ -11,6 +11,12 @@ version '1.0-SNAPSHOT'
 repositories {
     mavenCentral()
 }
+bootJar {
+    manifest {
+        attributes 'Start-Class': 'com.denknd.MonitoringServiceApplication'
+    }
+}
+
 configurations {
     compileOnly {
         extendsFrom annotationProcessor
@@ -31,6 +37,7 @@ dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-validation'
     implementation 'org.springframework.boot:spring-boot-starter-data-jdbc'
     implementation "org.springdoc:springdoc-openapi-starter-webmvc-ui:${springDocVersion}"
+    implementation "org.springdoc:springdoc-openapi-starter-webmvc-api:${springDocVersion}"
 
     implementation "org.mapstruct:mapstruct:${mapstructVersion}"
     implementation "org.yaml:snakeyaml"
@@ -51,7 +58,6 @@ dependencies {
     testImplementation 'org.springframework.boot:spring-boot-testcontainers'
     testImplementation 'org.testcontainers:junit-jupiter'
     testImplementation 'org.testcontainers:postgresql'
-    testImplementation "org.springdoc:springdoc-openapi-starter-webmvc-api:${springDocVersion}"
 }
 
 test {

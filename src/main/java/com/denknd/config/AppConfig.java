@@ -25,11 +25,6 @@ import java.text.ParseException;
 @Configuration
 @Log4j2
 public class AppConfig implements WebMvcConfigurer {
-  /**
-   * Маппер из json в объект и обратно.
-   *
-   * @return маппер из json в объект и обратно.
-   */
   @Bean
   public ObjectMapper objectMapper() {
     var objectMapper = new ObjectMapper();
@@ -37,15 +32,6 @@ public class AppConfig implements WebMvcConfigurer {
     return objectMapper;
   }
 
-  /**
-   * Кодировщик токенов.
-   *
-   * @param cookieTokenKey секретный ключ.
-   * @return Кодировщик токенов.
-   * @throws ParseException        ошибка парсинга секретного ключа.
-   * @throws KeyLengthException    ошибка связаная с длиной ключа.
-   * @throws FileNotFoundException ошибка чтения файла.
-   */
   @Bean
   public JWEEncrypter jweEncrypter(
           @Value("${jwt.cookie-token-key}") String cookieTokenKey
@@ -53,13 +39,6 @@ public class AppConfig implements WebMvcConfigurer {
     return new DirectEncrypter(OctetSequenceKey.parse(cookieTokenKey));
   }
 
-  /**
-   * Декодировщик токенов.
-   *
-   * @param cookieTokenKey секретный ключ.
-   * @return Декодировщик токенов.
-   * @throws Exception ошибка при декодировании токена.
-   */
   @Bean
   public JWEDecrypter jweDecrypter(
           @Value("${jwt.cookie-token-key}") String cookieTokenKey
@@ -67,12 +46,6 @@ public class AppConfig implements WebMvcConfigurer {
     return new DirectDecrypter(OctetSequenceKey.parse(cookieTokenKey));
   }
 
-  /**
-   * Бин для работы модуля аудита
-   *
-   * @param securityService сервис безопасности, для получения идентификатора авторизованного пользователя
-   * @return сервис для передачи данных о пользователе
-   */
   @Bean
   public UserIdentificationService userIdentificationService(SecurityService securityService) {
     return () -> securityService.isAuthentication() ? securityService.getUserSecurity().userId() : null;

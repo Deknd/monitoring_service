@@ -3,7 +3,7 @@
                    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.6.xsd">
 
     <changeSet id="001__add_data_test_addresses" author="den">
-        <insert tableName="addresses" schemaName="${defaultSchema}">
+        <insert tableName="addresses" >
             <column name="user_id" value="1"/>
             <column name="postal_code" value="123456"/>
             <column name="region" value="Москва"/>

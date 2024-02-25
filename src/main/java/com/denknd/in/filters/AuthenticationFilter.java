@@ -17,7 +17,6 @@ import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
 import org.springframework.http.HttpStatus;
-import org.springframework.stereotype.Component;
 
 import java.io.IOException;
 import java.util.Arrays;
@@ -34,29 +33,17 @@ import java.util.stream.Collectors;
 @Setter
 @Slf4j
 @RequiredArgsConstructor
-@Component
 public class AuthenticationFilter extends HttpFilter implements ExceptionResponse {
-  /**
-   * Сервис для работы с безопасностью.
-   */
   private final SecurityService securityService;
-  /**
-   * Конвертеры аутентификации.
-   */
   private final List<AuthenticationConverter> authenticationConverters;
-  /**
-   * Аутентификаторы пользователей.
-   */
+  private final ObjectMapper objectMapper;
   private final List<UserAuthenticator> userAuthenticators;
   /**
    * Мапа URL-ов для игнорирования данным фильтром.
    * Ключ - URL для игнорирования, значение - множество методов, которые будут игнорироваться для данного URL-а.
    */
   private final Map<String, Set<String>> ignoredRequests = new HashMap<>();
-  /**
-   * Объект для преобразования объектов в JSON и обратно.
-   */
-  private final ObjectMapper objectMapper;
+
 
   /**
    * Добавляет URL для игнорирования фильтром безопасности.
@@ -88,41 +75,35 @@ public class AuthenticationFilter extends HttpFilter implements ExceptionRespons
     res.setCharacterEncoding("UTF-8");
     var method = req.getMethod();
     var ignored
-            = this.isAnyMatch(method, requestURI);
-    if (ignored) {
+            = this.matchesIgnoredRequests(method, requestURI);
+    if (!ignored) {
+      PreAuthenticatedAuthenticationToken preAuthenticated = null;
       try {
-        var preAuthenticated = this.convertRequest(req);
-        if (preAuthenticated == null) {
-          var errorMessage = "Запрос на аутентификацию не обработан, не удалось получить данные о пользователе.";
-          setExceptionResponse(res, errorMessage, HttpStatus.UNAUTHORIZED);
-          return;
-        }
-        var authentication = this.authentication(preAuthenticated);
-        if (authentication == null) {
-          var errorMessage = "Запрос на аутентификацию не обработан, так как учетные данные не верные.";
-          setExceptionResponse(res, errorMessage, HttpStatus.UNAUTHORIZED);
-          return;
-        }
-        this.securityService.addPrincipal(authentication);
-        log.info("Авторизация успешна. Идентификатор пользователя: " + authentication.userId());
-        super.doFilter(req, res, chain);
-        return;
+        preAuthenticated = this.convertRequest(req);
       } catch (BadCredentialsException e) {
         log.error("Ошибка авторизации. " + e.getMessage());
         setExceptionResponse(res, e.getMessage(), HttpStatus.UNAUTHORIZED);
         return;
       }
+      if (preAuthenticated == null) {
+        var errorMessage = "Запрос на аутентификацию не обработан, не удалось получить данные о пользователе.";
+        setExceptionResponse(res, errorMessage, HttpStatus.UNAUTHORIZED);
+        return;
+      }
+      var authentication = this.authentication(preAuthenticated);
+      if (authentication == null) {
+        var errorMessage = "Запрос на аутентификацию не обработан, так как учетные данные не верные.";
+        setExceptionResponse(res, errorMessage, HttpStatus.UNAUTHORIZED);
+        return;
+      }
+      this.securityService.addPrincipal(authentication);
+      log.info("Авторизация успешна. Идентификатор пользователя: " + authentication.userId());
+      super.doFilter(req, res, chain);
+      return;
     }
     super.doFilter(req, res, chain);
   }
 
-  /**
-   * Преобразует HTTP-запрос в объект аутентификации на основе доступных конвертеров аутентификации.
-   *
-   * @param req HTTP-запрос, который необходимо преобразовать в объект аутентификации
-   * @return объект аутентификации или null, если не удалось выполнить преобразование
-   * @throws BadCredentialsException если произошла ошибка при обработке недействительных учетных данных
-   */
   private PreAuthenticatedAuthenticationToken convertRequest(HttpServletRequest req) throws BadCredentialsException {
     for (var authenticationConverter : this.authenticationConverters) {
       var preAuthenticatedAuthenticationToken = authenticationConverter.convert(req);
@@ -133,12 +114,6 @@ public class AuthenticationFilter extends HttpFilter implements ExceptionRespons
     return null;
   }
 
-  /**
-   * Проводит аутентификацию пользователя на основе доступных аутентификаторов пользователей.
-   *
-   * @param preAuthenticatedAuthenticationToken объект аутентификации, полученный из HTTP-запроса
-   * @return объект безопасности пользователя или null, если аутентификация не удалась
-   */
   private UserSecurity authentication(PreAuthenticatedAuthenticationToken preAuthenticatedAuthenticationToken) {
     for (var userAuthenticator : this.userAuthenticators) {
       var userSecurity = userAuthenticator.authentication(preAuthenticatedAuthenticationToken);
@@ -156,7 +131,7 @@ public class AuthenticationFilter extends HttpFilter implements ExceptionRespons
    * @param uri    URI запроса
    * @return true, если запрос соответствует игнорируемым URL-ам и методам, иначе false
    */
-  private boolean isAnyMatch(String method, String uri) {
+  private boolean matchesIgnoredRequests(String method, String uri) {
     var exactMatch = new HashSet<String>();
     var notExactMatch = new HashSet<String>();
     this.ignoredRequests.keySet().forEach(key -> {
@@ -170,26 +145,25 @@ public class AuthenticationFilter extends HttpFilter implements ExceptionRespons
       if (pattern.equals(uri)) {
         Set<String> ignoredMethods = this.ignoredRequests.get(pattern);
         if (ignoredMethods.contains(method)) {
-          return false;
+          return true;
         }
       }
     }
     for (String pattern : notExactMatch) {
       var splitPattern = pattern.split("/");
       var splitUri = uri.split("/");
-      boolean result = true;
       var size = Math.min(splitPattern.length - 1, splitUri.length);
+      var result = false;
       for (int i = 0; i < size; i++) {
-        if (splitPattern[i].equals(splitUri[i])) {
-          result = false;
-        } else {
-          return true;
-        }
+        result = splitPattern[i].equals(splitUri[i]);
       }
-      return result;
+      if (result) {
+        return true;
+      }
     }
-    return true;
+    return false;
   }
+
 
   /**
    * Получает экземпляр ObjectMapper для преобразования объектов в JSON.

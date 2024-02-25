@@ -20,9 +20,6 @@ import java.time.ZoneId;
 @RequiredArgsConstructor
 @Log4j2
 public class TokenServiceImpl implements TokenService {
-  /**
-   * Репозиторий для заблокированных токенов
-   */
   private final TokenRepository tokenRepository;
 
   /**

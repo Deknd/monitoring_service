@@ -31,25 +31,13 @@ public class BasicAuthenticationFilter extends HttpFilter implements ExceptionRe
    * Паттерн по которому срабатывает фильтр
    */
   private String URL_PATTERNS = "/auth/login";
-  /**
-   * Сервис по работе с безопасностью
-   */
   private final SecurityService securityService;
-  /**
-   * Служит для аутентификации пользователя по логину и паролю
-   */
   private final UserAuthenticator userAuthenticator;
-  /**
-   * Для маппинга в джесон и обратно
-   */
   private ObjectMapper objectMapper;
-  /**
-   * Получает объект пре аутентификации из полученного от пользователя запроса
-   */
   private AuthenticationConverter authenticationConverter = new BasicAuthenticationConverter();
 
 
-  public BasicAuthenticationFilter(ObjectMapper objectMapper, SecurityService securityService,@Qualifier("basicUserAuthenticator") UserAuthenticator userAuthenticator) {
+  public BasicAuthenticationFilter(ObjectMapper objectMapper, SecurityService securityService, @Qualifier("basicUserAuthenticator") UserAuthenticator userAuthenticator) {
     this.securityService = securityService;
     this.userAuthenticator = userAuthenticator;
     this.objectMapper = objectMapper;

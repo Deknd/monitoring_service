@@ -1,32 +1,29 @@
 package com.denknd.in.controllers;
 
+import com.denknd.config.TestConfig;
 import com.denknd.dto.AddressDto;
+import com.denknd.exception.AccessDeniedException;
 import com.denknd.exception.AddressDatabaseException;
-import com.denknd.in.controllers.AddressController;
-import com.denknd.in.controllers.ExceptionHandlerController;
 import com.denknd.mappers.AddressMapper;
-import com.denknd.security.service.SecurityService;
 import com.denknd.services.AddressService;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.module.paramnames.ParameterNamesModule;
-import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
-import org.mockito.MockitoAnnotations;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
+import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
+import org.springframework.test.context.junit.jupiter.SpringJUnitConfig;
 import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
-import java.nio.file.AccessDeniedException;
 import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
@@ -36,31 +33,26 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
+@WebMvcTest(controllers = {AddressController.class})
+@AutoConfigureMockMvc
+@SpringJUnitConfig(TestConfig.class)
 class AddressControllerTest {
 
-  @Mock
+  @MockBean
   private AddressService addressService;
-  @Mock
+  @MockBean
   private AddressMapper addressMapper;
-  private AutoCloseable closeable;
-  private ObjectMapper objectMapper;
 
+  private ObjectMapper objectMapper;
+  @Autowired
   private MockMvc mockMvc;
 
   @BeforeEach
   void setUp() {
-    this.closeable = MockitoAnnotations.openMocks(this);
     this.objectMapper = new ObjectMapper();
     this.objectMapper.registerModule(new ParameterNamesModule(JsonCreator.Mode.PROPERTIES));
-    var addressController = new AddressController(this.addressService, this.addressMapper);
-    this.mockMvc = MockMvcBuilders.standaloneSetup(addressController).setControllerAdvice(new ExceptionHandlerController()).build();
-
   }
 
-  @AfterEach
-  void tearDown() throws Exception {
-    this.closeable.close();
-  }
 
   @Test
   @DisplayName("Проверяет, что вызываются нужные сервисы, с нужными аргументами")
@@ -80,7 +72,7 @@ class AddressControllerTest {
                     .contentType(MediaType.APPLICATION_JSON)
                     .content(json))
             .andExpect(status().isCreated())
-            .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+            .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
             .andReturn();
 
     assertThat(mvcResult.getResponse().getContentAsString()).isNotNull();
@@ -106,7 +98,7 @@ class AddressControllerTest {
                     .contentType(MediaType.APPLICATION_JSON)
                     .content(json))
             .andExpect(status().isBadRequest())
-            .andExpect(content().contentType(MediaType.APPLICATION_PROBLEM_JSON))
+            .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_PROBLEM_JSON))
             .andReturn();
 
     assertThat(mvcResult.getResponse().getContentAsString()).isNotNull();
@@ -132,7 +124,7 @@ class AddressControllerTest {
                     .contentType(MediaType.APPLICATION_JSON)
                     .content(json))
             .andExpect(status().isForbidden())
-            .andExpect(content().contentType(MediaType.APPLICATION_PROBLEM_JSON))
+            .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_PROBLEM_JSON))
             .andReturn();
 
     assertThat(mvcResult.getResponse().getContentAsString()).isNotNull();
@@ -147,7 +139,7 @@ class AddressControllerTest {
                     get("/address")
                             .param("userId", String.valueOf(userId)))
             .andExpect(status().isOk())
-            .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+            .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
             .andReturn();
 
     assertThat(mvcResult.getResponse().getContentAsString()).isNotNull();

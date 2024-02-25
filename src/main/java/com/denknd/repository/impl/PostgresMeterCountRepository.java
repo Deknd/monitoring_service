@@ -19,9 +19,6 @@ import java.sql.Types;
 @RequiredArgsConstructor
 public class PostgresMeterCountRepository implements MeterCountRepository {
 
-  /**
-   * Выдает соединение с базой данных
-   */
   private final JdbcTemplate jdbcTemplate;
 
   /**

@@ -19,17 +19,8 @@ import java.util.Base64;
 @Component
 @Slf4j
 public class BasicAuthenticationConverter implements AuthenticationConverter {
-  /**
-   * Заголовок для AUTHORIZATION
-   */
-  private static final String AUTHORIZATION = "Authorization";
-  /**
-   * Название аутентификации
-   */
+  private static final String HEADER_AUTHORIZATION = "Authorization";
   private static final String AUTHENTICATION_SCHEME_BASIC = "Basic";
-  /**
-   * Кодировка
-   */
   private static final Charset CREDENTIALS_CHARSET = StandardCharsets.UTF_8;
 
   /**
@@ -41,7 +32,7 @@ public class BasicAuthenticationConverter implements AuthenticationConverter {
    */
   @Override
   public PreAuthenticatedAuthenticationToken convert(HttpServletRequest httpRequest) throws BadCredentialsException {
-    var header = httpRequest.getHeader(AUTHORIZATION);
+    var header = httpRequest.getHeader(HEADER_AUTHORIZATION);
     if (header == null) {
       return null;
     }

@@ -16,17 +16,8 @@ import org.springframework.stereotype.Component;
 @Component
 @RequiredArgsConstructor
 public class BasicUserAuthenticator implements UserAuthenticator {
-  /**
-   * Сервис для работы с пользователями в базе данных.
-   */
   private final UserService userService;
-  /**
-   * Маппер для пользователя.
-   */
   private final UserMapper userMapper;
-  /**
-   * Кодировщик паролей.
-   */
   private final PasswordEncoder passwordEncoder;
 
   /**

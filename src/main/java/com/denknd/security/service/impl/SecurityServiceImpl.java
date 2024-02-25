@@ -21,26 +21,10 @@ import java.util.function.Function;
 @Slf4j
 @RequiredArgsConstructor
 public class SecurityServiceImpl implements SecurityService {
-  /**
-   * Сервис по управлению заблокированными токенами
-   */
   private final TokenService tokenService;
-  /**
-   * Имя для куки авторизации
-   */
   private static final String COOKIE_NAME = "__Host-auth-token";
-
-  /**
-   * Аутентифицированный пользователь.
-   */
   private UserSecurity userSecurity = null;
-  /**
-   * Создает куку из пользователя
-   */
   private final Function<UserSecurity, Token> createToken;
-  /**
-   * Сереализует куку
-   */
   private final Function<Token, String> serializerToken;
 
   /**

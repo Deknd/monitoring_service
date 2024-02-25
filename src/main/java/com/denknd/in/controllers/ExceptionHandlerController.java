@@ -1,5 +1,6 @@
 package com.denknd.in.controllers;
 
+import com.denknd.exception.AccessDeniedException;
 import com.denknd.exception.AddressDatabaseException;
 import com.denknd.exception.InvalidUserDataException;
 import com.denknd.exception.MeterReadingConflictError;
@@ -15,7 +16,6 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
-import java.nio.file.AccessDeniedException;
 import java.security.NoSuchAlgorithmException;
 import java.sql.SQLException;
 import java.util.Arrays;
@@ -39,11 +39,17 @@ public class ExceptionHandlerController extends ResponseEntityExceptionHandler {
   @Override
   public ResponseEntity<Object> handleMethodArgumentNotValid(
           MethodArgumentNotValidException ex, HttpHeaders headers, HttpStatusCode status, WebRequest request) {
-    var collect = Arrays.stream(ex.getDetailMessageArguments()).map(Object::toString).collect(Collectors.joining(""));
-    var body = createProblemDetail(ex, HttpStatus.BAD_REQUEST, "Нет обязательных полей: " + collect, null, null, request);
+    var errorFieldMessage = Arrays.stream(ex.getDetailMessageArguments()).map(Object::toString).collect(Collectors.joining(""));
+    var body = createProblemDetail(ex, HttpStatus.BAD_REQUEST, "Нет обязательных полей: " + errorFieldMessage, null, null, request);
     return handleExceptionInternal(ex, body, headers, HttpStatus.BAD_REQUEST, request);
   }
 
+  /**
+   * Обрабатывает ошибку, которая выпадает при сохранении данных
+   * @param ex Исключение, которое нужно обработать.
+   * @param request Текущий запрос.
+   * @return  Ответ с соответствующим статусом и телом.
+   */
   @ExceptionHandler(AddressDatabaseException.class)
   public ResponseEntity<Object> handlerAddressDatabaseException(
           AddressDatabaseException ex, WebRequest request) {
@@ -51,16 +57,26 @@ public class ExceptionHandlerController extends ResponseEntityExceptionHandler {
     return handleExceptionInternal(ex, null, headers, ex.getStatusCode(), request);
   }
 
+  /**
+   * Обрабатывает ошибку, которая возникает при попытке получить доступ к не своим ресурсам
+   * @param ex Исключение, которое нужно обработать.
+   * @param request Текущий запрос.
+   * @return  Ответ с соответствующим статусом и телом.
+   */
   @ExceptionHandler(AccessDeniedException.class)
   public ResponseEntity<Object> handlerAccessDeniedException(
           AccessDeniedException ex, WebRequest request
   ) {
     var headers = new HttpHeaders();
-    var body = createProblemDetail(ex, HttpStatus.FORBIDDEN, ex.getMessage(), null, null, request);
 
-    return handleExceptionInternal(ex, body, headers, HttpStatus.FORBIDDEN, request);
+    return handleExceptionInternal(ex, null, headers, HttpStatus.FORBIDDEN, request);
   }
-
+  /**
+   * Обрабатывает ошибку, которая возникает при не удачном сохранении данных в бд.
+   * @param ex Исключение, которое нужно обработать.
+   * @param request Текущий запрос.
+   * @return  Ответ с соответствующим статусом и телом.
+   */
   @ExceptionHandler(SQLException.class)
   public ResponseEntity<Object> handlerSQLException(
           SQLException ex, WebRequest request
@@ -69,7 +85,12 @@ public class ExceptionHandlerController extends ResponseEntityExceptionHandler {
     var body = createProblemDetail(ex, HttpStatus.BAD_REQUEST, ex.getMessage(), null, null, request);
     return handleExceptionInternal(ex, body, headers, HttpStatus.BAD_REQUEST, request);
   }
-
+  /**
+   * Обрабатывает ошибку, которая возникает при попытке сохранить не верные показания счетчиков.
+   * @param ex Исключение, которое нужно обработать.
+   * @param request Текущий запрос.
+   * @return  Ответ с соответствующим статусом и телом.
+   */
   @ExceptionHandler(MeterReadingConflictError.class)
   public ResponseEntity<Object> handlerMeterReadingConflictError(
           MeterReadingConflictError ex, WebRequest request
@@ -77,7 +98,12 @@ public class ExceptionHandlerController extends ResponseEntityExceptionHandler {
     var headers = new HttpHeaders();
     return handleExceptionInternal(ex, null, headers, ex.getStatusCode(), request);
   }
-
+  /**
+   * Обрабатывает ошибку, которая возникает при попытке сохранить новые показания.
+   * @param ex Исключение, которое нужно обработать.
+   * @param request Текущий запрос.
+   * @return  Ответ с соответствующим статусом и телом.
+   */
   @ExceptionHandler(TypeMeterAdditionException.class)
   public ResponseEntity<Object> handlerTypeMeterAdditionException(
           TypeMeterAdditionException ex, WebRequest request
@@ -85,14 +111,24 @@ public class ExceptionHandlerController extends ResponseEntityExceptionHandler {
     var headers = new HttpHeaders();
     return handleExceptionInternal(ex, null, headers, ex.getStatusCode(), request);
   }
-
+  /**
+   * Обрабатывает ошибку, которая возникает при попытке сохранить существующего пользователя.
+   * @param ex Исключение, которое нужно обработать.
+   * @param request Текущий запрос.
+   * @return  Ответ с соответствующим статусом и телом.
+   */
   @ExceptionHandler(UserAlreadyExistsException.class)
   public ResponseEntity<Object> handlerUserAlreadyExistsException(
           UserAlreadyExistsException ex, WebRequest request) {
     var headers = new HttpHeaders();
     return handleExceptionInternal(ex, null, headers, ex.getStatusCode(), request);
   }
-
+  /**
+   * Обрабатывает ошибку, которая возникает при попытке шифрования пароля.
+   * @param ex Исключение, которое нужно обработать.
+   * @param request Текущий запрос.
+   * @return  Ответ с соответствующим статусом и телом.
+   */
   @ExceptionHandler(NoSuchAlgorithmException.class)
   public ResponseEntity<Object> handlerNoSuchAlgorithmException(
           NoSuchAlgorithmException ex, WebRequest request
@@ -101,10 +137,16 @@ public class ExceptionHandlerController extends ResponseEntityExceptionHandler {
     var headers = new HttpHeaders();
     return handleExceptionInternal(ex, body, headers, HttpStatus.INTERNAL_SERVER_ERROR, request);
   }
+  /**
+   * Обрабатывает ошибку, которая возникает при попытке сохранить не валидного пользователя.
+   * @param ex Исключение, которое нужно обработать.
+   * @param request Текущий запрос.
+   * @return  Ответ с соответствующим статусом и телом.
+   */
   @ExceptionHandler(InvalidUserDataException.class)
   public ResponseEntity<Object> handlerInvalidUserDataException(
           InvalidUserDataException ex, WebRequest request
-  ){
+  ) {
     var headers = new HttpHeaders();
     return handleExceptionInternal(ex, null, headers, ex.getStatusCode(), request);
   }

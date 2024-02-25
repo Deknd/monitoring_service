@@ -1,27 +1,25 @@
 package com.denknd.in.controllers;
 
+import com.denknd.config.TestConfig;
 import com.denknd.dto.UserCreateDto;
 import com.denknd.entity.Parameters;
+import com.denknd.exception.AccessDeniedException;
 import com.denknd.exception.InvalidUserDataException;
 import com.denknd.exception.UserAlreadyExistsException;
-import com.denknd.in.controllers.ExceptionHandlerController;
-import com.denknd.in.controllers.UserController;
 import com.denknd.mappers.UserMapper;
 import com.denknd.services.UserService;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.module.paramnames.ParameterNamesModule;
-import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentCaptor;
-import org.mockito.Mock;
-import org.mockito.MockitoAnnotations;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
+import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
+import org.springframework.test.context.junit.jupiter.SpringJUnitConfig;
 import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
-import java.nio.file.AccessDeniedException;
 import java.security.NoSuchAlgorithmException;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -34,37 +32,24 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
+@WebMvcTest(controllers = {UserController.class})
+@AutoConfigureMockMvc
+@SpringJUnitConfig(TestConfig.class)
 class UserControllerTest {
-  @Mock
+  @MockBean
   private UserService userService;
-  @Mock
+  @MockBean
   private UserMapper userMapper;
-  private AutoCloseable closeable;
+  @Autowired
   private MockMvc mockMvc;
+  @Autowired
   private ObjectMapper objectMapper;
-
-  @BeforeEach
-  void setUp() {
-    this.closeable = MockitoAnnotations.openMocks(this);
-    var userController = new UserController(this.userService, this.userMapper);
-    this.mockMvc = MockMvcBuilders
-            .standaloneSetup(userController)
-            .setControllerAdvice(new ExceptionHandlerController())
-            .build();
-    this.objectMapper = new ObjectMapper();
-    this.objectMapper.registerModule(new ParameterNamesModule());
-  }
-
-  @AfterEach
-  void tearDown() throws Exception {
-    this.closeable.close();
-  }
 
   @Test
   @DisplayName("Проверяет, что метод вызывает все сервисы")
   void createUser() throws Exception {
     var userCreateDto = UserCreateDto.builder()
-            .email("email")
+            .email("email@mail.com")
             .password("password")
             .lastName("lastName")
             .firstName("firstName")
@@ -75,7 +60,7 @@ class UserControllerTest {
                     .contentType(MediaType.APPLICATION_JSON)
                     .content(json))
             .andExpect(status().isOk())
-            .andExpect(content().contentType(MediaType.APPLICATION_JSON));
+            .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON));
 
     verify(this.userService, times(1)).registrationUser(any());
   }
@@ -84,7 +69,7 @@ class UserControllerTest {
   @DisplayName("Проверяет, что метод вызывает все сервисы и обрабатывает ошибку UserAlreadyExistsException")
   void createUser_UserAlreadyExistsException() throws Exception {
     var userCreateDto = UserCreateDto.builder()
-            .email("email")
+            .email("email@mail.com")
             .password("password")
             .lastName("lastName")
             .firstName("firstName")
@@ -96,7 +81,7 @@ class UserControllerTest {
                     .contentType(MediaType.APPLICATION_JSON)
                     .content(json))
             .andExpect(status().isConflict())
-            .andExpect(content().contentType(MediaType.APPLICATION_PROBLEM_JSON));
+            .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_PROBLEM_JSON));
 
     verify(this.userService, times(1)).registrationUser(any());
   }
@@ -105,7 +90,7 @@ class UserControllerTest {
   @DisplayName("Проверяет, что метод вызывает все сервисы и обрабатывает ошибку NoSuchAlgorithmException")
   void createUser_NoSuchAlgorithmException() throws Exception {
     var userCreateDto = UserCreateDto.builder()
-            .email("email")
+            .email("email@mail.com")
             .password("password")
             .lastName("lastName")
             .firstName("firstName")
@@ -117,7 +102,7 @@ class UserControllerTest {
                     .contentType(MediaType.APPLICATION_JSON)
                     .content(json))
             .andExpect(status().isInternalServerError())
-            .andExpect(content().contentType(MediaType.APPLICATION_PROBLEM_JSON));
+            .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_PROBLEM_JSON));
 
     verify(this.userService, times(1)).registrationUser(any());
   }
@@ -126,7 +111,7 @@ class UserControllerTest {
   @DisplayName("Проверяет, что метод вызывает все сервисы и обрабатывает ошибку InvalidUserDataException")
   void createUser_InvalidUserDataException() throws Exception {
     var userCreateDto = UserCreateDto.builder()
-            .email("email")
+            .email("email@mail.com")
             .password("password")
             .lastName("lastName")
             .firstName("firstName")
@@ -138,7 +123,7 @@ class UserControllerTest {
                     .contentType(MediaType.APPLICATION_JSON)
                     .content(json))
             .andExpect(status().isBadRequest())
-            .andExpect(content().contentType(MediaType.APPLICATION_PROBLEM_JSON));
+            .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_PROBLEM_JSON));
 
     verify(this.userService, times(1)).registrationUser(any());
   }
@@ -147,7 +132,7 @@ class UserControllerTest {
   @DisplayName("Проверяет, что метод вызывает все сервисы и обрабатывает ошибку AccessDeniedException")
   void createUser_AccessDeniedException() throws Exception {
     var userCreateDto = UserCreateDto.builder()
-            .email("email")
+            .email("email@mail.com")
             .password("password")
             .lastName("lastName")
             .firstName("firstName")
@@ -159,7 +144,7 @@ class UserControllerTest {
                     .contentType(MediaType.APPLICATION_JSON)
                     .content(json))
             .andExpect(status().isForbidden())
-            .andExpect(content().contentType(MediaType.APPLICATION_PROBLEM_JSON));
+            .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_PROBLEM_JSON));
 
     verify(this.userService, times(1)).registrationUser(any());
   }
@@ -175,7 +160,7 @@ class UserControllerTest {
                     .param("id", String.valueOf(userId))
                     .param("email", email))
             .andExpect(status().isOk())
-            .andExpect(content().contentType(MediaType.APPLICATION_JSON));
+            .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON));
 
     var argumentCapture = ArgumentCaptor.forClass(Parameters.class);
     verify(this.userService, times(1)).getUser(argumentCapture.capture());

@@ -24,9 +24,6 @@ import java.util.function.Function;
 @Log4j2
 @Component
 public class DefaultSerializerToken implements Function<Token, String> {
-  /**
-   * Экземпляр JWEEncrypter для шифрования токена.
-   */
   private final JWEEncrypter jweEncrypter;
 
   /**

@@ -3,8 +3,6 @@ package com.denknd.security.utils;
 import com.denknd.security.entity.Token;
 import com.denknd.security.entity.UserSecurity;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.log4j.Log4j;
-import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
@@ -12,7 +10,6 @@ import java.time.Duration;
 import java.time.Instant;
 import java.util.UUID;
 import java.util.function.Function;
-import java.util.logging.Level;
 
 /**
  * Класс для создания токена доступа
@@ -20,11 +17,8 @@ import java.util.logging.Level;
 @RequiredArgsConstructor
 @Component
 public class DefaultCreateToken implements Function<UserSecurity, Token> {
-  /**
-   * Время жизни токена
-   */
   @Value("${jwt.expiration}")
-  private Long expiration;
+  private Long expirationToken;
 
   /**
    * Создает токен доступа из UserSecurity
@@ -39,6 +33,6 @@ public class DefaultCreateToken implements Function<UserSecurity, Token> {
     return new Token(UUID.randomUUID(), authentication.userId(),
             authentication.firstName(),
             authentication.role().name(),
-            now, now.plus(Duration.ofHours(expiration != null ? expiration : 10)));
+            now, now.plus(Duration.ofHours(expirationToken != null ? expirationToken : 10)));
   }
 }

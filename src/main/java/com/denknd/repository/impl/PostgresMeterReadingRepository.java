@@ -27,13 +27,7 @@ import java.util.Optional;
 @RequiredArgsConstructor
 @Slf4j
 public class PostgresMeterReadingRepository implements MeterReadingRepository {
-  /**
-   * Выдает соединение с базой данных
-   */
   private final JdbcTemplate jdbcTemplate;
-  /**
-   * Маппер для мапинга показаний
-   */
   private final MeterReadingMapper meterReadingMapper;
 
   /**

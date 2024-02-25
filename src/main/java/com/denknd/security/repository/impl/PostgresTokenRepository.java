@@ -17,9 +17,6 @@ import java.sql.Types;
 @Repository
 @RequiredArgsConstructor
 public class PostgresTokenRepository implements TokenRepository {
-  /**
-   * Выдает соединение с базой данных
-   */
   private final JdbcTemplate jdbcTemplate;
 
   /**
@@ -42,11 +39,11 @@ public class PostgresTokenRepository implements TokenRepository {
       throw new SQLException("Ошибка блокировки токена, ни одной строки не добавлено в БД");
     }
 
-    var generatedKey = keyHolder.getKey();
-    if (generatedKey == null) {
-      throw new SQLException("Ошибка сохранения информации о счетчике, не сгенерирован идентификатор");
+    var generatedKeys = keyHolder.getKeys();
+    if (generatedKeys == null || generatedKeys.size() == 0 || generatedKeys.get("token_block_id") == null) {
+      throw new SQLException("Ошибка сохранения токена, идентификатор не сгенерирован");
     }
-    var generatedId = generatedKey.longValue();
+    var generatedId = (Long) generatedKeys.get("token_block_id");
     return new TokenBlock(generatedId, tokenBlock.tokenId(), tokenBlock.expirationTime());
   }
 

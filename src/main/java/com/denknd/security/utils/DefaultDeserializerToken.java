@@ -19,9 +19,6 @@ import java.util.function.Function;
 @Slf4j
 @Component
 public class DefaultDeserializerToken implements Function<String, Token> {
-  /**
-   * Декриптор для расшифровки токена
-   */
   private final JWEDecrypter jweDecrypter;
 
   /**

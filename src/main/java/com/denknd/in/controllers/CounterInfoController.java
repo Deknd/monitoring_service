@@ -15,10 +15,13 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -35,14 +38,9 @@ import java.sql.SQLException;
         name = "CounterInfoController",
         description = "Для добавления информации о счетчике"
 )
+@Slf4j
 public class CounterInfoController {
-  /**
-   * Сервис для работы с информацией по счетчикам
-   */
   private final MeterCountService meterCountService;
-  /**
-   * Маппер для преобразования объекта {@link com.denknd.entity.Meter}
-   */
   private final MeterCountMapper meterCountMapper;
 
   /**
@@ -67,8 +65,8 @@ public class CounterInfoController {
   @RespForbidden
   @PutMapping
   @AuditRecording("Добавляет дополнительную информацию о счетчиках")
-  public ResponseEntity<MeterDto> addInfoForMeter(@Valid CounterInfoDto counterInfoDto)
-          throws SQLException, AccessDeniedException {
+  public ResponseEntity<MeterDto> addInfoForMeter(@RequestBody CounterInfoDto counterInfoDto)
+          throws SQLException {
     var meter = this.meterCountMapper.mapCounterInfoDtoToMeter(counterInfoDto);
     var result = this.meterCountService.addInfoForMeterCount(meter);
     var meterDto = this.meterCountMapper.mapMeterToMeterDto(result);

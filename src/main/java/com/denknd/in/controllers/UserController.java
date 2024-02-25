@@ -49,14 +49,9 @@ import java.util.Optional;
         description = "Дает доступ для управления пользователями"
 )
 public class UserController {
-  /**
-   * Сервис для управления пользователями
-   */
+
   private final UserService userService;
 
-  /**
-   * Маппер пользователей
-   */
   private final UserMapper userMapper;
 
   /**
@@ -86,7 +81,7 @@ public class UserController {
   @RespBadRequest
   @RespForbidden
   public ResponseEntity<UserDto> createUser(@RequestBody @Valid UserCreateDto userCreateDto)
-          throws UserAlreadyExistsException, NoSuchAlgorithmException, InvalidUserDataException, AccessDeniedException {
+          throws  NoSuchAlgorithmException{
     var user = this.userMapper.mapUserCreateDtoToUser(userCreateDto);
     var result = this.userService.registrationUser(user);
     var userDto = this.userMapper.mapUserToUserDto(result);

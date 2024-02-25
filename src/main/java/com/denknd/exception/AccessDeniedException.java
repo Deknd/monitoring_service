@@ -7,14 +7,11 @@ import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ProblemDetail;
 import org.springframework.web.ErrorResponse;
 
-/**
- * Эксепшен выбрасывается, при попытке зарегистрировать пользователя с емайлом, который существует.
- */
 @RequiredArgsConstructor
 @Getter
-public class UserAlreadyExistsException extends RuntimeException implements ErrorResponse {
-
+public class AccessDeniedException extends RuntimeException implements ErrorResponse {
   private final String message;
+
 
   /**
    * Получает HTTP статус код для ошибки.
@@ -23,7 +20,7 @@ public class UserAlreadyExistsException extends RuntimeException implements Erro
    */
   @Override
   public HttpStatusCode getStatusCode() {
-    return HttpStatus.CONFLICT;
+    return HttpStatus.BAD_REQUEST;
   }
 
   /**
@@ -35,5 +32,4 @@ public class UserAlreadyExistsException extends RuntimeException implements Erro
   public ProblemDetail getBody() {
     return ProblemDetail.forStatusAndDetail(this.getStatusCode(), this.message);
   }
-
 }

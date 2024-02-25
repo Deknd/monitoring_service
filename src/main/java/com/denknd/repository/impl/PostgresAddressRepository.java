@@ -21,13 +21,7 @@ import java.util.Optional;
 @Repository
 @RequiredArgsConstructor
 public class PostgresAddressRepository implements AddressRepository {
-  /**
-   * Выдает соединение с базой данных
-   */
   private final JdbcTemplate jdbcTemplate;
-  /**
-   * Маппер для мапинга адресов.
-   */
   private final AddressMapper addressMapper;
 
   /**
@@ -92,7 +86,11 @@ public class PostgresAddressRepository implements AddressRepository {
   public Optional<Address> findAddress(Long addressId) {
     var sql = "SELECT * FROM addresses WHERE address_id = ?";
     RowMapper<Address> rowMapper = (resultSet, rowNum) -> addressMapper.mapResultSetToAddress(resultSet);
-    var address = jdbcTemplate.queryForObject(sql, rowMapper, addressId);
-    return Optional.ofNullable(address);
+    var addresses = jdbcTemplate.query(sql, rowMapper, addressId);
+    if (addresses.isEmpty()) {
+      return Optional.empty();
+    } else {
+      return Optional.of(addresses.get(0));
+    }
   }
 }

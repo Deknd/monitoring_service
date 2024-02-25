@@ -24,13 +24,7 @@ import java.util.List;
 @Repository
 @RequiredArgsConstructor
 public class PostgresTypeMeterRepository implements TypeMeterRepository {
-  /**
-   * Выдает соединение с базой данных
-   */
   private final JdbcTemplate jdbcTemplate;
-  /**
-   * Маппер для маппинга типов показаний
-   */
   private final TypeMeterMapper typeMeterMapper;
 
   /**

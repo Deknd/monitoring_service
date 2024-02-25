@@ -19,7 +19,7 @@ public interface MeterReadingService {
    * @throws MeterReadingConflictError Ошибка при сохранении, если показания уже внесены или меньше предыдущих.
    * @throws AccessDeniedException     Исключение, выбрасываемое в случае отсутствия доступа для добавления показаний.
    */
-  MeterReading addMeterValue(MeterReading meterReading) throws MeterReadingConflictError, AccessDeniedException;
+  MeterReading addMeterValue(MeterReading meterReading);
 
   /**
    * Получает актуальные данные по всем переданным типам.

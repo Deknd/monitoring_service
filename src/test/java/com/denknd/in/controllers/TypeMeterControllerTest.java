@@ -1,24 +1,21 @@
 package com.denknd.in.controllers;
 
+import com.denknd.config.TestConfig;
 import com.denknd.dto.TypeMeterDto;
+import com.denknd.exception.AccessDeniedException;
 import com.denknd.exception.TypeMeterAdditionException;
-import com.denknd.in.controllers.ExceptionHandlerController;
-import com.denknd.in.controllers.TypeMeterController;
 import com.denknd.mappers.TypeMeterMapper;
 import com.denknd.services.TypeMeterService;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.module.paramnames.ParameterNamesModule;
-import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.mockito.Mock;
-import org.mockito.MockitoAnnotations;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
+import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
+import org.springframework.test.context.junit.jupiter.SpringJUnitConfig;
 import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.setup.MockMvcBuilders;
-
-import java.nio.file.AccessDeniedException;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.times;
@@ -29,31 +26,19 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
+@WebMvcTest(controllers = {TypeMeterController.class})
+@AutoConfigureMockMvc
+@SpringJUnitConfig(TestConfig.class)
 class TypeMeterControllerTest {
-  @Mock
+  @Autowired
   private TypeMeterService typeMeterService;
-  @Mock
+  @MockBean
   private TypeMeterMapper typeMeterMapper;
-  private AutoCloseable closeable;
+  @Autowired
   private MockMvc mockMvc;
+  @Autowired
   private ObjectMapper objectMapper;
 
-  @BeforeEach
-  void setUp() {
-    this.closeable = MockitoAnnotations.openMocks(this);
-    var typeMeterController = new TypeMeterController(this.typeMeterService, this.typeMeterMapper);
-    this.mockMvc = MockMvcBuilders
-            .standaloneSetup(typeMeterController)
-            .setControllerAdvice(new ExceptionHandlerController())
-            .build();
-    this.objectMapper = new ObjectMapper();
-    this.objectMapper.registerModule(new ParameterNamesModule());
-  }
-
-  @AfterEach
-  void tearDown() throws Exception {
-    this.closeable.close();
-  }
 
   @Test
   @DisplayName("Проверяет, что метод обращается в нужный сервис")
@@ -69,7 +54,7 @@ class TypeMeterControllerTest {
                     .contentType(MediaType.APPLICATION_JSON)
                     .content(json))
             .andExpect(status().isCreated())
-            .andExpect(content().contentType(MediaType.APPLICATION_JSON));
+            .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON));
 
     verify(this.typeMeterService, times(1)).addNewTypeMeter(any());
   }
@@ -89,7 +74,7 @@ class TypeMeterControllerTest {
                     .contentType(MediaType.APPLICATION_JSON)
                     .content(json))
             .andExpect(status().isBadRequest())
-            .andExpect(content().contentType(MediaType.APPLICATION_PROBLEM_JSON));
+            .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_PROBLEM_JSON));
 
     verify(this.typeMeterService, times(1)).addNewTypeMeter(any());
   }
@@ -109,7 +94,7 @@ class TypeMeterControllerTest {
                     .contentType(MediaType.APPLICATION_JSON)
                     .content(json))
             .andExpect(status().isForbidden())
-            .andExpect(content().contentType(MediaType.APPLICATION_PROBLEM_JSON));
+            .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_PROBLEM_JSON));
 
     verify(this.typeMeterService, times(1)).addNewTypeMeter(any());
   }
@@ -120,7 +105,7 @@ class TypeMeterControllerTest {
 
     this.mockMvc.perform(get("/meter-types"))
             .andExpect(status().isOk())
-            .andExpect(content().contentType(MediaType.APPLICATION_JSON));
+            .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON));
 
     verify(this.typeMeterService, times(1)).getTypeMeter();
   }

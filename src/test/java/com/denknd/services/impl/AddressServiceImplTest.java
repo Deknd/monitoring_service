@@ -2,6 +2,7 @@ package com.denknd.services.impl;
 
 import com.denknd.entity.Address;
 import com.denknd.entity.Roles;
+import com.denknd.exception.AccessDeniedException;
 import com.denknd.exception.AddressDatabaseException;
 import com.denknd.repository.AddressRepository;
 import com.denknd.security.entity.UserSecurity;
@@ -14,7 +15,6 @@ import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
-import java.nio.file.AccessDeniedException;
 import java.sql.SQLException;
 import java.util.Optional;
 

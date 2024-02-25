@@ -12,6 +12,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.List;
 import java.util.Optional;
 
 /**
@@ -20,13 +21,7 @@ import java.util.Optional;
 @Repository
 @RequiredArgsConstructor
 public class PostgresUserRepository implements UserRepository {
-  /**
-   * Выдает соединение с базой данных
-   */
   private final JdbcTemplate jdbcTemplate;
-  /**
-   * Маппер для объектов пользователя.
-   */
   private final UserMapper userMapper;
 
   /**
@@ -38,7 +33,8 @@ public class PostgresUserRepository implements UserRepository {
   @Override
   public boolean existUser(String email) {
     var sql = "SELECT 1 FROM users WHERE email = ?";
-    return jdbcTemplate.queryForObject(sql, Boolean.class, email) != null;
+    List<Boolean> result = jdbcTemplate.queryForList(sql, Boolean.class, email);
+    return !result.isEmpty();
   }
 
 
@@ -51,7 +47,8 @@ public class PostgresUserRepository implements UserRepository {
   @Override
   public boolean existUserByUserId(Long userId) {
     var sql = "SELECT 1 FROM users WHERE user_id = ?";
-    return jdbcTemplate.queryForObject(sql, Boolean.class, userId) != null;
+    List<Boolean> result = jdbcTemplate.queryForList(sql, Boolean.class, userId);
+    return !result.isEmpty();
   }
 
 

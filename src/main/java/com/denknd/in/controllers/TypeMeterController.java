@@ -40,13 +40,7 @@ import java.util.Set;
         description = "Получение информации о всех типах показаний счетчика"
 )
 public class TypeMeterController {
-  /**
-   * Сервис для управления типами показаний
-   */
   private final TypeMeterService typeMeterService;
-  /**
-   * Маппер для преобразования типов показаний.
-   */
   private final TypeMeterMapper typeMeterMapper;
 
   /**
@@ -71,8 +65,7 @@ public class TypeMeterController {
   })
   @RespBadRequest
   @RespForbidden
-  public ResponseEntity<TypeMeterDto> addNewType(@RequestBody @Valid TypeMeterDto typeMeterDto)
-          throws TypeMeterAdditionException, AccessDeniedException {
+  public ResponseEntity<TypeMeterDto> addNewType(@RequestBody @Valid TypeMeterDto typeMeterDto){
     var typeMeter = this.typeMeterMapper.mapTypeMeterDtoToTypeMeter(typeMeterDto);
     var result = this.typeMeterService.addNewTypeMeter(typeMeter);
     var typeMeterDtoResult = this.typeMeterMapper.typeMeterToTypeMeterDto(result);

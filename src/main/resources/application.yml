@@ -1,7 +1,6 @@
 spring:
   application:
     name: "Monitoring service"
-
   datasource:
     url: jdbc:postgresql://localhost:5432/monitoringDB
     username: monitoringUser
@@ -22,6 +21,7 @@ logging:
     org:
       springframework:
         security: TRACE
+
 audit:
   db:
     url: ${spring.datasource.url}
