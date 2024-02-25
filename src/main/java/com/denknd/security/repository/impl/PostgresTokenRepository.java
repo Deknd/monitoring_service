@@ -4,6 +4,7 @@ import com.denknd.security.entity.TokenBlock;
 import com.denknd.security.repository.TokenRepository;
 import com.denknd.util.DataBaseConnection;
 import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Repository;
 
 import java.sql.SQLException;
 import java.sql.Statement;
@@ -12,6 +13,7 @@ import java.sql.Types;
 /**
  * Реализация интерфейса для хранения объектов пользователя в БД.
  */
+@Repository
 @RequiredArgsConstructor
 public class PostgresTokenRepository implements TokenRepository {
   /**

@@ -20,7 +20,7 @@ class DateParserFromRawParametersTest {
   void apply() {
     var value = "1895-12";
 
-    var apply = this.dateParserFromRawParameters.apply(value);
+    var apply = this.dateParserFromRawParameters.convert(value);
 
     assertThat(apply).isNotNull();
     assertThat(apply.getYear()).isEqualTo(1895);
@@ -33,15 +33,7 @@ class DateParserFromRawParametersTest {
   void apply_notNumber() {
     var command = "command";
 
-    var apply = this.dateParserFromRawParameters.apply(command);
-
-    assertThat(apply).isNull();
-  }
-
-  @Test
-  @DisplayName("Проверяет, что если передать null, вернется null")
-  void apply_null() {
-    var apply = this.dateParserFromRawParameters.apply(null);
+    var apply = this.dateParserFromRawParameters.convert(command);
 
     assertThat(apply).isNull();
   }

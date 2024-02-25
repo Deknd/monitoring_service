@@ -1,14 +1,16 @@
+
 plugins {
     id 'war'
-    id("io.freefair.aspectj.post-compile-weaving") version "8.4"
 }
 apply from: 'https://raw.github.com/gretty-gradle-plugin/gretty/master/pluginScripts/gretty.plugin'
+
 group 'com.denknd'
 version '1.0-SNAPSHOT'
 
 repositories {
     mavenCentral()
 }
+
 
 ext {
     mapstructVersion = '1.6.0.Beta1'
@@ -21,19 +23,34 @@ ext {
     liquibaseVersion = '4.25.1'
     postgresqlVersion = '42.7.1'
     testcontainersPostgresqlVersion = '1.19.4'
-    jakartaServletVersion = '6.1.0-M1'
-    jakartaValidationVersion = '3.1.0-M1'
     slf4jVersion = '2.0.12'
-    hibernateValidatorVersion = '8.0.1.Final'
+    hibernateValidatorVersion = '8.0.0.Final'
     nimbusdsVersion = '9.38-rc3'
     jacksonVersion = '2.16.1'
-    aspectjVersion = '1.9.21'
+    springframeworkVersion = '6.1.4'
+    springDocVersion = '2.3.0'
+    jakartaVersion = '6.1.0-M1'
 }
 gretty {
+    jacocoEnabled false
+}
+
+gretty {
+    servletContainer = 'jetty11'
     httpPort = 8081
     contextPath = '/'
 }
 dependencies {
+    implementation "org.springframework:spring-context:${springframeworkVersion}"
+    implementation "org.springframework:spring-web:${springframeworkVersion}"
+    implementation "org.springframework:spring-aspects:${springframeworkVersion}"
+    implementation "org.springframework:spring-webmvc:${springframeworkVersion}"
+    implementation "org.hibernate.validator:hibernate-validator:${hibernateValidatorVersion}"
+    implementation "org.springdoc:springdoc-openapi-starter-webmvc-ui:${springDocVersion}"
+
+
+
+
     implementation "org.mapstruct:mapstruct:${mapstructVersion}"
     implementation "org.yaml:snakeyaml:${snakeyamlVersion}"
     implementation "org.liquibase:liquibase-core:${liquibaseVersion}"
@@ -41,47 +58,27 @@ dependencies {
     implementation "org.slf4j:slf4j-api:${slf4jVersion}"
     implementation "org.slf4j:slf4j-simple:${slf4jVersion}"
 
-    implementation "jakarta.servlet:jakarta.servlet-api:${jakartaServletVersion}"
-    implementation "jakarta.validation:jakarta.validation-api:${jakartaValidationVersion}"
-    implementation "org.hibernate.validator:hibernate-validator:${hibernateValidatorVersion}"
-
     implementation "com.nimbusds:nimbus-jose-jwt:${nimbusdsVersion}"
     implementation "com.fasterxml.jackson.datatype:jackson-datatype-jsr310:${jacksonVersion}"
     implementation "com.fasterxml.jackson.core:jackson-databind:${jacksonVersion}"
+    implementation "com.fasterxml.jackson.module:jackson-module-parameter-names:${jacksonVersion}"
+
 
     compileOnly "org.projectlombok:lombok:${lombokVersion}"
     annotationProcessor "org.projectlombok:lombok:${lombokVersion}"
     annotationProcessor "org.projectlombok:lombok-mapstruct-binding:${lombokMapstructVersion}"
     annotationProcessor "org.mapstruct:mapstruct-processor:${mapstructVersion}"
-    implementation "org.aspectj:aspectjrt:${aspectjVersion}"
-    implementation "org.aspectj:aspectjweaver:${aspectjVersion}"
 
+    testImplementation "org.springframework:spring-test:${springframeworkVersion}"
     testImplementation "org.junit.jupiter:junit-jupiter-api:${junitVersion}"
     testRuntimeOnly "org.junit.jupiter:junit-jupiter-engine:${junitVersion}"
     testImplementation "org.assertj:assertj-core:${assertjVersion}"
     testImplementation "org.mockito:mockito-core:${mockitoVersion}"
     testImplementation "org.testcontainers:postgresql:${testcontainersPostgresqlVersion}"
+    testImplementation "jakarta.servlet:jakarta.servlet-api:${jakartaVersion}"
+    testImplementation "org.springdoc:springdoc-openapi-starter-webmvc-api:${springDocVersion}"
 }
+
 test {
     useJUnitPlatform()
-}
-compileJava {
-    ajc {
-        enabled = true
-        classpath
-        options {
-            aspectpath.setFrom configurations.aspect
-            compilerArgs = []
-        }
-    }
-}
-compileTestJava {
-    ajc {
-        enabled = false
-        classpath
-        options {
-            aspectpath.setFrom configurations.testAspect
-            compilerArgs = []
-        }
-    }
 }

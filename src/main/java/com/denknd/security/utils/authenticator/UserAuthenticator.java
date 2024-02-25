@@ -2,6 +2,7 @@ package com.denknd.security.utils.authenticator;
 
 import com.denknd.security.entity.PreAuthenticatedAuthenticationToken;
 import com.denknd.security.entity.UserSecurity;
+
 /**
  * Интерфейс для аутентификации пользователей.
  */

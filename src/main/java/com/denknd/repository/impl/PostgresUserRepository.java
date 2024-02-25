@@ -5,14 +5,16 @@ import com.denknd.mappers.UserMapper;
 import com.denknd.repository.UserRepository;
 import com.denknd.util.DataBaseConnection;
 import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Repository;
 
-import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.Optional;
+
 /**
  * Реализация интерфейса для хранения объектов пользователя в БД.
  */
+@Repository
 @RequiredArgsConstructor
 public class PostgresUserRepository implements UserRepository {
   /**
@@ -23,6 +25,7 @@ public class PostgresUserRepository implements UserRepository {
    * Маппер для объектов пользователя.
    */
   private final UserMapper userMapper;
+
   /**
    * Проверяет, существует ли пользователь с указанным email.
    *
@@ -45,6 +48,7 @@ public class PostgresUserRepository implements UserRepository {
       return false;
     }
   }
+
   /**
    * Проверяет, существует ли пользователь с указанным айди.
    *
@@ -68,6 +72,7 @@ public class PostgresUserRepository implements UserRepository {
       return false;
     }
   }
+
   /**
    * Сохраняет пользователя в память.
    *
@@ -112,11 +117,12 @@ public class PostgresUserRepository implements UserRepository {
         }
       }
     } finally {
-      if(connection != null){
+      if (connection != null) {
         connection.close();
       }
     }
   }
+
   /**
    * Ищет пользователя по email.
    *
@@ -143,6 +149,7 @@ public class PostgresUserRepository implements UserRepository {
     }
     return Optional.empty();
   }
+
   /**
    * Ищет пользователя по айди.
    *

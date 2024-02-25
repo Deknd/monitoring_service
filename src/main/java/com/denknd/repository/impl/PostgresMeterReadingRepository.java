@@ -5,8 +5,8 @@ import com.denknd.mappers.MeterReadingMapper;
 import com.denknd.repository.MeterReadingRepository;
 import com.denknd.util.DataBaseConnection;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.log4j.Log4j2;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.stereotype.Repository;
 
 import java.sql.SQLException;
 import java.sql.Statement;
@@ -21,6 +21,7 @@ import java.util.Optional;
 /**
  * Реализация интерфейса для хранения показаний в БД.
  */
+@Repository
 @RequiredArgsConstructor
 @Slf4j
 public class PostgresMeterReadingRepository implements MeterReadingRepository {

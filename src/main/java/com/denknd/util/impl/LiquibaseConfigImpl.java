@@ -23,6 +23,7 @@ public class LiquibaseConfigImpl implements LiquibaseConfig {
 
   /**
    * Возвращает название технической схемы
+   *
    * @return техническая схема
    */
   @Override
@@ -32,6 +33,7 @@ public class LiquibaseConfigImpl implements LiquibaseConfig {
 
   /**
    * Возвращает название дефолтной схемы
+   *
    * @return дефолтная схема
    */
   @Override
@@ -41,6 +43,7 @@ public class LiquibaseConfigImpl implements LiquibaseConfig {
 
   /**
    * Возвращает Путь к скриптам миграции
+   *
    * @return Путь к скриптам миграции
    */
   @Override

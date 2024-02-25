@@ -6,6 +6,7 @@ import com.denknd.entity.Roles;
 import com.denknd.entity.User;
 import com.denknd.security.entity.UserSecurity;
 import org.mapstruct.Mapper;
+import org.mapstruct.MappingConstants;
 import org.mapstruct.NullValuePropertyMappingStrategy;
 import org.mapstruct.factory.Mappers;
 
@@ -13,35 +14,41 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 
 /**
- * Маппер для объекта юзера
+ * Маппер для объекта пользователя.
+ * Этот интерфейс предоставляет методы для преобразования объектов UserCreateDto в User и обратно,
+ * объектов User в UserDto и объектов User в UserSecurity, а также из ResultSet в объекты User при работе с базой данных.
  */
-@Mapper(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
+@Mapper(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE, componentModel = MappingConstants.ComponentModel.SPRING)
 public interface UserMapper {
   UserMapper INSTANCE = Mappers.getMapper(UserMapper.class);
 
   /**
-   * Преобразование UserCreateDto в User
-   * @param userCreateDto юзер от пользователя
-   * @return юзер для сервиса
+   * Преобразование UserCreateDto в User.
+   *
+   * @param userCreateDto данные о пользователе от пользователя
+   * @return объект пользователя для сервиса
    */
   User mapUserCreateDtoToUser(UserCreateDto userCreateDto);
 
   /**
-   * Преобразование User в UserDto
-   * @param user юзер от сервиса
-   * @return юзер для пользователя
+   * Преобразование User в UserDto.
+   *
+   * @param user объект пользователя от сервиса
+   * @return объект пользователя для пользователя
    */
   UserDto mapUserToUserDto(User user);
 
   /**
-   * Преобразует User в UserSecurity
-   * @param user юзер от сервиса
-   * @return юзер для секьюрити
+   * Преобразует User в UserSecurity.
+   *
+   * @param user объект пользователя от сервиса
+   * @return объект пользователя для секьюрити
    */
   UserSecurity mapUserToUserSecurity(User user);
 
   /**
-   * преобразует данные из БД в объект пользователя
+   * Преобразует данные из ResultSet в объект пользователя.
+   *
    * @param resultSet данные из БД
    * @return объект пользователя
    * @throws SQLException ошибка при извлечении данных

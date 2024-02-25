@@ -4,21 +4,23 @@ import com.denknd.util.DbConfig;
 import com.denknd.util.JwtConfig;
 import com.denknd.util.LiquibaseConfig;
 import com.denknd.util.YamlParser;
+import org.springframework.stereotype.Component;
 import org.yaml.snakeyaml.Yaml;
 
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 
 /**
- * Реализация парсера yml файла
+ * Реализация интерфейса парсера YAML файлов.
  */
+@Component
 public class YamlParserImpl implements YamlParser {
   /**
-   * Путь к конфигурациям приложения
+   * Путь к файлу с конфигурацией приложения YAML.
    */
   private String pathToApplicationYml = "src/main/resources/application.yml";
   /**
-   * Конфигурация ликвибаз
+   * Конфигурация Liquibase.
    */
   private LiquibaseConfigImpl liquibaseConfig;
   /**
@@ -32,8 +34,9 @@ public class YamlParserImpl implements YamlParser {
 
 
   /**
-   * Метод для парсинга данных из конфигураций приложения
-   * @throws FileNotFoundException выкидывается, когда файл не обноружен
+   * Метод для парсинга данных из файла конфигурации приложения YAML.
+   *
+   * @throws FileNotFoundException если файл не найден
    */
   private void parseYaml() throws FileNotFoundException {
     try {
@@ -54,9 +57,10 @@ public class YamlParserImpl implements YamlParser {
   }
 
   /**
-   * Конфигурация ликвибаз
-   * @return Конфигурация ликвибаз
-   * @throws FileNotFoundException когда нет доступа к файлу с конфигурациями
+   * Получение конфигурации Liquibase из файла YAML.
+   *
+   * @return Конфигурация Liquibase
+   * @throws FileNotFoundException если файл не найден
    */
   @Override
   public LiquibaseConfig liquibaseConfig() throws FileNotFoundException {
@@ -65,10 +69,12 @@ public class YamlParserImpl implements YamlParser {
     }
     return this.liquibaseConfig;
   }
+
   /**
-   * Конфигурация базы данных
+   * Получение конфигурации базы данных из файла YAML.
+   *
    * @return Конфигурация базы данных
-   * @throws FileNotFoundException когда нет доступа к файлу с конфигурациями
+   * @throws FileNotFoundException если файл не найден
    */
   @Override
   public DbConfig dbConfig() throws FileNotFoundException {
@@ -79,8 +85,10 @@ public class YamlParserImpl implements YamlParser {
   }
 
   /**
-   * Конфигурация для Jwt токенов
-   * @return конфиг для токенов
+   * Получение конфигурации JWT токенов из файла YAML.
+   *
+   * @return Конфигурация JWT токенов
+   * @throws FileNotFoundException если файл не найден
    */
   @Override
   public JwtConfig jwtConfig() throws FileNotFoundException {
@@ -91,8 +99,9 @@ public class YamlParserImpl implements YamlParser {
   }
 
   /**
-   * Настройка пути к файлу с конфигурациями
-   * @param pathToApplicationYml путь к файлу с конфигурациями
+   * Установка пути к файлу с конфигурацией приложения YAML.
+   *
+   * @param pathToApplicationYml путь к файлу YAML
    */
   @Override
   public void setPathToApplicationYml(String pathToApplicationYml) {

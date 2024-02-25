@@ -8,11 +8,15 @@ import com.denknd.security.utils.converter.impl.BasicAuthenticationConverter;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
+import jakarta.servlet.http.HttpFilter;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.Setter;
-import lombok.extern.log4j.Log4j2;
 import lombok.extern.slf4j.Slf4j;
+import org.slf4j.Logger;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.http.HttpStatus;
+import org.springframework.stereotype.Component;
 
 import java.io.IOException;
 
@@ -21,7 +25,8 @@ import java.io.IOException;
  */
 @Setter
 @Slf4j
-public class BasicAuthenticationFilter extends AbstractFilter {
+@Component
+public class BasicAuthenticationFilter extends HttpFilter implements ExceptionResponse {
   /**
    * Паттерн по которому срабатывает фильтр
    */
@@ -44,21 +49,10 @@ public class BasicAuthenticationFilter extends AbstractFilter {
   private AuthenticationConverter authenticationConverter = new BasicAuthenticationConverter();
 
 
-  public BasicAuthenticationFilter(ObjectMapper objectMapper, SecurityService securityService, UserAuthenticator userAuthenticator) {
+  public BasicAuthenticationFilter(ObjectMapper objectMapper, SecurityService securityService,@Qualifier("basicUserAuthenticator") UserAuthenticator userAuthenticator) {
     this.securityService = securityService;
     this.userAuthenticator = userAuthenticator;
     this.objectMapper = objectMapper;
-  }
-
-
-  /**
-   * Для маппинга в Json и обратно
-   *
-   * @return объект для работы с Json
-   */
-  @Override
-  protected ObjectMapper getObjectMapper() {
-    return this.objectMapper;
   }
 
   /**
@@ -74,7 +68,7 @@ public class BasicAuthenticationFilter extends AbstractFilter {
    * @param httpRequest  объект HttpServletRequest, содержащий запрос клиента
    * @param httpResponse объект HttpServletResponse, содержащий ответ фильтра для клиента
    * @param chain        объект FilterChain для вызова следующего фильтра или ресурса
-   * @throws IOException ошибка при работе с потоком данных
+   * @throws IOException      ошибка при работе с потоком данных
    * @throws ServletException ошибка сервлета
    */
   @Override
@@ -84,13 +78,13 @@ public class BasicAuthenticationFilter extends AbstractFilter {
         var preAuthenticated = this.authenticationConverter.convert(httpRequest);
         if (preAuthenticated == null) {
           var errorMessage = "Запрос на аутентификацию не обработан, так как не удалось найти имя пользователя и пароль в заголовке базовой авторизации";
-          setExceptionResponse(httpResponse, errorMessage, HttpServletResponse.SC_UNAUTHORIZED);
+          setExceptionResponse(httpResponse, errorMessage, HttpStatus.UNAUTHORIZED);
           return;
         }
         var authentication = this.userAuthenticator.authentication(preAuthenticated);
         if (authentication == null) {
           var errorMessage = "Запрос на аутентификацию не обработан, так как логин или пароль не верны";
-          setExceptionResponse(httpResponse, errorMessage, HttpServletResponse.SC_UNAUTHORIZED);
+          setExceptionResponse(httpResponse, errorMessage, HttpStatus.UNAUTHORIZED);
           return;
         }
         this.securityService.addPrincipal(authentication);
@@ -99,7 +93,7 @@ public class BasicAuthenticationFilter extends AbstractFilter {
         return;
       } catch (BadCredentialsException e) {
         log.error("Ошибка авторизации. " + e.getMessage());
-        setExceptionResponse(httpResponse, e.getMessage(), HttpServletResponse.SC_UNAUTHORIZED);
+        setExceptionResponse(httpResponse, e.getMessage(), HttpStatus.UNAUTHORIZED);
         return;
       }
     }
@@ -113,5 +107,25 @@ public class BasicAuthenticationFilter extends AbstractFilter {
    */
   public String getURL_PATTERNS() {
     return URL_PATTERNS;
+  }
+
+  /**
+   * Получает экземпляр ObjectMapper для преобразования объектов в JSON.
+   *
+   * @return Объект ObjectMapper.
+   */
+  @Override
+  public ObjectMapper getObjectMapper() {
+    return this.objectMapper;
+  }
+
+  /**
+   * Получает экземпляр логгера для записи логов.
+   *
+   * @return Экземпляр логгера.
+   */
+  @Override
+  public Logger logger() {
+    return log;
   }
 }

@@ -21,7 +21,7 @@
         </createTable>
         <comment>Таблица для хранения заблокированных токенов</comment>
     </changeSet>
-    <changeSet id="003__create_table_token_block" author="den" >
+    <changeSet id="003__create_table_token_block" author="den">
         <createProcedure schemaName="${defaultSchema}">
         <![CDATA[
             CREATE
@@ -37,7 +37,7 @@
             LANGUAGE plpgsql;
             ]]>
     </createProcedure>
-        <sql >
+        <sql>
             CREATE TRIGGER delete_expired_tokens_trigger
                 AFTER INSERT OR
             UPDATE ON ${defaultSchema}.token_block

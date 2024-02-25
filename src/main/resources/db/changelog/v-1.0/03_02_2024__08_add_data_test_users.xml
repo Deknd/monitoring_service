@@ -10,7 +10,7 @@
             <column name="user_name" value="TestName"/>
             <column name="user_last_name" value="TestLastName"/>
         </insert>
-        <comment>Добавления пользователя,емайл: test@mail.com  пароль 123</comment>
+        <comment>Добавления пользователя,емайл: test@mail.com пароль 123</comment>
     </changeSet>
     <changeSet id="002__add_data_test_user" author="den">
         <insert tableName="users" schemaName="${defaultSchema}">
@@ -20,6 +20,6 @@
             <column name="user_name" value="Admin"/>
             <column name="user_last_name" value="LastName"/>
         </insert>
-        <comment>Добавления пользователя,емайл: admin@admin.com  пароль 123</comment>
+        <comment>Добавления пользователя,емайл: admin@admin.com пароль 123</comment>
     </changeSet>
 </databaseChangeLog>

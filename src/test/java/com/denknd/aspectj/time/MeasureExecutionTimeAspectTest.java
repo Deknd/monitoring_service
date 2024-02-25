@@ -21,7 +21,7 @@ class MeasureExecutionTimeAspectTest {
 
   @Test
   @DisplayName("Проверяется, что метод выполняется без ошибок")
-  void logging() throws Throwable {
+  void logging()  {
     var joinPoint = mock(ProceedingJoinPoint.class);
     when(joinPoint.getSignature()).thenReturn(mock(Signature.class));
     when(joinPoint.getKind()).thenReturn("method-execution");

@@ -27,6 +27,7 @@ public class DbConfigImpl implements DbConfig {
 
   /**
    * Возвращает логин для БД
+   *
    * @return логин от бд
    */
   @Override
@@ -36,6 +37,7 @@ public class DbConfigImpl implements DbConfig {
 
   /**
    * Возвращает пароль от БД
+   *
    * @return пароль от БД
    */
   @Override
@@ -45,6 +47,7 @@ public class DbConfigImpl implements DbConfig {
 
   /**
    * Возвращает урл от БД
+   *
    * @return урл БД
    */
   @Override
@@ -54,6 +57,7 @@ public class DbConfigImpl implements DbConfig {
 
   /**
    * Возвращает дефолтную схему БД
+   *
    * @return дефолтная схема
    */
   @Override
