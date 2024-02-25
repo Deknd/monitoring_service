@@ -3,7 +3,7 @@
                    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.6.xsd">
 
     <changeSet id="001__add_data_test_meter_readings" author="den">
-        <insert tableName="meter_readings" schemaName="${defaultSchema}">
+        <insert tableName="meter_readings">
             <column name="address_id" value="2"/>
             <column name="type_meter_id" value="1"/>
             <column name="meter_value" value="1324.33"/>
@@ -13,7 +13,7 @@
         <comment>Добавления показаний для теста</comment>
     </changeSet>
     <changeSet id="002__add_data_test_meter_readings" author="den">
-        <insert tableName="meter_readings" schemaName="${defaultSchema}">
+        <insert tableName="meter_readings">
             <column name="address_id" value="2"/>
             <column name="type_meter_id" value="2"/>
             <column name="meter_value" value="132.33"/>
@@ -23,7 +23,7 @@
         <comment>Добавления показаний для теста</comment>
     </changeSet>
     <changeSet id="003__add_data_test_meter_readings" author="den">
-        <insert tableName="meter_readings" schemaName="${defaultSchema}">
+        <insert tableName="meter_readings">
             <column name="address_id" value="2"/>
             <column name="type_meter_id" value="2"/>
             <column name="meter_value" value="321.33"/>

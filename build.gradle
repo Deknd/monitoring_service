@@ -1,8 +1,9 @@
 
 plugins {
-    id 'war'
+    id 'java'
+    id 'org.springframework.boot' version '3.2.0'
+    id 'io.spring.dependency-management' version '1.1.4'
 }
-apply from: 'https://raw.github.com/gretty-gradle-plugin/gretty/master/pluginScripts/gretty.plugin'
 
 group 'com.denknd'
 version '1.0-SNAPSHOT'
@@ -10,73 +11,53 @@ version '1.0-SNAPSHOT'
 repositories {
     mavenCentral()
 }
+bootJar {
+    manifest {
+        attributes 'Start-Class': 'com.denknd.MonitoringServiceApplication'
+    }
+}
 
+configurations {
+    compileOnly {
+        extendsFrom annotationProcessor
+    }
+}
 
 ext {
     mapstructVersion = '1.6.0.Beta1'
-    lombokVersion = '1.18.30'
     lombokMapstructVersion = '0.2.0'
-    junitVersion = '5.9.2'
-    assertjVersion = '3.25.1'
-    mockitoVersion = '5.9.0'
-    snakeyamlVersion = '2.2'
-    liquibaseVersion = '4.25.1'
-    postgresqlVersion = '42.7.1'
-    testcontainersPostgresqlVersion = '1.19.4'
-    slf4jVersion = '2.0.12'
-    hibernateValidatorVersion = '8.0.0.Final'
     nimbusdsVersion = '9.38-rc3'
-    jacksonVersion = '2.16.1'
-    springframeworkVersion = '6.1.4'
     springDocVersion = '2.3.0'
-    jakartaVersion = '6.1.0-M1'
-}
-gretty {
-    jacocoEnabled false
 }
 
-gretty {
-    servletContainer = 'jetty11'
-    httpPort = 8081
-    contextPath = '/'
-}
 dependencies {
-    implementation "org.springframework:spring-context:${springframeworkVersion}"
-    implementation "org.springframework:spring-web:${springframeworkVersion}"
-    implementation "org.springframework:spring-aspects:${springframeworkVersion}"
-    implementation "org.springframework:spring-webmvc:${springframeworkVersion}"
-    implementation "org.hibernate.validator:hibernate-validator:${hibernateValidatorVersion}"
+    implementation project(':action-audit-starter')
+    implementation project(':measure-time-starter')
+    implementation 'org.springframework.boot:spring-boot-starter-web'
+    implementation 'org.springframework.boot:spring-boot-starter-validation'
+    implementation 'org.springframework.boot:spring-boot-starter-data-jdbc'
     implementation "org.springdoc:springdoc-openapi-starter-webmvc-ui:${springDocVersion}"
-
-
-
+    implementation "org.springdoc:springdoc-openapi-starter-webmvc-api:${springDocVersion}"
 
     implementation "org.mapstruct:mapstruct:${mapstructVersion}"
-    implementation "org.yaml:snakeyaml:${snakeyamlVersion}"
-    implementation "org.liquibase:liquibase-core:${liquibaseVersion}"
-    implementation "org.postgresql:postgresql:${postgresqlVersion}"
-    implementation "org.slf4j:slf4j-api:${slf4jVersion}"
-    implementation "org.slf4j:slf4j-simple:${slf4jVersion}"
+    implementation "org.yaml:snakeyaml"
+    implementation "org.liquibase:liquibase-core"
+    implementation "org.postgresql:postgresql"
 
     implementation "com.nimbusds:nimbus-jose-jwt:${nimbusdsVersion}"
-    implementation "com.fasterxml.jackson.datatype:jackson-datatype-jsr310:${jacksonVersion}"
-    implementation "com.fasterxml.jackson.core:jackson-databind:${jacksonVersion}"
-    implementation "com.fasterxml.jackson.module:jackson-module-parameter-names:${jacksonVersion}"
+    implementation "com.fasterxml.jackson.datatype:jackson-datatype-jsr310"
+    implementation "com.fasterxml.jackson.core:jackson-databind"
+    implementation "com.fasterxml.jackson.module:jackson-module-parameter-names"
 
-
-    compileOnly "org.projectlombok:lombok:${lombokVersion}"
-    annotationProcessor "org.projectlombok:lombok:${lombokVersion}"
+    compileOnly "org.projectlombok:lombok"
+    annotationProcessor "org.projectlombok:lombok"
     annotationProcessor "org.projectlombok:lombok-mapstruct-binding:${lombokMapstructVersion}"
     annotationProcessor "org.mapstruct:mapstruct-processor:${mapstructVersion}"
 
-    testImplementation "org.springframework:spring-test:${springframeworkVersion}"
-    testImplementation "org.junit.jupiter:junit-jupiter-api:${junitVersion}"
-    testRuntimeOnly "org.junit.jupiter:junit-jupiter-engine:${junitVersion}"
-    testImplementation "org.assertj:assertj-core:${assertjVersion}"
-    testImplementation "org.mockito:mockito-core:${mockitoVersion}"
-    testImplementation "org.testcontainers:postgresql:${testcontainersPostgresqlVersion}"
-    testImplementation "jakarta.servlet:jakarta.servlet-api:${jakartaVersion}"
-    testImplementation "org.springdoc:springdoc-openapi-starter-webmvc-api:${springDocVersion}"
+    testImplementation 'org.springframework.boot:spring-boot-starter-test'
+    testImplementation 'org.springframework.boot:spring-boot-testcontainers'
+    testImplementation 'org.testcontainers:junit-jupiter'
+    testImplementation 'org.testcontainers:postgresql'
 }
 
 test {

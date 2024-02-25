@@ -1,13 +1,21 @@
 package com.denknd.config;
 
+import com.denknd.in.filters.AuthenticationFilter;
+import com.denknd.in.filters.BasicAuthenticationFilter;
+import com.denknd.security.service.SecurityService;
+import com.denknd.security.utils.authenticator.UserAuthenticator;
+import com.denknd.security.utils.converter.AuthenticationConverter;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.context.annotation.ComponentScan;
+import org.springframework.boot.web.servlet.FilterRegistrationBean;
+import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.EnableAspectJAutoProxy;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
 import org.springframework.web.servlet.config.annotation.ViewControllerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
+
+import java.util.List;
 
 /**
  * Контекст для веб приложения
@@ -15,15 +23,27 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 @Configuration
 @Slf4j
 @EnableWebMvc
-@EnableAspectJAutoProxy
-@ComponentScan(basePackages = {"com.denknd.in.controllers"})
 public class WebConfig implements WebMvcConfigurer {
+  @Bean
+  public FilterRegistrationBean<AuthenticationFilter> authenticationFilterRegistration(
+          SecurityService securityService,
+          List<AuthenticationConverter> authenticationConverterList,
+          List<UserAuthenticator> userAuthenticatorList,
+          ObjectMapper objectMapper,
+          BasicAuthenticationFilter basicAuthenticationFilter
+  ) {
+    var registrationBean = new FilterRegistrationBean<AuthenticationFilter>();
+    var authenticationFilter = new AuthenticationFilter(securityService, authenticationConverterList, objectMapper, userAuthenticatorList);
+    authenticationFilter.addIgnoredRequest("/v3/api-docs", "GET");
+    authenticationFilter.addIgnoredRequest("/swagger-ui/.*", "GET");
+    authenticationFilter.addIgnoredRequest("/swagger/.*", "GET");
+    authenticationFilter.addIgnoredRequest(basicAuthenticationFilter.getURL_PATTERNS(), "POST");
+    registrationBean.setFilter(authenticationFilter);
+    registrationBean.addUrlPatterns("/*");
+    registrationBean.setMatchAfter(false);
+    return registrationBean;
+  }
 
-  /**
-   * Добавления статических ресурсов
-   *
-   * @param registry объект для регистрации статических ресурсов
-   */
   @Override
   public void addResourceHandlers(ResourceHandlerRegistry registry) {
     registry
@@ -34,11 +54,6 @@ public class WebConfig implements WebMvcConfigurer {
             );
   }
 
-  /**
-   * Добавления контроллера
-   *
-   * @param registry объект для добавления контроллера
-   */
   @Override
   public void addViewControllers(ViewControllerRegistry registry) {
     registry.addViewController("/swagger/")

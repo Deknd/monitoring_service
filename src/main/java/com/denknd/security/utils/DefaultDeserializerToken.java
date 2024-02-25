@@ -6,6 +6,7 @@ import com.nimbusds.jose.JWEDecrypter;
 import com.nimbusds.jwt.EncryptedJWT;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.stereotype.Component;
 
 import java.text.ParseException;
 import java.util.UUID;
@@ -16,10 +17,8 @@ import java.util.function.Function;
  */
 @RequiredArgsConstructor
 @Slf4j
+@Component
 public class DefaultDeserializerToken implements Function<String, Token> {
-  /**
-   * Декриптор для расшифровки токена
-   */
   private final JWEDecrypter jweDecrypter;
 
   /**

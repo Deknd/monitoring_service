@@ -4,9 +4,6 @@ import com.denknd.security.entity.Token;
 import com.denknd.security.entity.UserSecurity;
 import com.denknd.security.service.TokenService;
 import com.denknd.security.service.impl.SecurityServiceImpl;
-import com.denknd.util.JwtConfig;
-import com.denknd.util.PasswordEncoder;
-import com.nimbusds.jose.JWEDecrypter;
 import com.nimbusds.jose.JWEEncrypter;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletResponse;
@@ -35,19 +32,14 @@ class SecurityServiceImplTest {
   private Function<UserSecurity, Token> createToken;
   @Mock
   private Function<Token, String> serializerToken;
-  @Mock
-  private JWEEncrypter jweEncrypter;
-  @Mock
-  private JwtConfig jwtConfig;
+
   private SecurityServiceImpl securityService;
   private AutoCloseable closeable;
 
   @BeforeEach
   void setUp() {
     this.closeable = MockitoAnnotations.openMocks(this);
-    this.securityService = new SecurityServiceImpl(this.jweEncrypter, this.tokenService, this.jwtConfig);
-    this.securityService.setCreateToken(this.createToken);
-    this.securityService.setSerializerToken(this.serializerToken);
+    this.securityService = new SecurityServiceImpl(this.tokenService, createToken, serializerToken);
   }
   @AfterEach
   void tearDown() throws Exception {

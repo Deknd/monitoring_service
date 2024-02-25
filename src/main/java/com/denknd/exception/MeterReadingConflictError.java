@@ -12,10 +12,7 @@ import org.springframework.web.ErrorResponse;
  */
 @RequiredArgsConstructor
 @Getter
-public class MeterReadingConflictError extends Exception implements ErrorResponse {
-  /**
-   * Сообщение об ошибке.
-   */
+public class MeterReadingConflictError extends RuntimeException implements ErrorResponse {
   private final String message;
 
   /**

@@ -1,16 +1,21 @@
 package com.denknd.repository.impl;
 
+import com.denknd.config.ContainerConfig;
 import com.denknd.entity.Address;
 import com.denknd.entity.MeterReading;
 import com.denknd.entity.TypeMeter;
 import com.denknd.mappers.MeterReadingMapper;
-import com.denknd.repository.TestContainer;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
+import org.mockito.Spy;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.mock.mockito.SpyBean;
+import org.springframework.test.context.ActiveProfiles;
 
 import java.sql.SQLException;
 import java.time.OffsetDateTime;
@@ -25,22 +30,15 @@ import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-class PostgresMeterReadingRepositoryTest extends TestContainer {
+@SpringBootTest(classes = {ContainerConfig.class})
+@ActiveProfiles("test")
+class PostgresMeterReadingRepositoryTest {
 
+  @Autowired
   private PostgresMeterReadingRepository meterRepository;
-  private AutoCloseable closeable;
-  @Mock
+  @SpyBean
   private MeterReadingMapper meterReadingMapper;
 
-  @BeforeEach
-  void setUp() {
-    this.closeable = MockitoAnnotations.openMocks(this);
-    this.meterRepository = new PostgresMeterReadingRepository(postgresContainer.getDataBaseConnection(), this.meterReadingMapper);
-  }
-  @AfterEach
-  void tearDown() throws Exception {
-    this.closeable.close();
-  }
 
   @Test
   @DisplayName("Проверяет что объект сохраняется и генерирует id")
@@ -118,7 +116,6 @@ class PostgresMeterReadingRepositoryTest extends TestContainer {
   void findActualMeterReading() throws SQLException {
     var addressId = 2L;
     var typeId = 2L;
-    when(this.meterReadingMapper.mapResultSetToMeterReading(any())).thenReturn(mock(MeterReading.class));
 
     var actualMeterReading = this.meterRepository.findActualMeterReading(addressId, typeId);
 
@@ -156,7 +153,6 @@ class PostgresMeterReadingRepositoryTest extends TestContainer {
     var addressId = 2L;
     var typeId = 2L;
     var date = YearMonth.now().minusMonths(1);
-    when(this.meterReadingMapper.mapResultSetToMeterReading(any())).thenReturn(mock(MeterReading.class));
 
     var actualMeterReading = this.meterRepository.findMeterReadingForDate(addressId, typeId, date);
 

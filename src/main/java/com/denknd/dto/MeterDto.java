@@ -35,5 +35,5 @@ public record MeterDto(
         OffsetDateTime registrationDate,
 
         @Schema(description = "Дата последней проверки")
-        OffsetDateTime lastCheckDate)  {
+        OffsetDateTime lastCheckDate) {
 }

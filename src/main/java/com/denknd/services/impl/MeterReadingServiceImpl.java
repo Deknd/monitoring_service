@@ -6,6 +6,7 @@ import com.denknd.entity.MeterReading;
 import com.denknd.entity.Parameters;
 import com.denknd.entity.Roles;
 import com.denknd.entity.TypeMeter;
+import com.denknd.exception.AccessDeniedException;
 import com.denknd.exception.MeterReadingConflictError;
 import com.denknd.repository.MeterReadingRepository;
 import com.denknd.security.service.SecurityService;
@@ -17,7 +18,6 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
-import java.nio.file.AccessDeniedException;
 import java.sql.SQLException;
 import java.time.OffsetDateTime;
 import java.time.YearMonth;
@@ -36,25 +36,10 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 @Slf4j
 public class MeterReadingServiceImpl implements MeterReadingService {
-  /**
-   * Репозиторий для работы с показаниями.
-   */
   private final MeterReadingRepository meterReadingRepository;
-  /**
-   * Сервис для работы с типами показаний.
-   */
   private final TypeMeterService typeMeterService;
-  /**
-   * Сервис для работы с счетчиками
-   */
   private final MeterCountService meterCountService;
-  /**
-   * Сервис для управления адресами.
-   */
   private final AddressService addressService;
-  /**
-   * Сервис по работе с безопасностью
-   */
   private final SecurityService securityService;
 
   /**
@@ -66,7 +51,7 @@ public class MeterReadingServiceImpl implements MeterReadingService {
    * @throws AccessDeniedException     Выбрасывается, если доступ запрещен для данной операции
    */
   @Override
-  public MeterReading addMeterValue(MeterReading meterReading) throws MeterReadingConflictError, AccessDeniedException {
+  public MeterReading addMeterValue(MeterReading meterReading) {
     var userSecurity = this.securityService.getUserSecurity();
     if (userSecurity.role().equals(Roles.USER)) {
       var addressesByActiveUser = this.addressService.getAddresses(Optional.of(userSecurity.userId()));
@@ -133,7 +118,7 @@ public class MeterReadingServiceImpl implements MeterReadingService {
    */
   @Override
   public List<MeterReading> getActualMeterByAddress(Parameters parameters) {
-    if (!this.securityService.isAuthentication()){
+    if (!this.securityService.isAuthentication()) {
       return Collections.emptyList();
     }
     var typeCode = this.typeMeterService.getTypeMeter()
@@ -267,7 +252,7 @@ public class MeterReadingServiceImpl implements MeterReadingService {
    */
   @Override
   public List<MeterReading> getHistoryMeterByAddress(Parameters parameters) {
-    if (!this.securityService.isAuthentication()){
+    if (!this.securityService.isAuthentication()) {
       return Collections.emptyList();
     }
     var addressIds = this.getAddressIdByRole(parameters);

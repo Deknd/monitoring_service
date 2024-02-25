@@ -3,28 +3,28 @@
                    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.6.xsd">
 
     <changeSet id="001__add_datatest_meter_readings" author="den">
-        <insert tableName="meter_readings" schemaName="${defaultSchema}">
+        <insert tableName="meter_readings">
             <column name="address_id" value="1"/>
             <column name="type_meter_id" value="1"/>
             <column name="meter_value" value="123.32"/>
             <column name="submission_month" value="2023-10"/>
             <column name="time_send_meter" valueDate="2023-10-05"/>
         </insert>
-        <insert tableName="meter_readings" schemaName="${defaultSchema}">
+        <insert tableName="meter_readings">
             <column name="address_id" value="1"/>
             <column name="type_meter_id" value="1"/>
             <column name="meter_value" value="1233.32"/>
             <column name="submission_month" value="2023-11"/>
             <column name="time_send_meter" valueDate="2023-11-05"/>
         </insert>
-        <insert tableName="meter_readings" schemaName="${defaultSchema}">
+        <insert tableName="meter_readings">
             <column name="address_id" value="1"/>
             <column name="type_meter_id" value="1"/>
             <column name="meter_value" value="12333.32"/>
             <column name="submission_month" value="2023-12"/>
             <column name="time_send_meter" valueDate="2023-12-05"/>
         </insert>
-        <insert tableName="meter_readings" schemaName="${defaultSchema}">
+        <insert tableName="meter_readings">
             <column name="address_id" value="1"/>
             <column name="type_meter_id" value="1"/>
             <column name="meter_value" value="123123.32"/>
@@ -34,28 +34,28 @@
         <comment>Добавления показаний для теста</comment>
     </changeSet>
     <changeSet id="002__add_datatest_meter_readings" author="den">
-        <insert tableName="meter_readings" schemaName="${defaultSchema}">
+        <insert tableName="meter_readings">
             <column name="address_id" value="1"/>
             <column name="type_meter_id" value="2"/>
             <column name="meter_value" value="244.32"/>
             <column name="submission_month" value="2023-10"/>
             <column name="time_send_meter" valueDate="2023-10-05"/>
         </insert>
-        <insert tableName="meter_readings" schemaName="${defaultSchema}">
+        <insert tableName="meter_readings">
             <column name="address_id" value="1"/>
             <column name="type_meter_id" value="2"/>
             <column name="meter_value" value="42344.32"/>
             <column name="submission_month" value="2023-11"/>
             <column name="time_send_meter" valueDate="2023-11-05"/>
         </insert>
-        <insert tableName="meter_readings" schemaName="${defaultSchema}">
+        <insert tableName="meter_readings">
             <column name="address_id" value="1"/>
             <column name="type_meter_id" value="2"/>
             <column name="meter_value" value="123255.32"/>
             <column name="submission_month" value="2023-12"/>
             <column name="time_send_meter" valueDate="2023-12-05"/>
         </insert>
-        <insert tableName="meter_readings" schemaName="${defaultSchema}">
+        <insert tableName="meter_readings">
             <column name="address_id" value="1"/>
             <column name="type_meter_id" value="2"/>
             <column name="meter_value" value="242344.32"/>
@@ -65,28 +65,28 @@
         <comment>Добавления показаний для теста</comment>
     </changeSet>
     <changeSet id="001__add_data_test_meter_readings" author="den">
-        <insert tableName="meter_readings" schemaName="${defaultSchema}">
+        <insert tableName="meter_readings">
             <column name="address_id" value="1"/>
             <column name="type_meter_id" value="3"/>
             <column name="meter_value" value="99"/>
             <column name="submission_month" value="2023-10"/>
             <column name="time_send_meter" valueDate="2023-10-05"/>
         </insert>
-        <insert tableName="meter_readings" schemaName="${defaultSchema}">
+        <insert tableName="meter_readings">
             <column name="address_id" value="1"/>
             <column name="type_meter_id" value="3"/>
             <column name="meter_value" value="999"/>
             <column name="submission_month" value="2023-11"/>
             <column name="time_send_meter" valueDate="2023-11-05"/>
         </insert>
-        <insert tableName="meter_readings" schemaName="${defaultSchema}">
+        <insert tableName="meter_readings">
             <column name="address_id" value="1"/>
             <column name="type_meter_id" value="3"/>
             <column name="meter_value" value="9999"/>
             <column name="submission_month" value="2023-12"/>
             <column name="time_send_meter" valueDate="2023-12-05"/>
         </insert>
-        <insert tableName="meter_readings" schemaName="${defaultSchema}">
+        <insert tableName="meter_readings">
             <column name="address_id" value="1"/>
             <column name="type_meter_id" value="3"/>
             <column name="meter_value" value="999999"/>

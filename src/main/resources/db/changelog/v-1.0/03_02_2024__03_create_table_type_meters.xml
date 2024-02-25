@@ -2,12 +2,11 @@
                    xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
                    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.6.xsd">
     <changeSet id="001__create_meters_sequence" author="den">
-        <createSequence sequenceName="id_type_meter_seq" startValue="1" incrementBy="1"
-                        schemaName="${defaultSchema}"/>
+        <createSequence sequenceName="id_type_meter_seq" startValue="1" incrementBy="1"/>
         <comment>Последовательность для таблицы счетчиков</comment>
     </changeSet>
     <changeSet id="001__create_type_meter_table" author="den">
-        <createTable tableName="type_meters" schemaName="${defaultSchema}">
+        <createTable tableName="type_meters">
             <column name="type_meter_id" type="BIGINT" defaultValueSequenceNext="id_type_meter_seq">
                 <constraints primaryKey="true" nullable="false" primaryKeyName="type_meter_pkey" unique="true"/>
             </column>

@@ -3,7 +3,7 @@
                    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.6.xsd">
 
     <changeSet id="001__add_data_test_audit" author="den">
-        <insert tableName="audits" schemaName="${defaultSchema}">
+        <insert tableName="audits">
             <column name="operation" value="test audit operation"/>
             <column name="operation_time" valueDate="NOW()"/>
             <column name="user_id" value="1"/>

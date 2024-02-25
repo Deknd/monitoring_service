@@ -25,7 +25,7 @@ public interface TypeMeterService {
    * @throws TypeMeterAdditionException Исключение, выбрасываемое при несоблюдении ограничений базы данных.
    * @throws AccessDeniedException      Исключение, выбрасываемое при отсутствии доступа для добавления нового типа показаний.
    */
-  TypeMeter addNewTypeMeter(TypeMeter newType) throws TypeMeterAdditionException, AccessDeniedException;
+  TypeMeter addNewTypeMeter(TypeMeter newType);
 
   /**
    * Возвращает объект с типом показаний по коду этого типа.

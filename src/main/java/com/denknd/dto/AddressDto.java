@@ -5,8 +5,6 @@ import jakarta.validation.constraints.Digits;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import lombok.Builder;
-import lombok.Getter;
-import lombok.Setter;
 
 /**
  * Объект для передачи адреса пользователю
@@ -44,7 +42,7 @@ public record AddressDto(
         @Schema(description = "Номер дома", minLength = 2, maxLength = 50)
         String house,
 
-        @Size( max = 5)
+        @Size(max = 5)
         @Schema(description = "Номер квартиры", maxLength = 5)
         String apartment,
 

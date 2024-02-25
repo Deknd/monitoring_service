@@ -56,8 +56,8 @@ class AuthenticationFilterTest {
     this.authenticationFilter = new AuthenticationFilter(
             this.securityService,
             List.of(this.authenticationConverter),
-            List.of(this.userAuthenticator),
-            this.objectMapper);
+            this.objectMapper,
+            List.of(this.userAuthenticator));
     this.authenticationFilter.addIgnoredRequest("/test/url", "POST", "GET");
   }
 

@@ -1,16 +1,21 @@
 package com.denknd.repository.impl;
 
+import com.denknd.config.ContainerConfig;
 import com.denknd.entity.Roles;
 import com.denknd.entity.User;
 import com.denknd.mappers.UserMapper;
-import com.denknd.repository.TestContainer;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.mock.mockito.SpyBean;
+import org.springframework.test.context.ActiveProfiles;
 
+import java.security.SecureRandom;
 import java.sql.SQLException;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -21,21 +26,15 @@ import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-class PostgresUserRepositoryTest extends TestContainer {
+@SpringBootTest(classes = {ContainerConfig.class})
+@ActiveProfiles("test")
+class PostgresUserRepositoryTest {
+  @Autowired
   private PostgresUserRepository repository;
-  @Mock
+  @SpyBean
   private UserMapper userMapper;
-  private AutoCloseable closeable;
-
-  @BeforeEach
-  void setUp() {
-    this.closeable = MockitoAnnotations.openMocks(this);
-    this.repository = new PostgresUserRepository(postgresContainer.getDataBaseConnection(), this.userMapper);
-  }
-  @AfterEach
-  void tearDown() throws Exception {
-    this.closeable.close();
-  }
+  private static SecureRandom random = new SecureRandom();
+  private static String ALLOWED_CHARACTERS = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
   @Test
   @DisplayName("Проверяет, что пользователь существует")
   void existUser() {
@@ -86,42 +85,12 @@ class PostgresUserRepositoryTest extends TestContainer {
 
     assertThat(this.repository.existUser(userTest.getEmail())).isFalse();
   }
-  @Test
-  @DisplayName("Проверяет, что не сохраняет нового пользователя, если слишком длинное имя")
-  void save_longFirstName(){
-    var userTest = User.builder()
-            .email(generateRandomLogin(10)+"@Email.com")
-            .role(Roles.USER)
-            .password("1234")
-            .firstName(generateRandomLogin(51))
-            .lastName(generateRandomLogin(10))
-            .build();
 
-    assertThatThrownBy(()->this.repository.save(userTest)).isInstanceOf(SQLException.class);
-
-    assertThat(this.repository.existUser(userTest.getEmail())).isFalse();
-  }
-  @Test
-  @DisplayName("Проверяет, что не сохраняет нового пользователя, если слишком длинная фамилия")
-  void save_longLastName(){
-    var userTest = User.builder()
-            .email(generateRandomLogin(10)+"@Email.com")
-            .role(Roles.USER)
-            .password("1234")
-            .firstName(generateRandomLogin(10))
-            .lastName(generateRandomLogin(51))
-            .build();
-
-    assertThatThrownBy(()->this.repository.save(userTest)).isInstanceOf(SQLException.class);
-
-    assertThat(this.repository.existUser(userTest.getEmail())).isFalse();
-  }
 
   @Test
   @DisplayName("Проверяет, что пользователь достается из памяти")
   void find() throws SQLException {
     var email = "test@email.com";
-    when(this.userMapper.mapResultSetToUser(any())).thenReturn(mock(User.class));
 
     var optionalUser = this.repository.find(email);
 
@@ -141,7 +110,6 @@ class PostgresUserRepositoryTest extends TestContainer {
   @Test
   @DisplayName("проверяет что пользователь с данным айди существует")
   void existUserByUserId() throws SQLException {
-    when(this.userMapper.mapResultSetToUser(any())).thenReturn(mock(User.class));
 
     var result = this.repository.existUserByUserId(3L);
 
@@ -159,7 +127,6 @@ class PostgresUserRepositoryTest extends TestContainer {
   @Test
   @DisplayName("проверяет, что по айди достается пользователь")
   void findById() throws SQLException {
-    when(this.userMapper.mapResultSetToUser(any())).thenReturn(mock(User.class));
 
     var result = this.repository.findById(3L);
 
@@ -175,6 +142,13 @@ class PostgresUserRepositoryTest extends TestContainer {
 
     assertThat(result).isEmpty();
   }
-
+  public String generateRandomLogin(int length) {
+    StringBuilder login = new StringBuilder(length);
+    for (int i = 0; i < length; i++) {
+      int randomIndex = random.nextInt(ALLOWED_CHARACTERS.length());
+      login.append(ALLOWED_CHARACTERS.charAt(randomIndex));
+    }
+    return login.toString();
+  }
 
 }

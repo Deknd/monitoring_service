@@ -1,11 +1,17 @@
-db:
-  username: "testUserDb"
-  password: "testPasswordDb"
-  url: jdbc:test://test:5432/test
-liquibase:
-  technical_schema: "technical_schema"
-  default_schema: "default_schema"
-  changelog: "src/test/resources/db/changelog/changelog-test.xml"
+spring:
+  application:
+    name: "Monitoring service"
+
+  liquibase:
+    change-log: classpath:db/changelog/changelog-test.xml
+    default-schema: public
+    liquibase-schema: public
+
 jwt:
-  cookie_token_key: "cookie_token_key"
-  expiration: 2
+  cookie-token-key: '{"kty":"oct","use":"enc","k":"iGJzlxHw5WqHUVW2LDnsxLkWuUnxclpnhWtaDgvbmt4"}'
+  expiration: '24'
+logging:
+  level:
+    org:
+      springframework:
+        security: TRACE

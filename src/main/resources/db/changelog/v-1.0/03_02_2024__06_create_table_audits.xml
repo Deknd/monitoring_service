@@ -2,12 +2,11 @@
                    xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
                    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.6.xsd">
     <changeSet id="001__create_audits_sequence" author="den">
-        <createSequence sequenceName="id_audits_seq" startValue="1" incrementBy="1"
-                        schemaName="${defaultSchema}"/>
+        <createSequence sequenceName="id_audits_seq" startValue="1" incrementBy="1"/>
         <comment>Последовательность для таблицы счетчиков</comment>
     </changeSet>
     <changeSet id="002__create_audit_table" author="den">
-        <createTable tableName="audits" schemaName="${defaultSchema}">
+        <createTable tableName="audits">
             <column name="audit_id" type="BIGINT" defaultValueSequenceNext="id_audits_seq">
                 <constraints primaryKey="true" nullable="false" primaryKeyName="audit_pkey" unique="true"/>
             </column>
@@ -24,11 +23,9 @@
         <comment>Таблица для хранения аудита</comment>
     </changeSet>
     <changeSet id="003__create_fk_user_id_in_audits" author="den">
-        <addForeignKeyConstraint baseTableSchemaName="${defaultSchema}"
-                                 baseTableName="audits"
+        <addForeignKeyConstraint baseTableName="audits"
                                  baseColumnNames="user_id"
                                  constraintName="fk_audits_user"
-                                 referencedTableSchemaName="${defaultSchema}"
                                  referencedTableName="users"
                                  referencedColumnNames="user_id"/>
         <comment>Добавление внешнего ключа для связи с таблицей пользователей в таблице аудита</comment>

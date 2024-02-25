@@ -1,13 +1,12 @@
 package com.denknd.in.controllers;
 
-import com.denknd.aspectj.audit.AuditRecording;
-import com.denknd.aspectj.time.MeasureExecutionTime;
+import com.denknd.audit.api.AuditRecording;
 import com.denknd.dto.AddressDto;
-import com.denknd.exception.AddressDatabaseException;
 import com.denknd.mappers.AddressMapper;
 import com.denknd.services.AddressService;
 import com.denknd.swagger.RespBadRequest;
 import com.denknd.swagger.RespForbidden;
+import com.denknd.time.api.MeasureExecutionTime;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.ArraySchema;
@@ -29,7 +28,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.nio.file.AccessDeniedException;
 import java.util.List;
 import java.util.Optional;
 
@@ -45,13 +43,7 @@ import java.util.Optional;
         description = "Дает доступ к управлению адресами"
 )
 public class AddressController {
-  /**
-   * Сервис управления адресами.
-   */
   private final AddressService addressService;
-  /**
-   * Маппер адресов.
-   */
   private final AddressMapper addressMapper;
 
   /**
@@ -59,8 +51,6 @@ public class AddressController {
    *
    * @param addressDto адрес полученный от пользователя
    * @return возвращает добавленный адрес
-   * @throws AddressDatabaseException ошибка при сохранении адреса в бд.
-   * @throws AccessDeniedException    ошибка доступа к данным.
    */
   @Operation(summary = "Добавляет новый адрес(roles: USER)")
   @ApiResponses(value = {
@@ -76,8 +66,7 @@ public class AddressController {
   @RespForbidden
   @PostMapping(produces = MediaType.APPLICATION_JSON_VALUE)
   @AuditRecording("Добавляет новый адрес")
-  public ResponseEntity<AddressDto> addAddress(@RequestBody @Valid AddressDto addressDto)
-          throws AddressDatabaseException, AccessDeniedException {
+  public ResponseEntity<AddressDto> addAddress(@RequestBody @Valid AddressDto addressDto) {
     var address = this.addressMapper.mapAddressDtoToAddress(addressDto);
     var result = this.addressService.addAddressByUser(address);
     return ResponseEntity

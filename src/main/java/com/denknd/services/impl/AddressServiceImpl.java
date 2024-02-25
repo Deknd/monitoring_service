@@ -3,6 +3,7 @@ package com.denknd.services.impl;
 import com.denknd.entity.Address;
 import com.denknd.entity.Parameters;
 import com.denknd.entity.Roles;
+import com.denknd.exception.AccessDeniedException;
 import com.denknd.exception.AddressDatabaseException;
 import com.denknd.repository.AddressRepository;
 import com.denknd.security.service.SecurityService;
@@ -11,7 +12,6 @@ import com.denknd.services.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
-import java.nio.file.AccessDeniedException;
 import java.sql.SQLException;
 import java.util.Collections;
 import java.util.List;
@@ -23,18 +23,8 @@ import java.util.Optional;
 @Service
 @RequiredArgsConstructor
 public class AddressServiceImpl implements AddressService {
-
-  /**
-   * Репозиторий для работы с адресами.
-   */
   private final AddressRepository addressRepository;
-  /**
-   * Сервис управления безопасностью.
-   */
   private final SecurityService securityService;
-  /**
-   * Сервис управления пользователями.
-   */
   private final UserService userService;
 
   /**
@@ -68,7 +58,7 @@ public class AddressServiceImpl implements AddressService {
    * @return Полностью заполненный объект адреса с присвоенным айди.
    */
   @Override
-  public Address addAddressByUser(Address address) throws AddressDatabaseException, AccessDeniedException {
+  public Address addAddressByUser(Address address) {
     var userSecurity = this.securityService.getUserSecurity();
     if (userSecurity.role().equals(Roles.USER)) {
       var user = this.userService.getUser(Parameters.builder().userId(userSecurity.userId()).build());

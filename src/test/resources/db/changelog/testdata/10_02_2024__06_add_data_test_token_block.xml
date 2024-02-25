@@ -3,7 +3,7 @@
                    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.6.xsd">
 
     <changeSet id="001__add_data_token_block" author="den">
-        <insert tableName="token_block" schemaName="${defaultSchema}">
+        <insert tableName="token_block">
             <column name="token_id" value="fc9a79e6-b3af-4549-b6d0-35ee2802fb79"/>
             <column name="expiration_time" valueComputed="now() + interval '10 hours'"/>
         </insert>

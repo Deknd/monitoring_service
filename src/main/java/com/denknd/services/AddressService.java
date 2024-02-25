@@ -24,10 +24,8 @@ public interface AddressService {
    *
    * @param address Заполненный объект адреса без идентификатора.
    * @return Копия сохраненного адреса с идентификатором.
-   * @throws AddressDatabaseException   Исключение, выбрасываемое в случае ошибки базы данных при добавлении адреса.
-   * @throws AccessDeniedException      Исключение, выбрасываемое в случае отсутствия доступа для добавления адреса.
    */
-  Address addAddressByUser(Address address) throws AddressDatabaseException, AccessDeniedException;
+  Address addAddressByUser(Address address);
 
   /**
    * Получение адреса по его идентификатору.

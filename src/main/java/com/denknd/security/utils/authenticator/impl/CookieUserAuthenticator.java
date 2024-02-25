@@ -17,9 +17,6 @@ import java.time.Instant;
 @Component
 @RequiredArgsConstructor
 public class CookieUserAuthenticator implements UserAuthenticator {
-  /**
-   * Сервис для работы с заблокированными токенами
-   */
   private final TokenService tokenService;
 
   /**

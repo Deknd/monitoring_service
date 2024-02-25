@@ -2,11 +2,11 @@
                    xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
                    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.6.xsd">
     <changeSet id="001__create_users_sequence" author="den">
-        <createSequence sequenceName="id_user_seq" startValue="1" incrementBy="1" schemaName="${defaultSchema}"/>
+        <createSequence sequenceName="id_user_seq" startValue="1" incrementBy="1"/>
         <comment>Sequence для таблицы пользователей</comment>
     </changeSet>
     <changeSet id="002__create_users_table" author="den">
-        <createTable tableName="users" schemaName="${defaultSchema}">
+        <createTable tableName="users">
             <column name="user_id" type="BIGINT" defaultValueSequenceNext="id_user_seq">
                 <constraints primaryKey="true" nullable="false" primaryKeyName="user_pkey" unique="true"/>
             </column>
