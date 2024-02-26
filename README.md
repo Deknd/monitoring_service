@@ -36,8 +36,7 @@ gradle build
 1. После успешной сборки выполните команду:
 
 ```shell
-java -jar ./build/libs/monitoring_service-1.0-SNAPSHOT-plain.jar
-
+java -jar ./build/libs/monitoring_service-1.0-SNAPSHOT-boot.jar
 ```
 
 Это запустит ваше приложение и сделает его доступным для использования.

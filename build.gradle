@@ -11,23 +11,25 @@ version '1.0-SNAPSHOT'
 repositories {
     mavenCentral()
 }
-bootJar {
-    manifest {
-        attributes 'Start-Class': 'com.denknd.MonitoringServiceApplication'
-    }
-}
 
 configurations {
     compileOnly {
         extendsFrom annotationProcessor
     }
 }
+tasks.named("bootJar") {
+    mainClass = 'com.denknd.MonitoringServiceApplication'
+}
+
 
 ext {
     mapstructVersion = '1.6.0.Beta1'
     lombokMapstructVersion = '0.2.0'
     nimbusdsVersion = '9.38-rc3'
     springDocVersion = '2.3.0'
+}
+tasks.named("bootJar") {
+    archiveClassifier = 'boot'
 }
 
 dependencies {
