@@ -2,13 +2,13 @@ package com.denknd.services.impl;
 
 import com.denknd.entity.Meter;
 import com.denknd.entity.Roles;
+import com.denknd.exception.AccessDeniedException;
 import com.denknd.repository.MeterCountRepository;
 import com.denknd.security.service.SecurityService;
 import com.denknd.services.MeterCountService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
-import java.nio.file.AccessDeniedException;
 import java.sql.SQLException;
 import java.time.OffsetDateTime;
 
@@ -18,13 +18,7 @@ import java.time.OffsetDateTime;
 @Service
 @RequiredArgsConstructor
 public class MeterCountServiceImpl implements MeterCountService {
-  /**
-   * Репозиторий для хранения информации о счетчике
-   */
   private final MeterCountRepository meterCountRepository;
-  /**
-   * Сервис по работе с безопасностью.
-   */
   private final SecurityService securityService;
 
   /**
@@ -48,7 +42,7 @@ public class MeterCountServiceImpl implements MeterCountService {
    * @throws SQLException ошибка при сохранении информации в бд
    */
   @Override
-  public Meter addInfoForMeterCount(Meter meter) throws SQLException, AccessDeniedException {
+  public Meter addInfoForMeterCount(Meter meter) throws SQLException{
     var userSecurity = securityService.getUserSecurity();
     if (userSecurity.role().equals(Roles.ADMIN)) {
       return this.meterCountRepository.update(meter);

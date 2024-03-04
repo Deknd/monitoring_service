@@ -3,6 +3,7 @@ package com.denknd.services.impl;
 import com.denknd.entity.Parameters;
 import com.denknd.entity.Roles;
 import com.denknd.entity.User;
+import com.denknd.exception.AccessDeniedException;
 import com.denknd.exception.InvalidUserDataException;
 import com.denknd.exception.UserAlreadyExistsException;
 import com.denknd.repository.UserRepository;
@@ -16,7 +17,6 @@ import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
-import java.nio.file.AccessDeniedException;
 import java.security.NoSuchAlgorithmException;
 import java.sql.SQLException;
 import java.util.Optional;

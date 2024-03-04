@@ -17,12 +17,9 @@ public interface UserService {
    *
    * @param create Полностью созданный объект пользователя, без айди.
    * @return Полностью созданный объект пользователя с айди.
-   * @throws UserAlreadyExistsException Исключение, выбрасываемое при попытке регистрации пользователя с уже существующим email.
    * @throws NoSuchAlgorithmException   Исключение, выбрасываемое при невозможности создания хэша пароля.
-   * @throws InvalidUserDataException   Исключение, выбрасываемое при неверных данных пользователя.
-   * @throws AccessDeniedException      Исключение, выбрасываемое при отсутствии доступа для регистрации нового пользователя.
    */
-  User registrationUser(User create) throws UserAlreadyExistsException, NoSuchAlgorithmException, InvalidUserDataException, AccessDeniedException;
+  User registrationUser(User create) throws NoSuchAlgorithmException;
 
   /**
    * Проверяет существование пользователя по его айди.

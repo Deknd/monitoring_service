@@ -17,10 +17,6 @@ import java.util.stream.Collectors;
 @Component
 @RequiredArgsConstructor
 public class TypeMeterParametersParserFromRawParameters implements Converter<String, Set<Long>> {//implements Function<String, Set<Long>> {
-
-  /**
-   * Контроллер для работы с типами параметров.
-   */
   private final TypeMeterService typeMeterService;
 
   /**

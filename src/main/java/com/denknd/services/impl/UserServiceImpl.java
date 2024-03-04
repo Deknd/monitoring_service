@@ -3,6 +3,7 @@ package com.denknd.services.impl;
 import com.denknd.entity.Parameters;
 import com.denknd.entity.Roles;
 import com.denknd.entity.User;
+import com.denknd.exception.AccessDeniedException;
 import com.denknd.exception.InvalidUserDataException;
 import com.denknd.exception.UserAlreadyExistsException;
 import com.denknd.repository.UserRepository;
@@ -12,7 +13,6 @@ import com.denknd.util.PasswordEncoder;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
-import java.nio.file.AccessDeniedException;
 import java.security.NoSuchAlgorithmException;
 import java.sql.SQLException;
 
@@ -22,17 +22,8 @@ import java.sql.SQLException;
 @Service
 @RequiredArgsConstructor
 public class UserServiceImpl implements UserService {
-  /**
-   * Репозиторий для взаимодействия с хранилищем пользователей.
-   */
   private final UserRepository userRepository;
-  /**
-   * Кодировщик и сравниватель паролей.
-   */
   private final PasswordEncoder passwordEncoder;
-  /**
-   * Сервис для работы с безопасностью.
-   */
   private final SecurityService securityService;
 
   /**
@@ -46,7 +37,7 @@ public class UserServiceImpl implements UserService {
    * @throws AccessDeniedException      Если пользователь уже аутентифицирован.
    */
   @Override
-  public User registrationUser(User user) throws UserAlreadyExistsException, NoSuchAlgorithmException, InvalidUserDataException, AccessDeniedException {
+  public User registrationUser(User user) throws NoSuchAlgorithmException{
     if (this.securityService.isAuthentication()) {
       throw new AccessDeniedException("Вы уже зарегистрированы, если хотите создать еще один аккаунт, выйдите из этого аккаунта.");
     }

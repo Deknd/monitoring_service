@@ -3,12 +3,16 @@ package com.denknd.repository.impl;
 import com.denknd.entity.User;
 import com.denknd.mappers.UserMapper;
 import com.denknd.repository.UserRepository;
-import com.denknd.util.DataBaseConnection;
 import lombok.RequiredArgsConstructor;
+import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.RowMapper;
+import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.List;
 import java.util.Optional;
 
 /**
@@ -17,13 +21,7 @@ import java.util.Optional;
 @Repository
 @RequiredArgsConstructor
 public class PostgresUserRepository implements UserRepository {
-  /**
-   * Выдает соединение с базой данных
-   */
-  private final DataBaseConnection dataBaseConnection;
-  /**
-   * Маппер для объектов пользователя.
-   */
+  private final JdbcTemplate jdbcTemplate;
   private final UserMapper userMapper;
 
   /**
@@ -35,19 +33,10 @@ public class PostgresUserRepository implements UserRepository {
   @Override
   public boolean existUser(String email) {
     var sql = "SELECT 1 FROM users WHERE email = ?";
-    try (
-            var connection = dataBaseConnection.createConnection();
-            var preparedStatement = connection.prepareStatement(sql);
-    ) {
-      preparedStatement.setString(1, email);
-      try (var resultSet = preparedStatement.executeQuery()) {
-        return resultSet.next();
-      }
-    } catch (SQLException e) {
-      e.printStackTrace();
-      return false;
-    }
+    List<Boolean> result = jdbcTemplate.queryForList(sql, Boolean.class, email);
+    return !result.isEmpty();
   }
+
 
   /**
    * Проверяет, существует ли пользователь с указанным айди.
@@ -58,20 +47,10 @@ public class PostgresUserRepository implements UserRepository {
   @Override
   public boolean existUserByUserId(Long userId) {
     var sql = "SELECT 1 FROM users WHERE user_id = ?";
-    try (
-            var connection = dataBaseConnection.createConnection();
-            var preparedStatement = connection.prepareStatement(sql)
-    ) {
-      preparedStatement.setLong(1, userId);
-      try (var resultSet = preparedStatement.executeQuery()) {
-        return resultSet.next();
-      }
-
-    } catch (SQLException e) {
-      e.printStackTrace();
-      return false;
-    }
+    List<Boolean> result = jdbcTemplate.queryForList(sql, Boolean.class, userId);
+    return !result.isEmpty();
   }
+
 
   /**
    * Сохраняет пользователя в память.
@@ -79,48 +58,33 @@ public class PostgresUserRepository implements UserRepository {
    * @param user Заполненный объект пользователя, без айди.
    * @return Возвращает копию сохраненного пользователя.
    */
+  @Transactional
   @Override
   public User save(User user) throws SQLException {
     if (user.getUserId() != null) {
       throw new SQLException("Попытка сохранить пользователя у которого уже есть идентификатор");
     }
     var sql = "INSERT INTO users (email, roles, password, user_name, user_last_name) VALUES (?, ?, ?, ?, ?)";
-    var connection = this.dataBaseConnection.createConnection();
-    connection.setAutoCommit(false);
-    try (
-            var preparedStatement = connection.prepareStatement(
-                    sql,
-                    Statement.RETURN_GENERATED_KEYS)
-    ) {
-
+    var keyHolder = new GeneratedKeyHolder();
+    var affectedRows = jdbcTemplate.update(con -> {
+      var preparedStatement = con.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
       preparedStatement.setString(1, user.getEmail());
       preparedStatement.setString(2, user.getRole().toString());
       preparedStatement.setString(3, user.getPassword());
       preparedStatement.setString(4, user.getFirstName());
       preparedStatement.setString(5, user.getLastName());
-
-      var affectedRows = preparedStatement.executeUpdate();
-
-      if (affectedRows == 0) {
-        connection.rollback();
-        throw new SQLException("Пользователь не создан, ни одной строки не добавлено в БД");
-      }
-
-      try (var generatedKeys = preparedStatement.getGeneratedKeys()) {
-        if (generatedKeys.next()) {
-          user.setUserId(generatedKeys.getLong(1));
-          connection.commit();
-          return user;
-        } else {
-          connection.rollback();
-          throw new SQLException("Пользователь не создан, не сгенерирован идентификатор");
-        }
-      }
-    } finally {
-      if (connection != null) {
-        connection.close();
-      }
+      return preparedStatement;
+    }, keyHolder);
+    if (affectedRows == 0) {
+      throw new SQLException("Пользователь не создан, ни одной строки не добавлено в БД");
     }
+    var generatedKeys = keyHolder.getKeys();
+    if (generatedKeys == null || generatedKeys.size() == 0 || generatedKeys.get("user_id") == null) {
+      throw new SQLException("Ошибка сохранения пользователя, идентификатор не сгенерирован");
+    }
+    var generatedId = (Long) generatedKeys.get("user_id");
+    user.setUserId(generatedId);
+    return user;
   }
 
   /**
@@ -132,23 +96,11 @@ public class PostgresUserRepository implements UserRepository {
   @Override
   public Optional<User> find(String email) {
     var sql = "SELECT * FROM users WHERE email = ?";
-    try (
-            var connection = dataBaseConnection.createConnection();
-            var preparedStatement = connection.prepareStatement(sql)
-    ) {
-      preparedStatement.setString(1, email);
-      try (var resultSet = preparedStatement.executeQuery()) {
-        if (resultSet.next()) {
-
-          var user = this.userMapper.mapResultSetToUser(resultSet);
-          return Optional.of(user);
-        }
-      }
-    } catch (SQLException e) {
-      e.printStackTrace();
-    }
-    return Optional.empty();
+    RowMapper<User> rowMapper = (resultSet, rowNum) -> this.userMapper.mapResultSetToUser(resultSet);
+    var users = jdbcTemplate.query(sql, rowMapper, email);
+    return users.isEmpty() ? Optional.empty() : Optional.of(users.get(0));
   }
+
 
   /**
    * Ищет пользователя по айди.
@@ -159,19 +111,8 @@ public class PostgresUserRepository implements UserRepository {
   @Override
   public Optional<User> findById(Long id) {
     var sql = "SELECT * FROM users WHERE user_id = ?";
-    try (
-            var connection = dataBaseConnection.createConnection();
-            var preparedStatement = connection.prepareStatement(sql)
-    ) {
-      preparedStatement.setLong(1, id);
-      try (var resultSet = preparedStatement.executeQuery()) {
-        if (resultSet.next()) {
-          return Optional.of(this.userMapper.mapResultSetToUser(resultSet));
-        }
-      }
-    } catch (SQLException e) {
-      e.printStackTrace();
-    }
-    return Optional.empty();
+    RowMapper<User> rowMapper = (resultSet, rowNum) -> this.userMapper.mapResultSetToUser(resultSet);
+    var users = jdbcTemplate.query(sql, rowMapper, id);
+    return users.isEmpty() ? Optional.empty() : Optional.of(users.get(0));
   }
 }

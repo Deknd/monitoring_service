@@ -12,11 +12,10 @@ import org.springframework.web.ErrorResponse;
  */
 @RequiredArgsConstructor
 @Getter
-public class UserAlreadyExistsException extends Exception implements ErrorResponse {
-  /**
-   * Сообщение об ошибке.
-   */
+public class UserAlreadyExistsException extends RuntimeException implements ErrorResponse {
+
   private final String message;
+
   /**
    * Получает HTTP статус код для ошибки.
    *

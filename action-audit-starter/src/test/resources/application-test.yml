@@ -1,0 +1,7 @@
+spring:
+
+  liquibase:
+    change-log: db/changelog/changelog-master-audit.xml
+    url: ${spring.datasource.url}
+    user: ${spring.datasource.username}
+    password: ${spring.datasource.password}

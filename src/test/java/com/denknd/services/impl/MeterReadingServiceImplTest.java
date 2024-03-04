@@ -5,6 +5,7 @@ import com.denknd.entity.MeterReading;
 import com.denknd.entity.Parameters;
 import com.denknd.entity.Roles;
 import com.denknd.entity.TypeMeter;
+import com.denknd.exception.AccessDeniedException;
 import com.denknd.exception.MeterReadingConflictError;
 import com.denknd.repository.MeterReadingRepository;
 import com.denknd.security.entity.UserSecurity;
@@ -20,7 +21,6 @@ import org.mockito.ArgumentCaptor;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
-import java.nio.file.AccessDeniedException;
 import java.sql.SQLException;
 import java.time.OffsetDateTime;
 import java.time.YearMonth;

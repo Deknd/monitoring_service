@@ -1,33 +1,24 @@
 package com.denknd.in.controllers;
 
-import com.denknd.config.AppConfig;
-import com.denknd.config.SwaggerConfig;
-import com.denknd.config.WebConfig;
+import com.denknd.config.TestConfig;
 import com.denknd.dto.MeterReadingRequestDto;
 import com.denknd.entity.Parameters;
+import com.denknd.exception.AccessDeniedException;
 import com.denknd.exception.MeterReadingConflictError;
-import com.denknd.in.controllers.ExceptionHandlerController;
-import com.denknd.in.controllers.MeterReadingController;
 import com.denknd.mappers.MeterReadingMapper;
 import com.denknd.services.MeterReadingService;
-import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.module.paramnames.ParameterNamesModule;
-import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentCaptor;
-import org.mockito.Mock;
-import org.mockito.MockitoAnnotations;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
+import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
-import org.springframework.test.context.junit.jupiter.web.SpringJUnitWebConfig;
+import org.springframework.test.context.junit.jupiter.SpringJUnitConfig;
 import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.MvcResult;
-import org.springframework.test.web.servlet.setup.MockMvcBuilders;
-import org.springframework.web.context.WebApplicationContext;
 
-import java.nio.file.AccessDeniedException;
 import java.time.YearMonth;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -42,34 +33,18 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
+@WebMvcTest(controllers = {MeterReadingController.class})
+@AutoConfigureMockMvc
+@SpringJUnitConfig(TestConfig.class)
 class MeterReadingControllerTest {
-  @Mock
+  @MockBean
   private MeterReadingService meterReadingService;
-  @Mock
+  @MockBean
   private MeterReadingMapper meterReadingMapper;
-  private AutoCloseable closeable;
+  @Autowired
   private MockMvc mockMvc;
+  @Autowired
   private ObjectMapper objectMapper;
-
-  @BeforeEach
-  void setUp() {
-    this.closeable = MockitoAnnotations.openMocks(this);
-
-    var meterReadingController = new MeterReadingController(
-            this.meterReadingService,
-            this.meterReadingMapper);
-
-    this.mockMvc = MockMvcBuilders.standaloneSetup(meterReadingController)
-            .setControllerAdvice(new ExceptionHandlerController())
-            .build();
-    this.objectMapper = new ObjectMapper();
-    this.objectMapper.registerModule(new ParameterNamesModule(JsonCreator.Mode.PROPERTIES));
-  }
-
-  @AfterEach
-  void tearDown() throws Exception {
-    this.closeable.close();
-  }
 
   @Test
   @DisplayName("Проверяет, что метод вызывает все нужные сервисы с нужными параметрами")
@@ -112,14 +87,14 @@ class MeterReadingControllerTest {
                     .contentType(MediaType.APPLICATION_JSON)
                     .content(json))
             .andExpect(status().isCreated())
-            .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+            .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
             .andReturn();
 
     verify(this.meterReadingService, times(1)).addMeterValue(any());
   }
 
   @Test
-  @DisplayName("Проверяет, что метод вызывает все сервисы и обрабатывается ошибка MeterReadingConflictError" )
+  @DisplayName("Проверяет, что метод вызывает все сервисы и обрабатывается ошибка MeterReadingConflictError")
   void addMeterReadingValue_MeterReadingConflictError() throws Exception {
     var meterReadingRequestDto = MeterReadingRequestDto.builder()
             .typeMeterId(1L)
@@ -133,7 +108,7 @@ class MeterReadingControllerTest {
                     .contentType(MediaType.APPLICATION_JSON)
                     .content(json))
             .andExpect(status().isConflict())
-            .andExpect(content().contentType(MediaType.APPLICATION_PROBLEM_JSON))
+            .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_PROBLEM_JSON))
             .andReturn();
 
     verify(this.meterReadingService, times(1)).addMeterValue(any());
@@ -154,7 +129,7 @@ class MeterReadingControllerTest {
                     .contentType(MediaType.APPLICATION_JSON)
                     .content(json))
             .andExpect(status().isForbidden())
-            .andExpect(content().contentType(MediaType.APPLICATION_PROBLEM_JSON))
+            .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_PROBLEM_JSON))
             .andReturn();
 
     verify(this.meterReadingService, times(1)).addMeterValue(any());

@@ -1,6 +1,5 @@
 package com.denknd.security.utils.converter.impl;
 
-import com.denknd.exception.BadCredentialsException;
 import com.denknd.security.entity.PreAuthenticatedAuthenticationToken;
 import com.denknd.security.entity.Token;
 import com.denknd.security.utils.DefaultDeserializerToken;
@@ -20,9 +19,6 @@ import java.util.stream.Stream;
 @Component
 @Setter
 public class CookieAuthenticationConverter implements AuthenticationConverter {
-  /**
-   * Функция для десериализации токена из строки.
-   */
   private Function<String, Token> deserializerToken;
 
   @Autowired
@@ -35,10 +31,9 @@ public class CookieAuthenticationConverter implements AuthenticationConverter {
    *
    * @param httpRequest HTTP запрос.
    * @return токен аутентификации пользователя.
-   * @throws BadCredentialsException если происходит ошибка во время обработки аутентификационных данных.
    */
   @Override
-  public PreAuthenticatedAuthenticationToken convert(HttpServletRequest httpRequest) throws BadCredentialsException {
+  public PreAuthenticatedAuthenticationToken convert(HttpServletRequest httpRequest) {
     if (httpRequest.getCookies() == null) {
       return null;
     }

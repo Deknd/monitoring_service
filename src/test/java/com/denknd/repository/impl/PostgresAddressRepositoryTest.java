@@ -1,43 +1,29 @@
 package com.denknd.repository.impl;
 
+import com.denknd.config.ContainerConfig;
 import com.denknd.entity.Address;
 import com.denknd.entity.User;
-import com.denknd.mappers.AddressMapper;
-import com.denknd.repository.TestContainer;
-import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.mockito.Mock;
-import org.mockito.MockitoAnnotations;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.ActiveProfiles;
 
+import java.security.SecureRandom;
 import java.sql.SQLException;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
-import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.times;
-import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-class PostgresAddressRepositoryTest extends TestContainer {
+@SpringBootTest(classes = {ContainerConfig.class})
+@ActiveProfiles("test")
+class PostgresAddressRepositoryTest {
+  @Autowired
   private PostgresAddressRepository addressRepository;
-  @Mock
-  private AddressMapper addressMapper;
-  private AutoCloseable closeable;
-
-
-  @BeforeEach
-  void setUp() {
-    this.closeable = MockitoAnnotations.openMocks(this);
-    this.addressRepository = new PostgresAddressRepository(postgresContainer.getDataBaseConnection(), this.addressMapper);
-  }
-  @AfterEach
-  void tearDown() throws Exception {
-    this.closeable.close();
-  }
+  private static SecureRandom random = new SecureRandom();
+  private static String ALLOWED_CHARACTERS = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
 
   @Test
   @DisplayName("Проверяет, что сохраняется адрес в репозиторий")
@@ -60,6 +46,7 @@ class PostgresAddressRepositoryTest extends TestContainer {
     var exist = this.addressRepository.findAddressByUserId(2L);
     assertThat(exist).isNotEmpty();
   }
+
   @Test
   @DisplayName("Проверяет, что сохраняется адрес в репозиторий")
   void addAddress_notValidPostalCode() throws SQLException {
@@ -75,9 +62,10 @@ class PostgresAddressRepositoryTest extends TestContainer {
             .build();
     when(owner.getUserId()).thenReturn(2L);
 
-   assertThatThrownBy(()->this.addressRepository.addAddress(address));
+    assertThatThrownBy(() -> this.addressRepository.addAddress(address));
 
   }
+
   @Test
   @DisplayName("Проверяет, что сохраняется адрес в репозиторий")
   void addAddress_longRegion() throws SQLException {
@@ -93,8 +81,9 @@ class PostgresAddressRepositoryTest extends TestContainer {
             .build();
     when(owner.getUserId()).thenReturn(2L);
 
-    assertThatThrownBy(()->this.addressRepository.addAddress(address));
+    assertThatThrownBy(() -> this.addressRepository.addAddress(address));
   }
+
   @Test
   @DisplayName("Проверяет, что сохраняется адрес в репозиторий")
   void addAddress_longCity() throws SQLException {
@@ -110,8 +99,9 @@ class PostgresAddressRepositoryTest extends TestContainer {
             .build();
     when(owner.getUserId()).thenReturn(2L);
 
-    assertThatThrownBy(()->this.addressRepository.addAddress(address));
+    assertThatThrownBy(() -> this.addressRepository.addAddress(address));
   }
+
   @Test
   @DisplayName("Проверяет, что сохраняется адрес в репозиторий")
   void addAddress_longStreet() throws SQLException {
@@ -127,8 +117,9 @@ class PostgresAddressRepositoryTest extends TestContainer {
             .build();
     when(owner.getUserId()).thenReturn(2L);
 
-    assertThatThrownBy(()->this.addressRepository.addAddress(address));
+    assertThatThrownBy(() -> this.addressRepository.addAddress(address));
   }
+
   @Test
   @DisplayName("Проверяет, что сохраняется адрес в репозиторий")
   void addAddress_longHouse() throws SQLException {
@@ -144,8 +135,9 @@ class PostgresAddressRepositoryTest extends TestContainer {
             .build();
     when(owner.getUserId()).thenReturn(2L);
 
-    assertThatThrownBy(()->this.addressRepository.addAddress(address));
+    assertThatThrownBy(() -> this.addressRepository.addAddress(address));
   }
+
   @Test
   @DisplayName("Проверяет, что сохраняется адрес в репозиторий")
   void addAddress_longApartment() throws SQLException {
@@ -161,8 +153,9 @@ class PostgresAddressRepositoryTest extends TestContainer {
             .build();
     when(owner.getUserId()).thenReturn(2L);
 
-    assertThatThrownBy(()->this.addressRepository.addAddress(address));
+    assertThatThrownBy(() -> this.addressRepository.addAddress(address));
   }
+
   @Test
   @DisplayName("Проверяет, что сохраняется адрес в репозиторий, когда существует еще один адрес у данного пользователя")
   void addAddress_addAddressToList() throws SQLException {
@@ -185,6 +178,7 @@ class PostgresAddressRepositoryTest extends TestContainer {
     var exist = this.addressRepository.findAddressByUserId(1L);
     assertThat(exist).isNotEmpty();
   }
+
   @Test
   @DisplayName("Проверяет, что не сохраняется адрес у которого есть id")
   void addAddress_oldAddress() throws SQLException {
@@ -203,11 +197,12 @@ class PostgresAddressRepositoryTest extends TestContainer {
     when(owner.getUserId()).thenReturn(userId);
 
 
-    assertThatThrownBy(()-> this.addressRepository.addAddress(address));
+    assertThatThrownBy(() -> this.addressRepository.addAddress(address));
 
     var exist = this.addressRepository.findAddressByUserId(userId);
     assertThat(exist).isEmpty();
   }
+
   @Test
   @DisplayName("Проверяет, что находится адреса у пользователя")
   void findAddressByUserId() {
@@ -217,6 +212,7 @@ class PostgresAddressRepositoryTest extends TestContainer {
 
     assertThat(exist).isNotEmpty();
   }
+
   @Test
   @DisplayName("Проверяет, что не находится адреса у пользователя")
   void findAddressByUserId_notAddress() {
@@ -226,28 +222,42 @@ class PostgresAddressRepositoryTest extends TestContainer {
 
     assertThat(exist).isEmpty();
   }
+
   @Test
   @DisplayName("ищет адрес по идентификатору адреса")
   void findAddress() throws SQLException {
     var addressId = 1L;
-    var mock = mock(Address.class);
-    when(this.addressMapper.mapResultSetToAddress(any())).thenReturn(mock);
 
     var addressOptional = this.addressRepository.findAddress(addressId);
 
     assertThat(addressOptional).isPresent();
     var address = addressOptional.get();
-    assertThat(address).isEqualTo(mock);
-    verify(this.addressMapper, times(1)).mapResultSetToAddress(any());
+    assertThat(address.getOwner().getUserId()).isEqualTo(1L);
+    assertThat(address.getAddressId()).isEqualTo(addressId);
+    assertThat(address.getPostalCode()).isEqualTo(184040);
+    assertThat(address.getRegion()).isEqualTo("Мурманская область");
+    assertThat(address.getCity()).isEqualTo("Кандалакша");
+    assertThat(address.getStreet()).isEqualTo("Восточная");
+    assertThat(address.getHouse()).isEqualTo("6");
+    assertThat(address.getApartment()).isEqualTo("3");
 
   }
+
   @Test
   @DisplayName("не находит адреса, по идентификатору ")
-  void findAddress_notAddress(){
+  void findAddress_notAddress() {
     var addressId = 234234L;
 
     var addressOptional = this.addressRepository.findAddress(addressId);
-
     assertThat(addressOptional).isEmpty();
+  }
+
+  public String generateRandomLogin(int length) {
+    StringBuilder login = new StringBuilder(length);
+    for (int i = 0; i < length; i++) {
+      int randomIndex = random.nextInt(ALLOWED_CHARACTERS.length());
+      login.append(ALLOWED_CHARACTERS.charAt(randomIndex));
+    }
+    return login.toString();
   }
 }

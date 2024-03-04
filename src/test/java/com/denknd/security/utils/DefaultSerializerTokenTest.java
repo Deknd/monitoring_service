@@ -8,7 +8,6 @@ import com.nimbusds.jose.JWEEncrypter;
 import com.nimbusds.jose.KeyLengthException;
 import com.nimbusds.jose.crypto.DirectEncrypter;
 import com.nimbusds.jose.jwk.OctetSequenceKey;
-import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -16,12 +15,9 @@ import org.junit.jupiter.api.Test;
 import java.text.ParseException;
 import java.time.Duration;
 import java.time.Instant;
-import java.util.List;
-import java.util.Random;
 import java.util.UUID;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.*;
 
 class DefaultSerializerTokenTest {
 
@@ -36,7 +32,7 @@ class DefaultSerializerTokenTest {
     jweAlgorithm = JWEAlgorithm.DIR;
     encryptionMethod = EncryptionMethod.A128CBC_HS256;
     jweEncrypter = new DirectEncrypter(OctetSequenceKey.parse(secretCode));
-    serializerToken = new DefaultSerializerToken(jweEncrypter, jweAlgorithm, encryptionMethod);
+    serializerToken = new DefaultSerializerToken(jweEncrypter);
   }
 
   @Test

@@ -2,8 +2,9 @@ package com.denknd.security.repository.impl;
 
 import com.denknd.security.entity.TokenBlock;
 import com.denknd.security.repository.TokenRepository;
-import com.denknd.util.DataBaseConnection;
 import lombok.RequiredArgsConstructor;
+import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.stereotype.Repository;
 
 import java.sql.SQLException;
@@ -16,10 +17,7 @@ import java.sql.Types;
 @Repository
 @RequiredArgsConstructor
 public class PostgresTokenRepository implements TokenRepository {
-  /**
-   * Выдает соединение с базой данных
-   */
-  private final DataBaseConnection dataBaseConnection;
+  private final JdbcTemplate jdbcTemplate;
 
   /**
    * Сохраняет токен в базу данных.
@@ -30,33 +28,23 @@ public class PostgresTokenRepository implements TokenRepository {
   @Override
   public TokenBlock save(TokenBlock tokenBlock) throws SQLException {
     var sql = "INSERT INTO token_block (token_id, expiration_time) VALUES (?, ?)";
-    var connection = this.dataBaseConnection.createConnection();
-
-    connection.setAutoCommit(false);
-    try (var preparedStatement = connection.prepareStatement(sql,
-            Statement.RETURN_GENERATED_KEYS)) {
+    var keyHolder = new GeneratedKeyHolder();
+    var affectedRows = jdbcTemplate.update(con -> {
+      var preparedStatement = con.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
       preparedStatement.setString(1, tokenBlock.tokenId());
       preparedStatement.setObject(2, tokenBlock.expirationTime(), Types.TIMESTAMP_WITH_TIMEZONE);
-      var affectedRows = preparedStatement.executeUpdate();
-      if (affectedRows == 0) {
-        connection.rollback();
-        throw new SQLException("Ошибка блокировки токена, ни одной строки не добавлено в БД");
-      }
-      try (var generatedKeys = preparedStatement.getGeneratedKeys()) {
-        if (generatedKeys.next()) {
-          var keysLong = generatedKeys.getLong(1);
-          connection.commit();
-          return new TokenBlock(keysLong, tokenBlock.tokenId(), tokenBlock.expirationTime());
-        } else {
-          connection.rollback();
-          throw new SQLException("Токен не сохранен, не сгенерирован идентификатор");
-        }
-      }
-    } finally {
-      if (connection != null) {
-        connection.close();
-      }
+      return preparedStatement;
+    }, keyHolder);
+    if (affectedRows == 0) {
+      throw new SQLException("Ошибка блокировки токена, ни одной строки не добавлено в БД");
     }
+
+    var generatedKeys = keyHolder.getKeys();
+    if (generatedKeys == null || generatedKeys.size() == 0 || generatedKeys.get("token_block_id") == null) {
+      throw new SQLException("Ошибка сохранения токена, идентификатор не сгенерирован");
+    }
+    var generatedId = (Long) generatedKeys.get("token_block_id");
+    return new TokenBlock(generatedId, tokenBlock.tokenId(), tokenBlock.expirationTime());
   }
 
   /**
@@ -66,14 +54,9 @@ public class PostgresTokenRepository implements TokenRepository {
    * @return true, если токен существует, в противном случае - false.
    */
   @Override
-  public boolean existsByTokenId(String tokenId) throws SQLException {
-    var sql = "SELECT 1 FROM token_block WHERE token_id = ?";
-    try (var connection = dataBaseConnection.createConnection();
-         var preparedStatement = connection.prepareStatement(sql)) {
-      preparedStatement.setString(1, tokenId);
-      try (var resultSet = preparedStatement.executeQuery()) {
-        return resultSet.next();
-      }
-    }
+  public boolean existsByTokenId(String tokenId) {
+    var sql = "SELECT COUNT(*) FROM token_block WHERE token_id = ?";
+    var count = jdbcTemplate.queryForObject(sql, Integer.class, tokenId);
+    return count!= null && count > 0;
   }
 }

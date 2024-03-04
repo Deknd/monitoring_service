@@ -12,10 +12,7 @@ import org.springframework.web.ErrorResponse;
  */
 @RequiredArgsConstructor
 @Getter
-public class AddressDatabaseException extends Exception implements ErrorResponse {
-  /**
-   * Сообщение об ошибке.
-   */
+public class AddressDatabaseException extends RuntimeException implements ErrorResponse {
   private final String message;
 
 

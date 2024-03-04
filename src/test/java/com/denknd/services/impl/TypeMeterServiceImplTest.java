@@ -2,6 +2,7 @@ package com.denknd.services.impl;
 
 import com.denknd.entity.Roles;
 import com.denknd.entity.TypeMeter;
+import com.denknd.exception.AccessDeniedException;
 import com.denknd.exception.TypeMeterAdditionException;
 import com.denknd.repository.TypeMeterRepository;
 import com.denknd.security.entity.UserSecurity;
@@ -10,17 +11,19 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.mapstruct.Mapping;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
-import java.nio.file.AccessDeniedException;
 import java.sql.SQLException;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.any;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 class TypeMeterServiceImplTest {
 
@@ -36,10 +39,12 @@ class TypeMeterServiceImplTest {
     this.closeable = MockitoAnnotations.openMocks(this);
     this.typeMeterService = new TypeMeterServiceImpl(this.repository, this.securityService);
   }
+
   @AfterEach
   void tearDown() throws Exception {
     this.closeable.close();
   }
+
   @Test
   @DisplayName("Проверяет, что сервис обращается в репозиторий")
   void getTypeMeter() {
@@ -58,6 +63,7 @@ class TypeMeterServiceImplTest {
 
     verify(this.repository, times(1)).save(any(TypeMeter.class));
   }
+
   @Test
   @DisplayName("Проверяет, что если в репозитории выкинется ошибка, то тут ее обработают")
   void addNewTypeMeter_error() throws SQLException {
@@ -65,17 +71,18 @@ class TypeMeterServiceImplTest {
     when(this.securityService.getUserSecurity()).thenReturn(userSecurity);
     when(this.repository.save(any())).thenThrow(SQLException.class);
 
-    assertThatThrownBy(()->this.typeMeterService.addNewTypeMeter(mock(TypeMeter.class))).isInstanceOf(TypeMeterAdditionException.class);
+    assertThatThrownBy(() -> this.typeMeterService.addNewTypeMeter(mock(TypeMeter.class))).isInstanceOf(TypeMeterAdditionException.class);
 
     verify(this.repository, times(1)).save(any(TypeMeter.class));
   }
+
   @Test
   @DisplayName("Проверяет, что если в репозитории выкинется ошибка, то тут ее обработают")
   void addNewTypeMeter_errorAccessDeniedException() throws SQLException {
     var userSecurity = UserSecurity.builder().role(Roles.USER).build();
     when(this.securityService.getUserSecurity()).thenReturn(userSecurity);
 
-    assertThatThrownBy(()->this.typeMeterService.addNewTypeMeter(mock(TypeMeter.class))).isInstanceOf(AccessDeniedException.class);
+    assertThatThrownBy(() -> this.typeMeterService.addNewTypeMeter(mock(TypeMeter.class))).isInstanceOf(AccessDeniedException.class);
 
     verify(this.repository, times(0)).save(any());
   }
@@ -97,6 +104,7 @@ class TypeMeterServiceImplTest {
 
     assertThat(typeMeterByCode).isEqualTo(typeMeter);
   }
+
   @Test
   @DisplayName("проверяет, что достает данные из репозитория и не находит код с данным типом")
   void getTypeMeterByCode_null() {

@@ -1,6 +1,6 @@
 package com.denknd.in.controllers;
 
-import com.denknd.aspectj.audit.AuditRecording;
+import com.denknd.audit.api.AuditRecording;
 import com.denknd.dto.MeterReadingRequestDto;
 import com.denknd.dto.MeterReadingResponseDto;
 import com.denknd.entity.Address;
@@ -12,6 +12,7 @@ import com.denknd.mappers.MeterReadingMapper;
 import com.denknd.services.MeterReadingService;
 import com.denknd.swagger.RespConflict;
 import com.denknd.swagger.RespForbidden;
+import com.denknd.time.api.MeasureExecutionTime;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.ArraySchema;
@@ -51,13 +52,8 @@ import java.util.Set;
         description = "Ендпоинты для работы с показаниями счетчиков"
 )
 public class MeterReadingController {
-  /**
-   * Сервис для работы с данными о показаниях счетчиков.
-   */
+
   private final MeterReadingService meterReadingService;
-  /**
-   * Маппер для преобразования DTO показаний счетчиков.
-   */
   private final MeterReadingMapper meterReadingMapper;
 
   /**
@@ -88,6 +84,7 @@ public class MeterReadingController {
                                   array = @ArraySchema(schema = @Schema(implementation = MeterReadingResponseDto.class))))
           }
   )
+  @MeasureExecutionTime
   public ResponseEntity<List<MeterReadingResponseDto>> getHistoryMeterReading(
           @Parameter(description = " идентификатор адреса. Если не передан, выведется история по всем доступным пользователю адресам(roles: USER, ADMIN).")
           @RequestParam("addrId") Optional<Long> addressId,
@@ -103,7 +100,7 @@ public class MeterReadingController {
                   content = @Content(schema = @Schema(implementation = String.class, format = "yyyy-MM")))
           @RequestParam("end_date") Optional<YearMonth> endDate
   ) {
-    var buildParameters = Parameters.builder()
+    var buildParametersForHistory = Parameters.builder()
             .addressId(addressId.orElse(null))
             .userId(userId.orElse(null))
             .typeMeterIds(typeMeterIds.orElse(null))
@@ -112,7 +109,7 @@ public class MeterReadingController {
             .build();
     var historyMeterByAddress
             = this.meterReadingService.getHistoryMeterByAddress(
-            buildParameters);
+            buildParametersForHistory);
     var meterReadingResponseDtos
             = this.meterReadingMapper.mapMeterReadingsToMeterReadingResponsesDto(historyMeterByAddress);
     return ResponseEntity.status(HttpStatus.OK).contentType(MediaType.APPLICATION_JSON).body(meterReadingResponseDtos);
@@ -179,6 +176,7 @@ public class MeterReadingController {
                                   array = @ArraySchema(schema = @Schema(implementation = MeterReadingResponseDto.class))))
           }
   )
+  @MeasureExecutionTime
   public ResponseEntity<List<MeterReadingResponseDto>> getMeterReadings(
           @Parameter(description = " идентификатор адреса. Если не передан, выведется история по всем доступным пользователю адресам(roles: USER, ADMIN).")
           @RequestParam("addrId") Optional<Long> addressId,

@@ -1,10 +1,13 @@
 package com.denknd.security.repository.impl;
 
-import com.denknd.repository.TestContainer;
+import com.denknd.config.ContainerConfig;
 import com.denknd.security.entity.TokenBlock;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.ActiveProfiles;
 
 import java.sql.SQLException;
 import java.time.OffsetDateTime;
@@ -13,14 +16,13 @@ import java.util.UUID;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
-class PostgresTokenRepositoryTest extends TestContainer {
-
+@SpringBootTest(classes = {ContainerConfig.class})
+@ActiveProfiles("test")
+class PostgresTokenRepositoryTest {
+  @Autowired
   private PostgresTokenRepository postgresTokenRepository;
 
-  @BeforeEach
-  void setUp() {
-    this.postgresTokenRepository = new PostgresTokenRepository(postgresContainer.getDataBaseConnection());
-  }
+
 
   @Test
   @DisplayName("Проверяет, что успешно сохраняется токен")

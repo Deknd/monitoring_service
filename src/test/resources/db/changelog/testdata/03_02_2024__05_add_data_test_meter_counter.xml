@@ -3,7 +3,7 @@
                    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.6.xsd">
 
     <changeSet id="001__add_data_test_meters" author="den">
-        <insert tableName="meters" schemaName="${defaultSchema}">
+        <insert tableName="meters">
             <column name="address_id" value="1"/>
             <column name="type_meter_id" value="1"/>
             <column name="registration_date" value="NOW()"/>

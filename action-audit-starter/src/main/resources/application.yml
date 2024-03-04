@@ -1,0 +1,11 @@
+spring:
+  datasource:
+    url: ${audit.db.url}
+    username: ${audit.db.username}
+    password: ${audit.db.password}
+    driver-class-name: ${audit.db.driver-class-name}
+  liquibase:
+    change-log: db/changelog/changelog-master-audit.xml
+    url: ${audit.db.url}
+    user: ${audit.db.username}
+    password: ${audit.db.password}

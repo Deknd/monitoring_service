@@ -27,6 +27,6 @@ public interface MeterCountService {
    * @throws SQLException          Ошибка сохранения в базе данных.
    * @throws AccessDeniedException Исключение, выбрасываемое в случае отсутствия доступа для добавления информации о счетчике.
    */
-  Meter addInfoForMeterCount(Meter meter) throws SQLException, AccessDeniedException;
+  Meter addInfoForMeterCount(Meter meter) throws SQLException;
 
 }

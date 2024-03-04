@@ -2,9 +2,11 @@ package com.denknd.repository.impl;
 
 import com.denknd.entity.Meter;
 import com.denknd.repository.MeterCountRepository;
-import com.denknd.util.DataBaseConnection;
 import lombok.RequiredArgsConstructor;
+import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.sql.SQLException;
 import java.sql.Statement;
@@ -17,10 +19,7 @@ import java.sql.Types;
 @RequiredArgsConstructor
 public class PostgresMeterCountRepository implements MeterCountRepository {
 
-  /**
-   * Выдает соединение с базой данных
-   */
-  private final DataBaseConnection dataBaseConnection;
+  private final JdbcTemplate jdbcTemplate;
 
   /**
    * Добавляет новый счетчик в хранилище.
@@ -30,38 +29,31 @@ public class PostgresMeterCountRepository implements MeterCountRepository {
    * @return Полностью заполненный объект Meter
    * @throws SQLException выкидывается, если не соблюдены ограничения БД
    */
+  @Transactional
   @Override
   public Meter save(Meter meter) throws SQLException {
     if (meter.getMeterCountId() != null) {
       throw new SQLException("Ошибка сохранения нового счетчика. Переданный объект счетчика содержит идентификатор");
     }
     var sql = "INSERT INTO meters (address_id, type_meter_id, registration_date) VALUES (?, ?, ?)";
-    var connection = dataBaseConnection.createConnection();
-    connection.setAutoCommit(false);
-    try (var preparedStatement = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
+    var keyHolder = new GeneratedKeyHolder();
+    var affectedRows = jdbcTemplate.update(connection -> {
+      var preparedStatement = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
       preparedStatement.setObject(1, meter.getAddressId(), Types.BIGINT);
       preparedStatement.setObject(2, meter.getTypeMeterId(), Types.BIGINT);
       preparedStatement.setObject(3, meter.getRegistrationDate(), Types.TIMESTAMP_WITH_TIMEZONE);
-      int affectedRows = preparedStatement.executeUpdate();
-      if (affectedRows == 0) {
-        connection.rollback();
-        throw new SQLException("Ошибка сохранения информации о счетчике, ни одной строки не добавлено");
-      }
-      try (var generatedKeys = preparedStatement.getGeneratedKeys()) {
-        if (generatedKeys.next()) {
-          meter.setMeterCountId(generatedKeys.getLong(1));
-          connection.commit();
-          return meter;
-        } else {
-          connection.rollback();
-          throw new SQLException("Ошибка сохранения информации о счетчике, не сгенерировано идентификатора");
-        }
-      }
-    } finally {
-      if (connection != null) {
-        connection.close();
-      }
+      return preparedStatement;
+    }, keyHolder);
+    if (affectedRows == 0) {
+      throw new SQLException("Ошибка сохранения информации о счетчике, ни одной строки не добавлено");
     }
+    var generatedKeys = keyHolder.getKeys();
+    if (generatedKeys == null || generatedKeys.size() == 0 || generatedKeys.get("meter_count_id") == null) {
+      throw new SQLException("Ошибка сохранения информации о счетчике, идентификатор не сгенерирован");
+    }
+    var generatedId = (Long) generatedKeys.get("meter_count_id");
+    meter.setMeterCountId(generatedId);
+    return meter;
   }
 
   /**
@@ -71,6 +63,7 @@ public class PostgresMeterCountRepository implements MeterCountRepository {
    * @return возвращает объект с данными о счетчике
    * @throws SQLException в случае ошибки обновления бд
    */
+  @Transactional
   @Override
   public Meter update(Meter meter) throws SQLException {
     if (meter.getAddressId() == null || meter.getTypeMeterId() == null) {
@@ -78,32 +71,21 @@ public class PostgresMeterCountRepository implements MeterCountRepository {
               + " addressId: " + meter.getAddressId()
               + ", typeMeterId: " + meter.getTypeMeterId());
     }
-    String sql = "UPDATE meters " +
+    var sql = "UPDATE meters " +
             "SET serial_number = ?, " +
             "last_check_date = ?, " +
             "meter_model = ? " +
             "WHERE address_id = ? AND type_meter_id = ?";
-    var connection = dataBaseConnection.createConnection();
-    connection.setAutoCommit(false);
-    try (var stmt = connection.prepareStatement(sql)) {
-      stmt.setString(1, meter.getSerialNumber());
-      stmt.setObject(2, meter.getLastCheckDate(), Types.TIMESTAMP_WITH_TIMEZONE);
-      stmt.setString(3, meter.getMeterModel());
-      stmt.setLong(4, meter.getAddressId());
-      stmt.setLong(5, meter.getTypeMeterId());
-      int rowsAffected = stmt.executeUpdate();
-      if (rowsAffected == 0) {
-        connection.rollback();
-        throw new SQLException("Ошибка сохранения информации о счетчике, ни одной строки не добавлено");
-      }
-      return meter;
-    } catch (SQLException e) {
-      e.printStackTrace();
-      throw new SQLException("Ошибка сохранения информации о счетчике, данные не добавлены");
-    } finally {
-      if (connection != null) {
-        connection.close();
-      }
+    var rowsAffected = jdbcTemplate.update(sql, preparedStatement -> {
+      preparedStatement.setString(1, meter.getSerialNumber());
+      preparedStatement.setObject(2, meter.getLastCheckDate(), Types.TIMESTAMP_WITH_TIMEZONE);
+      preparedStatement.setString(3, meter.getMeterModel());
+      preparedStatement.setLong(4, meter.getAddressId());
+      preparedStatement.setLong(5, meter.getTypeMeterId());
+    });
+    if (rowsAffected == 0) {
+      throw new SQLException("Ошибка сохранения информации о счетчике, ни одной строки не добавлено");
     }
+    return meter;
   }
 }

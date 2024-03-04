@@ -12,11 +12,10 @@ import org.springframework.web.ErrorResponse;
  */
 @RequiredArgsConstructor
 @Getter
-public class TypeMeterAdditionException extends Exception implements ErrorResponse {
-  /**
-   * Сообщение об ошибке.
-   */
+public class TypeMeterAdditionException extends RuntimeException implements ErrorResponse {
+
   private final String message;
+
   /**
    * Получает HTTP статус код для ошибки.
    *

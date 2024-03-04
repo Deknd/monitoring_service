@@ -13,7 +13,6 @@ public interface AuthenticationConverter {
    *
    * @param httpRequest HTTP-запрос, который содержит информацию для аутентификации
    * @return объект PreAuthenticatedAuthenticationToken, представляющий аутентификацию пользователя
-   * @throws BadCredentialsException если аутентификация не удалась из-за недопустимых учетных данных
    */
   PreAuthenticatedAuthenticationToken convert(HttpServletRequest httpRequest) throws BadCredentialsException;
 }
